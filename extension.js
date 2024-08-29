@@ -42,11 +42,18 @@ export function activate(context) {
     args.push("--send-crash-reports");
   }
   if (config.get("log.path") != "") {
-    args.push("--log-path " + config.get("log.path"));
+    args.push("--log-path=" + config.get("log.path"));
   }
   if (config.get("version") != "") {
-    args.push("--lang-version " + config.get("version"));
+    args.push("--lang-version=" + config.get("version"));
   }
+  if (config.get('c3.path')) {
+    args.push('--c3c-path='+config.get('c3.path'));
+  }
+  if (config.get('diagnosticsDelay')) {
+    args.push('--diagnostics-delay='+config.get('diagnosticsDelay'));
+  }
+
   const serverOptions = {
     run: {
       command: executablePath,
@@ -62,7 +69,7 @@ export function activate(context) {
   const clientOptions = {
     documentSelector: [{ scheme: "file", language: "c3" }],
     synchronize: {
-      fileEvents: workspace.createFileSystemWatcher("**/*.c3"),
+      fileEvents: workspace.createFileSystemWatcher('**/*.{c3,c3i}'),
     },
   };
 
@@ -73,6 +80,8 @@ export function activate(context) {
   client.start();
 }
 export function deactivate() {
+  if (!client) {
+    return undefined;
+  }
   return client.stop();
-  
 }
