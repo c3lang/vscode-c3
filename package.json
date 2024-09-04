@@ -50,7 +50,7 @@
                 "properties": {
                     "c3.version": {
                         "type": "string",
-                        "default": "",
+                        "default": "0.6.1",
                         "markdownDescription": "Specify C3 language version."
                     }
                 }
