@@ -29,3256 +29,8 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 ));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// node_modules/vscode-jsonrpc/lib/common/is.js
-var require_is = __commonJS({
-  "node_modules/vscode-jsonrpc/lib/common/is.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.stringArray = exports2.array = exports2.func = exports2.error = exports2.number = exports2.string = exports2.boolean = void 0;
-    function boolean(value) {
-      return value === true || value === false;
-    }
-    exports2.boolean = boolean;
-    function string(value) {
-      return typeof value === "string" || value instanceof String;
-    }
-    exports2.string = string;
-    function number(value) {
-      return typeof value === "number" || value instanceof Number;
-    }
-    exports2.number = number;
-    function error(value) {
-      return value instanceof Error;
-    }
-    exports2.error = error;
-    function func(value) {
-      return typeof value === "function";
-    }
-    exports2.func = func;
-    function array(value) {
-      return Array.isArray(value);
-    }
-    exports2.array = array;
-    function stringArray(value) {
-      return array(value) && value.every((elem) => string(elem));
-    }
-    exports2.stringArray = stringArray;
-  }
-});
-
-// node_modules/vscode-jsonrpc/lib/common/messages.js
-var require_messages = __commonJS({
-  "node_modules/vscode-jsonrpc/lib/common/messages.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.Message = exports2.NotificationType9 = exports2.NotificationType8 = exports2.NotificationType7 = exports2.NotificationType6 = exports2.NotificationType5 = exports2.NotificationType4 = exports2.NotificationType3 = exports2.NotificationType2 = exports2.NotificationType1 = exports2.NotificationType0 = exports2.NotificationType = exports2.RequestType9 = exports2.RequestType8 = exports2.RequestType7 = exports2.RequestType6 = exports2.RequestType5 = exports2.RequestType4 = exports2.RequestType3 = exports2.RequestType2 = exports2.RequestType1 = exports2.RequestType = exports2.RequestType0 = exports2.AbstractMessageSignature = exports2.ParameterStructures = exports2.ResponseError = exports2.ErrorCodes = void 0;
-    var is = require_is();
-    var ErrorCodes;
-    (function(ErrorCodes2) {
-      ErrorCodes2.ParseError = -32700;
-      ErrorCodes2.InvalidRequest = -32600;
-      ErrorCodes2.MethodNotFound = -32601;
-      ErrorCodes2.InvalidParams = -32602;
-      ErrorCodes2.InternalError = -32603;
-      ErrorCodes2.jsonrpcReservedErrorRangeStart = -32099;
-      ErrorCodes2.serverErrorStart = -32099;
-      ErrorCodes2.MessageWriteError = -32099;
-      ErrorCodes2.MessageReadError = -32098;
-      ErrorCodes2.PendingResponseRejected = -32097;
-      ErrorCodes2.ConnectionInactive = -32096;
-      ErrorCodes2.ServerNotInitialized = -32002;
-      ErrorCodes2.UnknownErrorCode = -32001;
-      ErrorCodes2.jsonrpcReservedErrorRangeEnd = -32e3;
-      ErrorCodes2.serverErrorEnd = -32e3;
-    })(ErrorCodes || (exports2.ErrorCodes = ErrorCodes = {}));
-    var ResponseError = class _ResponseError extends Error {
-      constructor(code, message, data) {
-        super(message);
-        this.code = is.number(code) ? code : ErrorCodes.UnknownErrorCode;
-        this.data = data;
-        Object.setPrototypeOf(this, _ResponseError.prototype);
-      }
-      toJson() {
-        const result = {
-          code: this.code,
-          message: this.message
-        };
-        if (this.data !== void 0) {
-          result.data = this.data;
-        }
-        return result;
-      }
-    };
-    exports2.ResponseError = ResponseError;
-    var ParameterStructures = class _ParameterStructures {
-      constructor(kind) {
-        this.kind = kind;
-      }
-      static is(value) {
-        return value === _ParameterStructures.auto || value === _ParameterStructures.byName || value === _ParameterStructures.byPosition;
-      }
-      toString() {
-        return this.kind;
-      }
-    };
-    exports2.ParameterStructures = ParameterStructures;
-    ParameterStructures.auto = new ParameterStructures("auto");
-    ParameterStructures.byPosition = new ParameterStructures("byPosition");
-    ParameterStructures.byName = new ParameterStructures("byName");
-    var AbstractMessageSignature = class {
-      constructor(method, numberOfParams) {
-        this.method = method;
-        this.numberOfParams = numberOfParams;
-      }
-      get parameterStructures() {
-        return ParameterStructures.auto;
-      }
-    };
-    exports2.AbstractMessageSignature = AbstractMessageSignature;
-    var RequestType0 = class extends AbstractMessageSignature {
-      constructor(method) {
-        super(method, 0);
-      }
-    };
-    exports2.RequestType0 = RequestType0;
-    var RequestType = class extends AbstractMessageSignature {
-      constructor(method, _parameterStructures = ParameterStructures.auto) {
-        super(method, 1);
-        this._parameterStructures = _parameterStructures;
-      }
-      get parameterStructures() {
-        return this._parameterStructures;
-      }
-    };
-    exports2.RequestType = RequestType;
-    var RequestType1 = class extends AbstractMessageSignature {
-      constructor(method, _parameterStructures = ParameterStructures.auto) {
-        super(method, 1);
-        this._parameterStructures = _parameterStructures;
-      }
-      get parameterStructures() {
-        return this._parameterStructures;
-      }
-    };
-    exports2.RequestType1 = RequestType1;
-    var RequestType2 = class extends AbstractMessageSignature {
-      constructor(method) {
-        super(method, 2);
-      }
-    };
-    exports2.RequestType2 = RequestType2;
-    var RequestType3 = class extends AbstractMessageSignature {
-      constructor(method) {
-        super(method, 3);
-      }
-    };
-    exports2.RequestType3 = RequestType3;
-    var RequestType4 = class extends AbstractMessageSignature {
-      constructor(method) {
-        super(method, 4);
-      }
-    };
-    exports2.RequestType4 = RequestType4;
-    var RequestType5 = class extends AbstractMessageSignature {
-      constructor(method) {
-        super(method, 5);
-      }
-    };
-    exports2.RequestType5 = RequestType5;
-    var RequestType6 = class extends AbstractMessageSignature {
-      constructor(method) {
-        super(method, 6);
-      }
-    };
-    exports2.RequestType6 = RequestType6;
-    var RequestType7 = class extends AbstractMessageSignature {
-      constructor(method) {
-        super(method, 7);
-      }
-    };
-    exports2.RequestType7 = RequestType7;
-    var RequestType8 = class extends AbstractMessageSignature {
-      constructor(method) {
-        super(method, 8);
-      }
-    };
-    exports2.RequestType8 = RequestType8;
-    var RequestType9 = class extends AbstractMessageSignature {
-      constructor(method) {
-        super(method, 9);
-      }
-    };
-    exports2.RequestType9 = RequestType9;
-    var NotificationType = class extends AbstractMessageSignature {
-      constructor(method, _parameterStructures = ParameterStructures.auto) {
-        super(method, 1);
-        this._parameterStructures = _parameterStructures;
-      }
-      get parameterStructures() {
-        return this._parameterStructures;
-      }
-    };
-    exports2.NotificationType = NotificationType;
-    var NotificationType0 = class extends AbstractMessageSignature {
-      constructor(method) {
-        super(method, 0);
-      }
-    };
-    exports2.NotificationType0 = NotificationType0;
-    var NotificationType1 = class extends AbstractMessageSignature {
-      constructor(method, _parameterStructures = ParameterStructures.auto) {
-        super(method, 1);
-        this._parameterStructures = _parameterStructures;
-      }
-      get parameterStructures() {
-        return this._parameterStructures;
-      }
-    };
-    exports2.NotificationType1 = NotificationType1;
-    var NotificationType2 = class extends AbstractMessageSignature {
-      constructor(method) {
-        super(method, 2);
-      }
-    };
-    exports2.NotificationType2 = NotificationType2;
-    var NotificationType3 = class extends AbstractMessageSignature {
-      constructor(method) {
-        super(method, 3);
-      }
-    };
-    exports2.NotificationType3 = NotificationType3;
-    var NotificationType4 = class extends AbstractMessageSignature {
-      constructor(method) {
-        super(method, 4);
-      }
-    };
-    exports2.NotificationType4 = NotificationType4;
-    var NotificationType5 = class extends AbstractMessageSignature {
-      constructor(method) {
-        super(method, 5);
-      }
-    };
-    exports2.NotificationType5 = NotificationType5;
-    var NotificationType6 = class extends AbstractMessageSignature {
-      constructor(method) {
-        super(method, 6);
-      }
-    };
-    exports2.NotificationType6 = NotificationType6;
-    var NotificationType7 = class extends AbstractMessageSignature {
-      constructor(method) {
-        super(method, 7);
-      }
-    };
-    exports2.NotificationType7 = NotificationType7;
-    var NotificationType8 = class extends AbstractMessageSignature {
-      constructor(method) {
-        super(method, 8);
-      }
-    };
-    exports2.NotificationType8 = NotificationType8;
-    var NotificationType9 = class extends AbstractMessageSignature {
-      constructor(method) {
-        super(method, 9);
-      }
-    };
-    exports2.NotificationType9 = NotificationType9;
-    var Message;
-    (function(Message2) {
-      function isRequest2(message) {
-        const candidate = message;
-        return candidate && is.string(candidate.method) && (is.string(candidate.id) || is.number(candidate.id));
-      }
-      Message2.isRequest = isRequest2;
-      function isNotification(message) {
-        const candidate = message;
-        return candidate && is.string(candidate.method) && message.id === void 0;
-      }
-      Message2.isNotification = isNotification;
-      function isResponse2(message) {
-        const candidate = message;
-        return candidate && (candidate.result !== void 0 || !!candidate.error) && (is.string(candidate.id) || is.number(candidate.id) || candidate.id === null);
-      }
-      Message2.isResponse = isResponse2;
-    })(Message || (exports2.Message = Message = {}));
-  }
-});
-
-// node_modules/vscode-jsonrpc/lib/common/linkedMap.js
-var require_linkedMap = __commonJS({
-  "node_modules/vscode-jsonrpc/lib/common/linkedMap.js"(exports2) {
-    "use strict";
-    var _a;
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.LRUCache = exports2.LinkedMap = exports2.Touch = void 0;
-    var Touch;
-    (function(Touch2) {
-      Touch2.None = 0;
-      Touch2.First = 1;
-      Touch2.AsOld = Touch2.First;
-      Touch2.Last = 2;
-      Touch2.AsNew = Touch2.Last;
-    })(Touch || (exports2.Touch = Touch = {}));
-    var LinkedMap = class {
-      constructor() {
-        this[_a] = "LinkedMap";
-        this._map = /* @__PURE__ */ new Map();
-        this._head = void 0;
-        this._tail = void 0;
-        this._size = 0;
-        this._state = 0;
-      }
-      clear() {
-        this._map.clear();
-        this._head = void 0;
-        this._tail = void 0;
-        this._size = 0;
-        this._state++;
-      }
-      isEmpty() {
-        return !this._head && !this._tail;
-      }
-      get size() {
-        return this._size;
-      }
-      get first() {
-        return this._head?.value;
-      }
-      get last() {
-        return this._tail?.value;
-      }
-      has(key) {
-        return this._map.has(key);
-      }
-      get(key, touch = Touch.None) {
-        const item = this._map.get(key);
-        if (!item) {
-          return void 0;
-        }
-        if (touch !== Touch.None) {
-          this.touch(item, touch);
-        }
-        return item.value;
-      }
-      set(key, value, touch = Touch.None) {
-        let item = this._map.get(key);
-        if (item) {
-          item.value = value;
-          if (touch !== Touch.None) {
-            this.touch(item, touch);
-          }
-        } else {
-          item = { key, value, next: void 0, previous: void 0 };
-          switch (touch) {
-            case Touch.None:
-              this.addItemLast(item);
-              break;
-            case Touch.First:
-              this.addItemFirst(item);
-              break;
-            case Touch.Last:
-              this.addItemLast(item);
-              break;
-            default:
-              this.addItemLast(item);
-              break;
-          }
-          this._map.set(key, item);
-          this._size++;
-        }
-        return this;
-      }
-      delete(key) {
-        return !!this.remove(key);
-      }
-      remove(key) {
-        const item = this._map.get(key);
-        if (!item) {
-          return void 0;
-        }
-        this._map.delete(key);
-        this.removeItem(item);
-        this._size--;
-        return item.value;
-      }
-      shift() {
-        if (!this._head && !this._tail) {
-          return void 0;
-        }
-        if (!this._head || !this._tail) {
-          throw new Error("Invalid list");
-        }
-        const item = this._head;
-        this._map.delete(item.key);
-        this.removeItem(item);
-        this._size--;
-        return item.value;
-      }
-      forEach(callbackfn, thisArg) {
-        const state = this._state;
-        let current = this._head;
-        while (current) {
-          if (thisArg) {
-            callbackfn.bind(thisArg)(current.value, current.key, this);
-          } else {
-            callbackfn(current.value, current.key, this);
-          }
-          if (this._state !== state) {
-            throw new Error(`LinkedMap got modified during iteration.`);
-          }
-          current = current.next;
-        }
-      }
-      keys() {
-        const state = this._state;
-        let current = this._head;
-        const iterator = {
-          [Symbol.iterator]: () => {
-            return iterator;
-          },
-          next: () => {
-            if (this._state !== state) {
-              throw new Error(`LinkedMap got modified during iteration.`);
-            }
-            if (current) {
-              const result = { value: current.key, done: false };
-              current = current.next;
-              return result;
-            } else {
-              return { value: void 0, done: true };
-            }
-          }
-        };
-        return iterator;
-      }
-      values() {
-        const state = this._state;
-        let current = this._head;
-        const iterator = {
-          [Symbol.iterator]: () => {
-            return iterator;
-          },
-          next: () => {
-            if (this._state !== state) {
-              throw new Error(`LinkedMap got modified during iteration.`);
-            }
-            if (current) {
-              const result = { value: current.value, done: false };
-              current = current.next;
-              return result;
-            } else {
-              return { value: void 0, done: true };
-            }
-          }
-        };
-        return iterator;
-      }
-      entries() {
-        const state = this._state;
-        let current = this._head;
-        const iterator = {
-          [Symbol.iterator]: () => {
-            return iterator;
-          },
-          next: () => {
-            if (this._state !== state) {
-              throw new Error(`LinkedMap got modified during iteration.`);
-            }
-            if (current) {
-              const result = { value: [current.key, current.value], done: false };
-              current = current.next;
-              return result;
-            } else {
-              return { value: void 0, done: true };
-            }
-          }
-        };
-        return iterator;
-      }
-      [(_a = Symbol.toStringTag, Symbol.iterator)]() {
-        return this.entries();
-      }
-      trimOld(newSize) {
-        if (newSize >= this.size) {
-          return;
-        }
-        if (newSize === 0) {
-          this.clear();
-          return;
-        }
-        let current = this._head;
-        let currentSize = this.size;
-        while (current && currentSize > newSize) {
-          this._map.delete(current.key);
-          current = current.next;
-          currentSize--;
-        }
-        this._head = current;
-        this._size = currentSize;
-        if (current) {
-          current.previous = void 0;
-        }
-        this._state++;
-      }
-      addItemFirst(item) {
-        if (!this._head && !this._tail) {
-          this._tail = item;
-        } else if (!this._head) {
-          throw new Error("Invalid list");
-        } else {
-          item.next = this._head;
-          this._head.previous = item;
-        }
-        this._head = item;
-        this._state++;
-      }
-      addItemLast(item) {
-        if (!this._head && !this._tail) {
-          this._head = item;
-        } else if (!this._tail) {
-          throw new Error("Invalid list");
-        } else {
-          item.previous = this._tail;
-          this._tail.next = item;
-        }
-        this._tail = item;
-        this._state++;
-      }
-      removeItem(item) {
-        if (item === this._head && item === this._tail) {
-          this._head = void 0;
-          this._tail = void 0;
-        } else if (item === this._head) {
-          if (!item.next) {
-            throw new Error("Invalid list");
-          }
-          item.next.previous = void 0;
-          this._head = item.next;
-        } else if (item === this._tail) {
-          if (!item.previous) {
-            throw new Error("Invalid list");
-          }
-          item.previous.next = void 0;
-          this._tail = item.previous;
-        } else {
-          const next = item.next;
-          const previous = item.previous;
-          if (!next || !previous) {
-            throw new Error("Invalid list");
-          }
-          next.previous = previous;
-          previous.next = next;
-        }
-        item.next = void 0;
-        item.previous = void 0;
-        this._state++;
-      }
-      touch(item, touch) {
-        if (!this._head || !this._tail) {
-          throw new Error("Invalid list");
-        }
-        if (touch !== Touch.First && touch !== Touch.Last) {
-          return;
-        }
-        if (touch === Touch.First) {
-          if (item === this._head) {
-            return;
-          }
-          const next = item.next;
-          const previous = item.previous;
-          if (item === this._tail) {
-            previous.next = void 0;
-            this._tail = previous;
-          } else {
-            next.previous = previous;
-            previous.next = next;
-          }
-          item.previous = void 0;
-          item.next = this._head;
-          this._head.previous = item;
-          this._head = item;
-          this._state++;
-        } else if (touch === Touch.Last) {
-          if (item === this._tail) {
-            return;
-          }
-          const next = item.next;
-          const previous = item.previous;
-          if (item === this._head) {
-            next.previous = void 0;
-            this._head = next;
-          } else {
-            next.previous = previous;
-            previous.next = next;
-          }
-          item.next = void 0;
-          item.previous = this._tail;
-          this._tail.next = item;
-          this._tail = item;
-          this._state++;
-        }
-      }
-      toJSON() {
-        const data = [];
-        this.forEach((value, key) => {
-          data.push([key, value]);
-        });
-        return data;
-      }
-      fromJSON(data) {
-        this.clear();
-        for (const [key, value] of data) {
-          this.set(key, value);
-        }
-      }
-    };
-    exports2.LinkedMap = LinkedMap;
-    var LRUCache = class extends LinkedMap {
-      constructor(limit, ratio = 1) {
-        super();
-        this._limit = limit;
-        this._ratio = Math.min(Math.max(0, ratio), 1);
-      }
-      get limit() {
-        return this._limit;
-      }
-      set limit(limit) {
-        this._limit = limit;
-        this.checkTrim();
-      }
-      get ratio() {
-        return this._ratio;
-      }
-      set ratio(ratio) {
-        this._ratio = Math.min(Math.max(0, ratio), 1);
-        this.checkTrim();
-      }
-      get(key, touch = Touch.AsNew) {
-        return super.get(key, touch);
-      }
-      peek(key) {
-        return super.get(key, Touch.None);
-      }
-      set(key, value) {
-        super.set(key, value, Touch.Last);
-        this.checkTrim();
-        return this;
-      }
-      checkTrim() {
-        if (this.size > this._limit) {
-          this.trimOld(Math.round(this._limit * this._ratio));
-        }
-      }
-    };
-    exports2.LRUCache = LRUCache;
-  }
-});
-
-// node_modules/vscode-jsonrpc/lib/common/disposable.js
-var require_disposable = __commonJS({
-  "node_modules/vscode-jsonrpc/lib/common/disposable.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.Disposable = void 0;
-    var Disposable;
-    (function(Disposable2) {
-      function create(func) {
-        return {
-          dispose: func
-        };
-      }
-      Disposable2.create = create;
-    })(Disposable || (exports2.Disposable = Disposable = {}));
-  }
-});
-
-// node_modules/vscode-jsonrpc/lib/common/ral.js
-var require_ral = __commonJS({
-  "node_modules/vscode-jsonrpc/lib/common/ral.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    var _ral;
-    function RAL() {
-      if (_ral === void 0) {
-        throw new Error(`No runtime abstraction layer installed`);
-      }
-      return _ral;
-    }
-    (function(RAL2) {
-      function install(ral) {
-        if (ral === void 0) {
-          throw new Error(`No runtime abstraction layer provided`);
-        }
-        _ral = ral;
-      }
-      RAL2.install = install;
-    })(RAL || (RAL = {}));
-    exports2.default = RAL;
-  }
-});
-
-// node_modules/vscode-jsonrpc/lib/common/events.js
-var require_events = __commonJS({
-  "node_modules/vscode-jsonrpc/lib/common/events.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.Emitter = exports2.Event = void 0;
-    var ral_1 = require_ral();
-    var Event;
-    (function(Event2) {
-      const _disposable = { dispose() {
-      } };
-      Event2.None = function() {
-        return _disposable;
-      };
-    })(Event || (exports2.Event = Event = {}));
-    var CallbackList = class {
-      add(callback, context2 = null, bucket) {
-        if (!this._callbacks) {
-          this._callbacks = [];
-          this._contexts = [];
-        }
-        this._callbacks.push(callback);
-        this._contexts.push(context2);
-        if (Array.isArray(bucket)) {
-          bucket.push({ dispose: () => this.remove(callback, context2) });
-        }
-      }
-      remove(callback, context2 = null) {
-        if (!this._callbacks) {
-          return;
-        }
-        let foundCallbackWithDifferentContext = false;
-        for (let i = 0, len = this._callbacks.length; i < len; i++) {
-          if (this._callbacks[i] === callback) {
-            if (this._contexts[i] === context2) {
-              this._callbacks.splice(i, 1);
-              this._contexts.splice(i, 1);
-              return;
-            } else {
-              foundCallbackWithDifferentContext = true;
-            }
-          }
-        }
-        if (foundCallbackWithDifferentContext) {
-          throw new Error("When adding a listener with a context, you should remove it with the same context");
-        }
-      }
-      invoke(...args) {
-        if (!this._callbacks) {
-          return [];
-        }
-        const ret = [], callbacks = this._callbacks.slice(0), contexts = this._contexts.slice(0);
-        for (let i = 0, len = callbacks.length; i < len; i++) {
-          try {
-            ret.push(callbacks[i].apply(contexts[i], args));
-          } catch (e) {
-            (0, ral_1.default)().console.error(e);
-          }
-        }
-        return ret;
-      }
-      isEmpty() {
-        return !this._callbacks || this._callbacks.length === 0;
-      }
-      dispose() {
-        this._callbacks = void 0;
-        this._contexts = void 0;
-      }
-    };
-    var Emitter = class _Emitter {
-      constructor(_options) {
-        this._options = _options;
-      }
-      /**
-       * For the public to allow to subscribe
-       * to events from this Emitter
-       */
-      get event() {
-        if (!this._event) {
-          this._event = (listener, thisArgs, disposables) => {
-            if (!this._callbacks) {
-              this._callbacks = new CallbackList();
-            }
-            if (this._options && this._options.onFirstListenerAdd && this._callbacks.isEmpty()) {
-              this._options.onFirstListenerAdd(this);
-            }
-            this._callbacks.add(listener, thisArgs);
-            const result = {
-              dispose: () => {
-                if (!this._callbacks) {
-                  return;
-                }
-                this._callbacks.remove(listener, thisArgs);
-                result.dispose = _Emitter._noop;
-                if (this._options && this._options.onLastListenerRemove && this._callbacks.isEmpty()) {
-                  this._options.onLastListenerRemove(this);
-                }
-              }
-            };
-            if (Array.isArray(disposables)) {
-              disposables.push(result);
-            }
-            return result;
-          };
-        }
-        return this._event;
-      }
-      /**
-       * To be kept private to fire an event to
-       * subscribers
-       */
-      fire(event) {
-        if (this._callbacks) {
-          this._callbacks.invoke.call(this._callbacks, event);
-        }
-      }
-      dispose() {
-        if (this._callbacks) {
-          this._callbacks.dispose();
-          this._callbacks = void 0;
-        }
-      }
-    };
-    exports2.Emitter = Emitter;
-    Emitter._noop = function() {
-    };
-  }
-});
-
-// node_modules/vscode-jsonrpc/lib/common/cancellation.js
-var require_cancellation = __commonJS({
-  "node_modules/vscode-jsonrpc/lib/common/cancellation.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.CancellationTokenSource = exports2.CancellationToken = void 0;
-    var ral_1 = require_ral();
-    var Is = require_is();
-    var events_1 = require_events();
-    var CancellationToken;
-    (function(CancellationToken2) {
-      CancellationToken2.None = Object.freeze({
-        isCancellationRequested: false,
-        onCancellationRequested: events_1.Event.None
-      });
-      CancellationToken2.Cancelled = Object.freeze({
-        isCancellationRequested: true,
-        onCancellationRequested: events_1.Event.None
-      });
-      function is(value) {
-        const candidate = value;
-        return candidate && (candidate === CancellationToken2.None || candidate === CancellationToken2.Cancelled || Is.boolean(candidate.isCancellationRequested) && !!candidate.onCancellationRequested);
-      }
-      CancellationToken2.is = is;
-    })(CancellationToken || (exports2.CancellationToken = CancellationToken = {}));
-    var shortcutEvent = Object.freeze(function(callback, context2) {
-      const handle = (0, ral_1.default)().timer.setTimeout(callback.bind(context2), 0);
-      return { dispose() {
-        handle.dispose();
-      } };
-    });
-    var MutableToken = class {
-      constructor() {
-        this._isCancelled = false;
-      }
-      cancel() {
-        if (!this._isCancelled) {
-          this._isCancelled = true;
-          if (this._emitter) {
-            this._emitter.fire(void 0);
-            this.dispose();
-          }
-        }
-      }
-      get isCancellationRequested() {
-        return this._isCancelled;
-      }
-      get onCancellationRequested() {
-        if (this._isCancelled) {
-          return shortcutEvent;
-        }
-        if (!this._emitter) {
-          this._emitter = new events_1.Emitter();
-        }
-        return this._emitter.event;
-      }
-      dispose() {
-        if (this._emitter) {
-          this._emitter.dispose();
-          this._emitter = void 0;
-        }
-      }
-    };
-    var CancellationTokenSource = class {
-      get token() {
-        if (!this._token) {
-          this._token = new MutableToken();
-        }
-        return this._token;
-      }
-      cancel() {
-        if (!this._token) {
-          this._token = CancellationToken.Cancelled;
-        } else {
-          this._token.cancel();
-        }
-      }
-      dispose() {
-        if (!this._token) {
-          this._token = CancellationToken.None;
-        } else if (this._token instanceof MutableToken) {
-          this._token.dispose();
-        }
-      }
-    };
-    exports2.CancellationTokenSource = CancellationTokenSource;
-  }
-});
-
-// node_modules/vscode-jsonrpc/lib/common/sharedArrayCancellation.js
-var require_sharedArrayCancellation = __commonJS({
-  "node_modules/vscode-jsonrpc/lib/common/sharedArrayCancellation.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.SharedArrayReceiverStrategy = exports2.SharedArraySenderStrategy = void 0;
-    var cancellation_1 = require_cancellation();
-    var CancellationState;
-    (function(CancellationState2) {
-      CancellationState2.Continue = 0;
-      CancellationState2.Cancelled = 1;
-    })(CancellationState || (CancellationState = {}));
-    var SharedArraySenderStrategy = class {
-      constructor() {
-        this.buffers = /* @__PURE__ */ new Map();
-      }
-      enableCancellation(request) {
-        if (request.id === null) {
-          return;
-        }
-        const buffer = new SharedArrayBuffer(4);
-        const data = new Int32Array(buffer, 0, 1);
-        data[0] = CancellationState.Continue;
-        this.buffers.set(request.id, buffer);
-        request.$cancellationData = buffer;
-      }
-      async sendCancellation(_conn, id) {
-        const buffer = this.buffers.get(id);
-        if (buffer === void 0) {
-          return;
-        }
-        const data = new Int32Array(buffer, 0, 1);
-        Atomics.store(data, 0, CancellationState.Cancelled);
-      }
-      cleanup(id) {
-        this.buffers.delete(id);
-      }
-      dispose() {
-        this.buffers.clear();
-      }
-    };
-    exports2.SharedArraySenderStrategy = SharedArraySenderStrategy;
-    var SharedArrayBufferCancellationToken = class {
-      constructor(buffer) {
-        this.data = new Int32Array(buffer, 0, 1);
-      }
-      get isCancellationRequested() {
-        return Atomics.load(this.data, 0) === CancellationState.Cancelled;
-      }
-      get onCancellationRequested() {
-        throw new Error(`Cancellation over SharedArrayBuffer doesn't support cancellation events`);
-      }
-    };
-    var SharedArrayBufferCancellationTokenSource = class {
-      constructor(buffer) {
-        this.token = new SharedArrayBufferCancellationToken(buffer);
-      }
-      cancel() {
-      }
-      dispose() {
-      }
-    };
-    var SharedArrayReceiverStrategy = class {
-      constructor() {
-        this.kind = "request";
-      }
-      createCancellationTokenSource(request) {
-        const buffer = request.$cancellationData;
-        if (buffer === void 0) {
-          return new cancellation_1.CancellationTokenSource();
-        }
-        return new SharedArrayBufferCancellationTokenSource(buffer);
-      }
-    };
-    exports2.SharedArrayReceiverStrategy = SharedArrayReceiverStrategy;
-  }
-});
-
-// node_modules/vscode-jsonrpc/lib/common/semaphore.js
-var require_semaphore = __commonJS({
-  "node_modules/vscode-jsonrpc/lib/common/semaphore.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.Semaphore = void 0;
-    var ral_1 = require_ral();
-    var Semaphore = class {
-      constructor(capacity = 1) {
-        if (capacity <= 0) {
-          throw new Error("Capacity must be greater than 0");
-        }
-        this._capacity = capacity;
-        this._active = 0;
-        this._waiting = [];
-      }
-      lock(thunk) {
-        return new Promise((resolve, reject) => {
-          this._waiting.push({ thunk, resolve, reject });
-          this.runNext();
-        });
-      }
-      get active() {
-        return this._active;
-      }
-      runNext() {
-        if (this._waiting.length === 0 || this._active === this._capacity) {
-          return;
-        }
-        (0, ral_1.default)().timer.setImmediate(() => this.doRunNext());
-      }
-      doRunNext() {
-        if (this._waiting.length === 0 || this._active === this._capacity) {
-          return;
-        }
-        const next = this._waiting.shift();
-        this._active++;
-        if (this._active > this._capacity) {
-          throw new Error(`To many thunks active`);
-        }
-        try {
-          const result = next.thunk();
-          if (result instanceof Promise) {
-            result.then((value) => {
-              this._active--;
-              next.resolve(value);
-              this.runNext();
-            }, (err) => {
-              this._active--;
-              next.reject(err);
-              this.runNext();
-            });
-          } else {
-            this._active--;
-            next.resolve(result);
-            this.runNext();
-          }
-        } catch (err) {
-          this._active--;
-          next.reject(err);
-          this.runNext();
-        }
-      }
-    };
-    exports2.Semaphore = Semaphore;
-  }
-});
-
-// node_modules/vscode-jsonrpc/lib/common/messageReader.js
-var require_messageReader = __commonJS({
-  "node_modules/vscode-jsonrpc/lib/common/messageReader.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.ReadableStreamMessageReader = exports2.AbstractMessageReader = exports2.MessageReader = void 0;
-    var ral_1 = require_ral();
-    var Is = require_is();
-    var events_1 = require_events();
-    var semaphore_1 = require_semaphore();
-    var MessageReader;
-    (function(MessageReader2) {
-      function is(value) {
-        let candidate = value;
-        return candidate && Is.func(candidate.listen) && Is.func(candidate.dispose) && Is.func(candidate.onError) && Is.func(candidate.onClose) && Is.func(candidate.onPartialMessage);
-      }
-      MessageReader2.is = is;
-    })(MessageReader || (exports2.MessageReader = MessageReader = {}));
-    var AbstractMessageReader = class {
-      constructor() {
-        this.errorEmitter = new events_1.Emitter();
-        this.closeEmitter = new events_1.Emitter();
-        this.partialMessageEmitter = new events_1.Emitter();
-      }
-      dispose() {
-        this.errorEmitter.dispose();
-        this.closeEmitter.dispose();
-      }
-      get onError() {
-        return this.errorEmitter.event;
-      }
-      fireError(error) {
-        this.errorEmitter.fire(this.asError(error));
-      }
-      get onClose() {
-        return this.closeEmitter.event;
-      }
-      fireClose() {
-        this.closeEmitter.fire(void 0);
-      }
-      get onPartialMessage() {
-        return this.partialMessageEmitter.event;
-      }
-      firePartialMessage(info) {
-        this.partialMessageEmitter.fire(info);
-      }
-      asError(error) {
-        if (error instanceof Error) {
-          return error;
-        } else {
-          return new Error(`Reader received error. Reason: ${Is.string(error.message) ? error.message : "unknown"}`);
-        }
-      }
-    };
-    exports2.AbstractMessageReader = AbstractMessageReader;
-    var ResolvedMessageReaderOptions;
-    (function(ResolvedMessageReaderOptions2) {
-      function fromOptions(options) {
-        let charset;
-        let result;
-        let contentDecoder;
-        const contentDecoders = /* @__PURE__ */ new Map();
-        let contentTypeDecoder;
-        const contentTypeDecoders = /* @__PURE__ */ new Map();
-        if (options === void 0 || typeof options === "string") {
-          charset = options ?? "utf-8";
-        } else {
-          charset = options.charset ?? "utf-8";
-          if (options.contentDecoder !== void 0) {
-            contentDecoder = options.contentDecoder;
-            contentDecoders.set(contentDecoder.name, contentDecoder);
-          }
-          if (options.contentDecoders !== void 0) {
-            for (const decoder of options.contentDecoders) {
-              contentDecoders.set(decoder.name, decoder);
-            }
-          }
-          if (options.contentTypeDecoder !== void 0) {
-            contentTypeDecoder = options.contentTypeDecoder;
-            contentTypeDecoders.set(contentTypeDecoder.name, contentTypeDecoder);
-          }
-          if (options.contentTypeDecoders !== void 0) {
-            for (const decoder of options.contentTypeDecoders) {
-              contentTypeDecoders.set(decoder.name, decoder);
-            }
-          }
-        }
-        if (contentTypeDecoder === void 0) {
-          contentTypeDecoder = (0, ral_1.default)().applicationJson.decoder;
-          contentTypeDecoders.set(contentTypeDecoder.name, contentTypeDecoder);
-        }
-        return { charset, contentDecoder, contentDecoders, contentTypeDecoder, contentTypeDecoders };
-      }
-      ResolvedMessageReaderOptions2.fromOptions = fromOptions;
-    })(ResolvedMessageReaderOptions || (ResolvedMessageReaderOptions = {}));
-    var ReadableStreamMessageReader = class extends AbstractMessageReader {
-      constructor(readable, options) {
-        super();
-        this.readable = readable;
-        this.options = ResolvedMessageReaderOptions.fromOptions(options);
-        this.buffer = (0, ral_1.default)().messageBuffer.create(this.options.charset);
-        this._partialMessageTimeout = 1e4;
-        this.nextMessageLength = -1;
-        this.messageToken = 0;
-        this.readSemaphore = new semaphore_1.Semaphore(1);
-      }
-      set partialMessageTimeout(timeout) {
-        this._partialMessageTimeout = timeout;
-      }
-      get partialMessageTimeout() {
-        return this._partialMessageTimeout;
-      }
-      listen(callback) {
-        this.nextMessageLength = -1;
-        this.messageToken = 0;
-        this.partialMessageTimer = void 0;
-        this.callback = callback;
-        const result = this.readable.onData((data) => {
-          this.onData(data);
-        });
-        this.readable.onError((error) => this.fireError(error));
-        this.readable.onClose(() => this.fireClose());
-        return result;
-      }
-      onData(data) {
-        try {
-          this.buffer.append(data);
-          while (true) {
-            if (this.nextMessageLength === -1) {
-              const headers = this.buffer.tryReadHeaders(true);
-              if (!headers) {
-                return;
-              }
-              const contentLength = headers.get("content-length");
-              if (!contentLength) {
-                this.fireError(new Error(`Header must provide a Content-Length property.
-${JSON.stringify(Object.fromEntries(headers))}`));
-                return;
-              }
-              const length = parseInt(contentLength);
-              if (isNaN(length)) {
-                this.fireError(new Error(`Content-Length value must be a number. Got ${contentLength}`));
-                return;
-              }
-              this.nextMessageLength = length;
-            }
-            const body = this.buffer.tryReadBody(this.nextMessageLength);
-            if (body === void 0) {
-              this.setPartialMessageTimer();
-              return;
-            }
-            this.clearPartialMessageTimer();
-            this.nextMessageLength = -1;
-            this.readSemaphore.lock(async () => {
-              const bytes = this.options.contentDecoder !== void 0 ? await this.options.contentDecoder.decode(body) : body;
-              const message = await this.options.contentTypeDecoder.decode(bytes, this.options);
-              this.callback(message);
-            }).catch((error) => {
-              this.fireError(error);
-            });
-          }
-        } catch (error) {
-          this.fireError(error);
-        }
-      }
-      clearPartialMessageTimer() {
-        if (this.partialMessageTimer) {
-          this.partialMessageTimer.dispose();
-          this.partialMessageTimer = void 0;
-        }
-      }
-      setPartialMessageTimer() {
-        this.clearPartialMessageTimer();
-        if (this._partialMessageTimeout <= 0) {
-          return;
-        }
-        this.partialMessageTimer = (0, ral_1.default)().timer.setTimeout((token, timeout) => {
-          this.partialMessageTimer = void 0;
-          if (token === this.messageToken) {
-            this.firePartialMessage({ messageToken: token, waitingTime: timeout });
-            this.setPartialMessageTimer();
-          }
-        }, this._partialMessageTimeout, this.messageToken, this._partialMessageTimeout);
-      }
-    };
-    exports2.ReadableStreamMessageReader = ReadableStreamMessageReader;
-  }
-});
-
-// node_modules/vscode-jsonrpc/lib/common/messageWriter.js
-var require_messageWriter = __commonJS({
-  "node_modules/vscode-jsonrpc/lib/common/messageWriter.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.WriteableStreamMessageWriter = exports2.AbstractMessageWriter = exports2.MessageWriter = void 0;
-    var ral_1 = require_ral();
-    var Is = require_is();
-    var semaphore_1 = require_semaphore();
-    var events_1 = require_events();
-    var ContentLength = "Content-Length: ";
-    var CRLF2 = "\r\n";
-    var MessageWriter;
-    (function(MessageWriter2) {
-      function is(value) {
-        let candidate = value;
-        return candidate && Is.func(candidate.dispose) && Is.func(candidate.onClose) && Is.func(candidate.onError) && Is.func(candidate.write);
-      }
-      MessageWriter2.is = is;
-    })(MessageWriter || (exports2.MessageWriter = MessageWriter = {}));
-    var AbstractMessageWriter = class {
-      constructor() {
-        this.errorEmitter = new events_1.Emitter();
-        this.closeEmitter = new events_1.Emitter();
-      }
-      dispose() {
-        this.errorEmitter.dispose();
-        this.closeEmitter.dispose();
-      }
-      get onError() {
-        return this.errorEmitter.event;
-      }
-      fireError(error, message, count) {
-        this.errorEmitter.fire([this.asError(error), message, count]);
-      }
-      get onClose() {
-        return this.closeEmitter.event;
-      }
-      fireClose() {
-        this.closeEmitter.fire(void 0);
-      }
-      asError(error) {
-        if (error instanceof Error) {
-          return error;
-        } else {
-          return new Error(`Writer received error. Reason: ${Is.string(error.message) ? error.message : "unknown"}`);
-        }
-      }
-    };
-    exports2.AbstractMessageWriter = AbstractMessageWriter;
-    var ResolvedMessageWriterOptions;
-    (function(ResolvedMessageWriterOptions2) {
-      function fromOptions(options) {
-        if (options === void 0 || typeof options === "string") {
-          return { charset: options ?? "utf-8", contentTypeEncoder: (0, ral_1.default)().applicationJson.encoder };
-        } else {
-          return { charset: options.charset ?? "utf-8", contentEncoder: options.contentEncoder, contentTypeEncoder: options.contentTypeEncoder ?? (0, ral_1.default)().applicationJson.encoder };
-        }
-      }
-      ResolvedMessageWriterOptions2.fromOptions = fromOptions;
-    })(ResolvedMessageWriterOptions || (ResolvedMessageWriterOptions = {}));
-    var WriteableStreamMessageWriter = class extends AbstractMessageWriter {
-      constructor(writable, options) {
-        super();
-        this.writable = writable;
-        this.options = ResolvedMessageWriterOptions.fromOptions(options);
-        this.errorCount = 0;
-        this.writeSemaphore = new semaphore_1.Semaphore(1);
-        this.writable.onError((error) => this.fireError(error));
-        this.writable.onClose(() => this.fireClose());
-      }
-      async write(msg) {
-        return this.writeSemaphore.lock(async () => {
-          const payload = this.options.contentTypeEncoder.encode(msg, this.options).then((buffer) => {
-            if (this.options.contentEncoder !== void 0) {
-              return this.options.contentEncoder.encode(buffer);
-            } else {
-              return buffer;
-            }
-          });
-          return payload.then((buffer) => {
-            const headers = [];
-            headers.push(ContentLength, buffer.byteLength.toString(), CRLF2);
-            headers.push(CRLF2);
-            return this.doWrite(msg, headers, buffer);
-          }, (error) => {
-            this.fireError(error);
-            throw error;
-          });
-        });
-      }
-      async doWrite(msg, headers, data) {
-        try {
-          await this.writable.write(headers.join(""), "ascii");
-          return this.writable.write(data);
-        } catch (error) {
-          this.handleError(error, msg);
-          return Promise.reject(error);
-        }
-      }
-      handleError(error, msg) {
-        this.errorCount++;
-        this.fireError(error, msg, this.errorCount);
-      }
-      end() {
-        this.writable.end();
-      }
-    };
-    exports2.WriteableStreamMessageWriter = WriteableStreamMessageWriter;
-  }
-});
-
-// node_modules/vscode-jsonrpc/lib/common/messageBuffer.js
-var require_messageBuffer = __commonJS({
-  "node_modules/vscode-jsonrpc/lib/common/messageBuffer.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.AbstractMessageBuffer = void 0;
-    var CR = 13;
-    var LF = 10;
-    var CRLF2 = "\r\n";
-    var AbstractMessageBuffer = class {
-      constructor(encoding = "utf-8") {
-        this._encoding = encoding;
-        this._chunks = [];
-        this._totalLength = 0;
-      }
-      get encoding() {
-        return this._encoding;
-      }
-      append(chunk) {
-        const toAppend = typeof chunk === "string" ? this.fromString(chunk, this._encoding) : chunk;
-        this._chunks.push(toAppend);
-        this._totalLength += toAppend.byteLength;
-      }
-      tryReadHeaders(lowerCaseKeys = false) {
-        if (this._chunks.length === 0) {
-          return void 0;
-        }
-        let state = 0;
-        let chunkIndex = 0;
-        let offset = 0;
-        let chunkBytesRead = 0;
-        row: while (chunkIndex < this._chunks.length) {
-          const chunk = this._chunks[chunkIndex];
-          offset = 0;
-          column: while (offset < chunk.length) {
-            const value = chunk[offset];
-            switch (value) {
-              case CR:
-                switch (state) {
-                  case 0:
-                    state = 1;
-                    break;
-                  case 2:
-                    state = 3;
-                    break;
-                  default:
-                    state = 0;
-                }
-                break;
-              case LF:
-                switch (state) {
-                  case 1:
-                    state = 2;
-                    break;
-                  case 3:
-                    state = 4;
-                    offset++;
-                    break row;
-                  default:
-                    state = 0;
-                }
-                break;
-              default:
-                state = 0;
-            }
-            offset++;
-          }
-          chunkBytesRead += chunk.byteLength;
-          chunkIndex++;
-        }
-        if (state !== 4) {
-          return void 0;
-        }
-        const buffer = this._read(chunkBytesRead + offset);
-        const result = /* @__PURE__ */ new Map();
-        const headers = this.toString(buffer, "ascii").split(CRLF2);
-        if (headers.length < 2) {
-          return result;
-        }
-        for (let i = 0; i < headers.length - 2; i++) {
-          const header = headers[i];
-          const index = header.indexOf(":");
-          if (index === -1) {
-            throw new Error(`Message header must separate key and value using ':'
-${header}`);
-          }
-          const key = header.substr(0, index);
-          const value = header.substr(index + 1).trim();
-          result.set(lowerCaseKeys ? key.toLowerCase() : key, value);
-        }
-        return result;
-      }
-      tryReadBody(length) {
-        if (this._totalLength < length) {
-          return void 0;
-        }
-        return this._read(length);
-      }
-      get numberOfBytes() {
-        return this._totalLength;
-      }
-      _read(byteCount) {
-        if (byteCount === 0) {
-          return this.emptyBuffer();
-        }
-        if (byteCount > this._totalLength) {
-          throw new Error(`Cannot read so many bytes!`);
-        }
-        if (this._chunks[0].byteLength === byteCount) {
-          const chunk = this._chunks[0];
-          this._chunks.shift();
-          this._totalLength -= byteCount;
-          return this.asNative(chunk);
-        }
-        if (this._chunks[0].byteLength > byteCount) {
-          const chunk = this._chunks[0];
-          const result2 = this.asNative(chunk, byteCount);
-          this._chunks[0] = chunk.slice(byteCount);
-          this._totalLength -= byteCount;
-          return result2;
-        }
-        const result = this.allocNative(byteCount);
-        let resultOffset = 0;
-        let chunkIndex = 0;
-        while (byteCount > 0) {
-          const chunk = this._chunks[chunkIndex];
-          if (chunk.byteLength > byteCount) {
-            const chunkPart = chunk.slice(0, byteCount);
-            result.set(chunkPart, resultOffset);
-            resultOffset += byteCount;
-            this._chunks[chunkIndex] = chunk.slice(byteCount);
-            this._totalLength -= byteCount;
-            byteCount -= byteCount;
-          } else {
-            result.set(chunk, resultOffset);
-            resultOffset += chunk.byteLength;
-            this._chunks.shift();
-            this._totalLength -= chunk.byteLength;
-            byteCount -= chunk.byteLength;
-          }
-        }
-        return result;
-      }
-    };
-    exports2.AbstractMessageBuffer = AbstractMessageBuffer;
-  }
-});
-
-// node_modules/vscode-jsonrpc/lib/common/connection.js
-var require_connection = __commonJS({
-  "node_modules/vscode-jsonrpc/lib/common/connection.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.createMessageConnection = exports2.ConnectionOptions = exports2.MessageStrategy = exports2.CancellationStrategy = exports2.CancellationSenderStrategy = exports2.CancellationReceiverStrategy = exports2.RequestCancellationReceiverStrategy = exports2.IdCancellationReceiverStrategy = exports2.ConnectionStrategy = exports2.ConnectionError = exports2.ConnectionErrors = exports2.LogTraceNotification = exports2.SetTraceNotification = exports2.TraceFormat = exports2.TraceValues = exports2.Trace = exports2.NullLogger = exports2.ProgressType = exports2.ProgressToken = void 0;
-    var ral_1 = require_ral();
-    var Is = require_is();
-    var messages_1 = require_messages();
-    var linkedMap_1 = require_linkedMap();
-    var events_1 = require_events();
-    var cancellation_1 = require_cancellation();
-    var CancelNotification;
-    (function(CancelNotification2) {
-      CancelNotification2.type = new messages_1.NotificationType("$/cancelRequest");
-    })(CancelNotification || (CancelNotification = {}));
-    var ProgressToken;
-    (function(ProgressToken2) {
-      function is(value) {
-        return typeof value === "string" || typeof value === "number";
-      }
-      ProgressToken2.is = is;
-    })(ProgressToken || (exports2.ProgressToken = ProgressToken = {}));
-    var ProgressNotification;
-    (function(ProgressNotification2) {
-      ProgressNotification2.type = new messages_1.NotificationType("$/progress");
-    })(ProgressNotification || (ProgressNotification = {}));
-    var ProgressType = class {
-      constructor() {
-      }
-    };
-    exports2.ProgressType = ProgressType;
-    var StarRequestHandler;
-    (function(StarRequestHandler2) {
-      function is(value) {
-        return Is.func(value);
-      }
-      StarRequestHandler2.is = is;
-    })(StarRequestHandler || (StarRequestHandler = {}));
-    exports2.NullLogger = Object.freeze({
-      error: () => {
-      },
-      warn: () => {
-      },
-      info: () => {
-      },
-      log: () => {
-      }
-    });
-    var Trace3;
-    (function(Trace4) {
-      Trace4[Trace4["Off"] = 0] = "Off";
-      Trace4[Trace4["Messages"] = 1] = "Messages";
-      Trace4[Trace4["Compact"] = 2] = "Compact";
-      Trace4[Trace4["Verbose"] = 3] = "Verbose";
-    })(Trace3 || (exports2.Trace = Trace3 = {}));
-    var TraceValues;
-    (function(TraceValues2) {
-      TraceValues2.Off = "off";
-      TraceValues2.Messages = "messages";
-      TraceValues2.Compact = "compact";
-      TraceValues2.Verbose = "verbose";
-    })(TraceValues || (exports2.TraceValues = TraceValues = {}));
-    (function(Trace4) {
-      function fromString(value) {
-        if (!Is.string(value)) {
-          return Trace4.Off;
-        }
-        value = value.toLowerCase();
-        switch (value) {
-          case "off":
-            return Trace4.Off;
-          case "messages":
-            return Trace4.Messages;
-          case "compact":
-            return Trace4.Compact;
-          case "verbose":
-            return Trace4.Verbose;
-          default:
-            return Trace4.Off;
-        }
-      }
-      Trace4.fromString = fromString;
-      function toString3(value) {
-        switch (value) {
-          case Trace4.Off:
-            return "off";
-          case Trace4.Messages:
-            return "messages";
-          case Trace4.Compact:
-            return "compact";
-          case Trace4.Verbose:
-            return "verbose";
-          default:
-            return "off";
-        }
-      }
-      Trace4.toString = toString3;
-    })(Trace3 || (exports2.Trace = Trace3 = {}));
-    var TraceFormat;
-    (function(TraceFormat2) {
-      TraceFormat2["Text"] = "text";
-      TraceFormat2["JSON"] = "json";
-    })(TraceFormat || (exports2.TraceFormat = TraceFormat = {}));
-    (function(TraceFormat2) {
-      function fromString(value) {
-        if (!Is.string(value)) {
-          return TraceFormat2.Text;
-        }
-        value = value.toLowerCase();
-        if (value === "json") {
-          return TraceFormat2.JSON;
-        } else {
-          return TraceFormat2.Text;
-        }
-      }
-      TraceFormat2.fromString = fromString;
-    })(TraceFormat || (exports2.TraceFormat = TraceFormat = {}));
-    var SetTraceNotification;
-    (function(SetTraceNotification2) {
-      SetTraceNotification2.type = new messages_1.NotificationType("$/setTrace");
-    })(SetTraceNotification || (exports2.SetTraceNotification = SetTraceNotification = {}));
-    var LogTraceNotification;
-    (function(LogTraceNotification2) {
-      LogTraceNotification2.type = new messages_1.NotificationType("$/logTrace");
-    })(LogTraceNotification || (exports2.LogTraceNotification = LogTraceNotification = {}));
-    var ConnectionErrors;
-    (function(ConnectionErrors2) {
-      ConnectionErrors2[ConnectionErrors2["Closed"] = 1] = "Closed";
-      ConnectionErrors2[ConnectionErrors2["Disposed"] = 2] = "Disposed";
-      ConnectionErrors2[ConnectionErrors2["AlreadyListening"] = 3] = "AlreadyListening";
-    })(ConnectionErrors || (exports2.ConnectionErrors = ConnectionErrors = {}));
-    var ConnectionError = class _ConnectionError extends Error {
-      constructor(code, message) {
-        super(message);
-        this.code = code;
-        Object.setPrototypeOf(this, _ConnectionError.prototype);
-      }
-    };
-    exports2.ConnectionError = ConnectionError;
-    var ConnectionStrategy;
-    (function(ConnectionStrategy2) {
-      function is(value) {
-        const candidate = value;
-        return candidate && Is.func(candidate.cancelUndispatched);
-      }
-      ConnectionStrategy2.is = is;
-    })(ConnectionStrategy || (exports2.ConnectionStrategy = ConnectionStrategy = {}));
-    var IdCancellationReceiverStrategy;
-    (function(IdCancellationReceiverStrategy2) {
-      function is(value) {
-        const candidate = value;
-        return candidate && (candidate.kind === void 0 || candidate.kind === "id") && Is.func(candidate.createCancellationTokenSource) && (candidate.dispose === void 0 || Is.func(candidate.dispose));
-      }
-      IdCancellationReceiverStrategy2.is = is;
-    })(IdCancellationReceiverStrategy || (exports2.IdCancellationReceiverStrategy = IdCancellationReceiverStrategy = {}));
-    var RequestCancellationReceiverStrategy;
-    (function(RequestCancellationReceiverStrategy2) {
-      function is(value) {
-        const candidate = value;
-        return candidate && candidate.kind === "request" && Is.func(candidate.createCancellationTokenSource) && (candidate.dispose === void 0 || Is.func(candidate.dispose));
-      }
-      RequestCancellationReceiverStrategy2.is = is;
-    })(RequestCancellationReceiverStrategy || (exports2.RequestCancellationReceiverStrategy = RequestCancellationReceiverStrategy = {}));
-    var CancellationReceiverStrategy;
-    (function(CancellationReceiverStrategy2) {
-      CancellationReceiverStrategy2.Message = Object.freeze({
-        createCancellationTokenSource(_) {
-          return new cancellation_1.CancellationTokenSource();
-        }
-      });
-      function is(value) {
-        return IdCancellationReceiverStrategy.is(value) || RequestCancellationReceiverStrategy.is(value);
-      }
-      CancellationReceiverStrategy2.is = is;
-    })(CancellationReceiverStrategy || (exports2.CancellationReceiverStrategy = CancellationReceiverStrategy = {}));
-    var CancellationSenderStrategy;
-    (function(CancellationSenderStrategy2) {
-      CancellationSenderStrategy2.Message = Object.freeze({
-        sendCancellation(conn, id) {
-          return conn.sendNotification(CancelNotification.type, { id });
-        },
-        cleanup(_) {
-        }
-      });
-      function is(value) {
-        const candidate = value;
-        return candidate && Is.func(candidate.sendCancellation) && Is.func(candidate.cleanup);
-      }
-      CancellationSenderStrategy2.is = is;
-    })(CancellationSenderStrategy || (exports2.CancellationSenderStrategy = CancellationSenderStrategy = {}));
-    var CancellationStrategy;
-    (function(CancellationStrategy2) {
-      CancellationStrategy2.Message = Object.freeze({
-        receiver: CancellationReceiverStrategy.Message,
-        sender: CancellationSenderStrategy.Message
-      });
-      function is(value) {
-        const candidate = value;
-        return candidate && CancellationReceiverStrategy.is(candidate.receiver) && CancellationSenderStrategy.is(candidate.sender);
-      }
-      CancellationStrategy2.is = is;
-    })(CancellationStrategy || (exports2.CancellationStrategy = CancellationStrategy = {}));
-    var MessageStrategy;
-    (function(MessageStrategy2) {
-      function is(value) {
-        const candidate = value;
-        return candidate && Is.func(candidate.handleMessage);
-      }
-      MessageStrategy2.is = is;
-    })(MessageStrategy || (exports2.MessageStrategy = MessageStrategy = {}));
-    var ConnectionOptions;
-    (function(ConnectionOptions2) {
-      function is(value) {
-        const candidate = value;
-        return candidate && (CancellationStrategy.is(candidate.cancellationStrategy) || ConnectionStrategy.is(candidate.connectionStrategy) || MessageStrategy.is(candidate.messageStrategy));
-      }
-      ConnectionOptions2.is = is;
-    })(ConnectionOptions || (exports2.ConnectionOptions = ConnectionOptions = {}));
-    var ConnectionState;
-    (function(ConnectionState2) {
-      ConnectionState2[ConnectionState2["New"] = 1] = "New";
-      ConnectionState2[ConnectionState2["Listening"] = 2] = "Listening";
-      ConnectionState2[ConnectionState2["Closed"] = 3] = "Closed";
-      ConnectionState2[ConnectionState2["Disposed"] = 4] = "Disposed";
-    })(ConnectionState || (ConnectionState = {}));
-    function createMessageConnection(messageReader, messageWriter, _logger, options) {
-      const logger = _logger !== void 0 ? _logger : exports2.NullLogger;
-      let sequenceNumber = 0;
-      let notificationSequenceNumber = 0;
-      let unknownResponseSequenceNumber = 0;
-      const version = "2.0";
-      let starRequestHandler = void 0;
-      const requestHandlers = /* @__PURE__ */ new Map();
-      let starNotificationHandler = void 0;
-      const notificationHandlers = /* @__PURE__ */ new Map();
-      const progressHandlers = /* @__PURE__ */ new Map();
-      let timer;
-      let messageQueue = new linkedMap_1.LinkedMap();
-      let responsePromises = /* @__PURE__ */ new Map();
-      let knownCanceledRequests = /* @__PURE__ */ new Set();
-      let requestTokens = /* @__PURE__ */ new Map();
-      let trace = Trace3.Off;
-      let traceFormat = TraceFormat.Text;
-      let tracer;
-      let state = ConnectionState.New;
-      const errorEmitter = new events_1.Emitter();
-      const closeEmitter = new events_1.Emitter();
-      const unhandledNotificationEmitter = new events_1.Emitter();
-      const unhandledProgressEmitter = new events_1.Emitter();
-      const disposeEmitter = new events_1.Emitter();
-      const cancellationStrategy = options && options.cancellationStrategy ? options.cancellationStrategy : CancellationStrategy.Message;
-      function createRequestQueueKey(id) {
-        if (id === null) {
-          throw new Error(`Can't send requests with id null since the response can't be correlated.`);
-        }
-        return "req-" + id.toString();
-      }
-      function createResponseQueueKey(id) {
-        if (id === null) {
-          return "res-unknown-" + (++unknownResponseSequenceNumber).toString();
-        } else {
-          return "res-" + id.toString();
-        }
-      }
-      function createNotificationQueueKey() {
-        return "not-" + (++notificationSequenceNumber).toString();
-      }
-      function addMessageToQueue(queue, message) {
-        if (messages_1.Message.isRequest(message)) {
-          queue.set(createRequestQueueKey(message.id), message);
-        } else if (messages_1.Message.isResponse(message)) {
-          queue.set(createResponseQueueKey(message.id), message);
-        } else {
-          queue.set(createNotificationQueueKey(), message);
-        }
-      }
-      function cancelUndispatched(_message) {
-        return void 0;
-      }
-      function isListening() {
-        return state === ConnectionState.Listening;
-      }
-      function isClosed() {
-        return state === ConnectionState.Closed;
-      }
-      function isDisposed() {
-        return state === ConnectionState.Disposed;
-      }
-      function closeHandler() {
-        if (state === ConnectionState.New || state === ConnectionState.Listening) {
-          state = ConnectionState.Closed;
-          closeEmitter.fire(void 0);
-        }
-      }
-      function readErrorHandler(error) {
-        errorEmitter.fire([error, void 0, void 0]);
-      }
-      function writeErrorHandler(data) {
-        errorEmitter.fire(data);
-      }
-      messageReader.onClose(closeHandler);
-      messageReader.onError(readErrorHandler);
-      messageWriter.onClose(closeHandler);
-      messageWriter.onError(writeErrorHandler);
-      function triggerMessageQueue() {
-        if (timer || messageQueue.size === 0) {
-          return;
-        }
-        timer = (0, ral_1.default)().timer.setImmediate(() => {
-          timer = void 0;
-          processMessageQueue();
-        });
-      }
-      function handleMessage(message) {
-        if (messages_1.Message.isRequest(message)) {
-          handleRequest(message);
-        } else if (messages_1.Message.isNotification(message)) {
-          handleNotification(message);
-        } else if (messages_1.Message.isResponse(message)) {
-          handleResponse(message);
-        } else {
-          handleInvalidMessage(message);
-        }
-      }
-      function processMessageQueue() {
-        if (messageQueue.size === 0) {
-          return;
-        }
-        const message = messageQueue.shift();
-        try {
-          const messageStrategy = options?.messageStrategy;
-          if (MessageStrategy.is(messageStrategy)) {
-            messageStrategy.handleMessage(message, handleMessage);
-          } else {
-            handleMessage(message);
-          }
-        } finally {
-          triggerMessageQueue();
-        }
-      }
-      const callback = (message) => {
-        try {
-          if (messages_1.Message.isNotification(message) && message.method === CancelNotification.type.method) {
-            const cancelId = message.params.id;
-            const key = createRequestQueueKey(cancelId);
-            const toCancel = messageQueue.get(key);
-            if (messages_1.Message.isRequest(toCancel)) {
-              const strategy = options?.connectionStrategy;
-              const response2 = strategy && strategy.cancelUndispatched ? strategy.cancelUndispatched(toCancel, cancelUndispatched) : cancelUndispatched(toCancel);
-              if (response2 && (response2.error !== void 0 || response2.result !== void 0)) {
-                messageQueue.delete(key);
-                requestTokens.delete(cancelId);
-                response2.id = toCancel.id;
-                traceSendingResponse(response2, message.method, Date.now());
-                messageWriter.write(response2).catch(() => logger.error(`Sending response for canceled message failed.`));
-                return;
-              }
-            }
-            const cancellationToken = requestTokens.get(cancelId);
-            if (cancellationToken !== void 0) {
-              cancellationToken.cancel();
-              traceReceivedNotification(message);
-              return;
-            } else {
-              knownCanceledRequests.add(cancelId);
-            }
-          }
-          addMessageToQueue(messageQueue, message);
-        } finally {
-          triggerMessageQueue();
-        }
-      };
-      function handleRequest(requestMessage) {
-        if (isDisposed()) {
-          return;
-        }
-        function reply(resultOrError, method, startTime2) {
-          const message = {
-            jsonrpc: version,
-            id: requestMessage.id
-          };
-          if (resultOrError instanceof messages_1.ResponseError) {
-            message.error = resultOrError.toJson();
-          } else {
-            message.result = resultOrError === void 0 ? null : resultOrError;
-          }
-          traceSendingResponse(message, method, startTime2);
-          messageWriter.write(message).catch(() => logger.error(`Sending response failed.`));
-        }
-        function replyError(error, method, startTime2) {
-          const message = {
-            jsonrpc: version,
-            id: requestMessage.id,
-            error: error.toJson()
-          };
-          traceSendingResponse(message, method, startTime2);
-          messageWriter.write(message).catch(() => logger.error(`Sending response failed.`));
-        }
-        function replySuccess(result, method, startTime2) {
-          if (result === void 0) {
-            result = null;
-          }
-          const message = {
-            jsonrpc: version,
-            id: requestMessage.id,
-            result
-          };
-          traceSendingResponse(message, method, startTime2);
-          messageWriter.write(message).catch(() => logger.error(`Sending response failed.`));
-        }
-        traceReceivedRequest(requestMessage);
-        const element = requestHandlers.get(requestMessage.method);
-        let type;
-        let requestHandler;
-        if (element) {
-          type = element.type;
-          requestHandler = element.handler;
-        }
-        const startTime = Date.now();
-        if (requestHandler || starRequestHandler) {
-          const tokenKey = requestMessage.id ?? String(Date.now());
-          const cancellationSource = IdCancellationReceiverStrategy.is(cancellationStrategy.receiver) ? cancellationStrategy.receiver.createCancellationTokenSource(tokenKey) : cancellationStrategy.receiver.createCancellationTokenSource(requestMessage);
-          if (requestMessage.id !== null && knownCanceledRequests.has(requestMessage.id)) {
-            cancellationSource.cancel();
-          }
-          if (requestMessage.id !== null) {
-            requestTokens.set(tokenKey, cancellationSource);
-          }
-          try {
-            let handlerResult;
-            if (requestHandler) {
-              if (requestMessage.params === void 0) {
-                if (type !== void 0 && type.numberOfParams !== 0) {
-                  replyError(new messages_1.ResponseError(messages_1.ErrorCodes.InvalidParams, `Request ${requestMessage.method} defines ${type.numberOfParams} params but received none.`), requestMessage.method, startTime);
-                  return;
-                }
-                handlerResult = requestHandler(cancellationSource.token);
-              } else if (Array.isArray(requestMessage.params)) {
-                if (type !== void 0 && type.parameterStructures === messages_1.ParameterStructures.byName) {
-                  replyError(new messages_1.ResponseError(messages_1.ErrorCodes.InvalidParams, `Request ${requestMessage.method} defines parameters by name but received parameters by position`), requestMessage.method, startTime);
-                  return;
-                }
-                handlerResult = requestHandler(...requestMessage.params, cancellationSource.token);
-              } else {
-                if (type !== void 0 && type.parameterStructures === messages_1.ParameterStructures.byPosition) {
-                  replyError(new messages_1.ResponseError(messages_1.ErrorCodes.InvalidParams, `Request ${requestMessage.method} defines parameters by position but received parameters by name`), requestMessage.method, startTime);
-                  return;
-                }
-                handlerResult = requestHandler(requestMessage.params, cancellationSource.token);
-              }
-            } else if (starRequestHandler) {
-              handlerResult = starRequestHandler(requestMessage.method, requestMessage.params, cancellationSource.token);
-            }
-            const promise = handlerResult;
-            if (!handlerResult) {
-              requestTokens.delete(tokenKey);
-              replySuccess(handlerResult, requestMessage.method, startTime);
-            } else if (promise.then) {
-              promise.then((resultOrError) => {
-                requestTokens.delete(tokenKey);
-                reply(resultOrError, requestMessage.method, startTime);
-              }, (error) => {
-                requestTokens.delete(tokenKey);
-                if (error instanceof messages_1.ResponseError) {
-                  replyError(error, requestMessage.method, startTime);
-                } else if (error && Is.string(error.message)) {
-                  replyError(new messages_1.ResponseError(messages_1.ErrorCodes.InternalError, `Request ${requestMessage.method} failed with message: ${error.message}`), requestMessage.method, startTime);
-                } else {
-                  replyError(new messages_1.ResponseError(messages_1.ErrorCodes.InternalError, `Request ${requestMessage.method} failed unexpectedly without providing any details.`), requestMessage.method, startTime);
-                }
-              });
-            } else {
-              requestTokens.delete(tokenKey);
-              reply(handlerResult, requestMessage.method, startTime);
-            }
-          } catch (error) {
-            requestTokens.delete(tokenKey);
-            if (error instanceof messages_1.ResponseError) {
-              reply(error, requestMessage.method, startTime);
-            } else if (error && Is.string(error.message)) {
-              replyError(new messages_1.ResponseError(messages_1.ErrorCodes.InternalError, `Request ${requestMessage.method} failed with message: ${error.message}`), requestMessage.method, startTime);
-            } else {
-              replyError(new messages_1.ResponseError(messages_1.ErrorCodes.InternalError, `Request ${requestMessage.method} failed unexpectedly without providing any details.`), requestMessage.method, startTime);
-            }
-          }
-        } else {
-          replyError(new messages_1.ResponseError(messages_1.ErrorCodes.MethodNotFound, `Unhandled method ${requestMessage.method}`), requestMessage.method, startTime);
-        }
-      }
-      function handleResponse(responseMessage) {
-        if (isDisposed()) {
-          return;
-        }
-        if (responseMessage.id === null) {
-          if (responseMessage.error) {
-            logger.error(`Received response message without id: Error is: 
-${JSON.stringify(responseMessage.error, void 0, 4)}`);
-          } else {
-            logger.error(`Received response message without id. No further error information provided.`);
-          }
-        } else {
-          const key = responseMessage.id;
-          const responsePromise = responsePromises.get(key);
-          traceReceivedResponse(responseMessage, responsePromise);
-          if (responsePromise !== void 0) {
-            responsePromises.delete(key);
-            try {
-              if (responseMessage.error) {
-                const error = responseMessage.error;
-                responsePromise.reject(new messages_1.ResponseError(error.code, error.message, error.data));
-              } else if (responseMessage.result !== void 0) {
-                responsePromise.resolve(responseMessage.result);
-              } else {
-                throw new Error("Should never happen.");
-              }
-            } catch (error) {
-              if (error.message) {
-                logger.error(`Response handler '${responsePromise.method}' failed with message: ${error.message}`);
-              } else {
-                logger.error(`Response handler '${responsePromise.method}' failed unexpectedly.`);
-              }
-            }
-          }
-        }
-      }
-      function handleNotification(message) {
-        if (isDisposed()) {
-          return;
-        }
-        let type = void 0;
-        let notificationHandler;
-        if (message.method === CancelNotification.type.method) {
-          const cancelId = message.params.id;
-          knownCanceledRequests.delete(cancelId);
-          traceReceivedNotification(message);
-          return;
-        } else {
-          const element = notificationHandlers.get(message.method);
-          if (element) {
-            notificationHandler = element.handler;
-            type = element.type;
-          }
-        }
-        if (notificationHandler || starNotificationHandler) {
-          try {
-            traceReceivedNotification(message);
-            if (notificationHandler) {
-              if (message.params === void 0) {
-                if (type !== void 0) {
-                  if (type.numberOfParams !== 0 && type.parameterStructures !== messages_1.ParameterStructures.byName) {
-                    logger.error(`Notification ${message.method} defines ${type.numberOfParams} params but received none.`);
-                  }
-                }
-                notificationHandler();
-              } else if (Array.isArray(message.params)) {
-                const params = message.params;
-                if (message.method === ProgressNotification.type.method && params.length === 2 && ProgressToken.is(params[0])) {
-                  notificationHandler({ token: params[0], value: params[1] });
-                } else {
-                  if (type !== void 0) {
-                    if (type.parameterStructures === messages_1.ParameterStructures.byName) {
-                      logger.error(`Notification ${message.method} defines parameters by name but received parameters by position`);
-                    }
-                    if (type.numberOfParams !== message.params.length) {
-                      logger.error(`Notification ${message.method} defines ${type.numberOfParams} params but received ${params.length} arguments`);
-                    }
-                  }
-                  notificationHandler(...params);
-                }
-              } else {
-                if (type !== void 0 && type.parameterStructures === messages_1.ParameterStructures.byPosition) {
-                  logger.error(`Notification ${message.method} defines parameters by position but received parameters by name`);
-                }
-                notificationHandler(message.params);
-              }
-            } else if (starNotificationHandler) {
-              starNotificationHandler(message.method, message.params);
-            }
-          } catch (error) {
-            if (error.message) {
-              logger.error(`Notification handler '${message.method}' failed with message: ${error.message}`);
-            } else {
-              logger.error(`Notification handler '${message.method}' failed unexpectedly.`);
-            }
-          }
-        } else {
-          unhandledNotificationEmitter.fire(message);
-        }
-      }
-      function handleInvalidMessage(message) {
-        if (!message) {
-          logger.error("Received empty message.");
-          return;
-        }
-        logger.error(`Received message which is neither a response nor a notification message:
-${JSON.stringify(message, null, 4)}`);
-        const responseMessage = message;
-        if (Is.string(responseMessage.id) || Is.number(responseMessage.id)) {
-          const key = responseMessage.id;
-          const responseHandler = responsePromises.get(key);
-          if (responseHandler) {
-            responseHandler.reject(new Error("The received response has neither a result nor an error property."));
-          }
-        }
-      }
-      function stringifyTrace(params) {
-        if (params === void 0 || params === null) {
-          return void 0;
-        }
-        switch (trace) {
-          case Trace3.Verbose:
-            return JSON.stringify(params, null, 4);
-          case Trace3.Compact:
-            return JSON.stringify(params);
-          default:
-            return void 0;
-        }
-      }
-      function traceSendingRequest(message) {
-        if (trace === Trace3.Off || !tracer) {
-          return;
-        }
-        if (traceFormat === TraceFormat.Text) {
-          let data = void 0;
-          if ((trace === Trace3.Verbose || trace === Trace3.Compact) && message.params) {
-            data = `Params: ${stringifyTrace(message.params)}
-
-`;
-          }
-          tracer.log(`Sending request '${message.method} - (${message.id})'.`, data);
-        } else {
-          logLSPMessage("send-request", message);
-        }
-      }
-      function traceSendingNotification(message) {
-        if (trace === Trace3.Off || !tracer) {
-          return;
-        }
-        if (traceFormat === TraceFormat.Text) {
-          let data = void 0;
-          if (trace === Trace3.Verbose || trace === Trace3.Compact) {
-            if (message.params) {
-              data = `Params: ${stringifyTrace(message.params)}
-
-`;
-            } else {
-              data = "No parameters provided.\n\n";
-            }
-          }
-          tracer.log(`Sending notification '${message.method}'.`, data);
-        } else {
-          logLSPMessage("send-notification", message);
-        }
-      }
-      function traceSendingResponse(message, method, startTime) {
-        if (trace === Trace3.Off || !tracer) {
-          return;
-        }
-        if (traceFormat === TraceFormat.Text) {
-          let data = void 0;
-          if (trace === Trace3.Verbose || trace === Trace3.Compact) {
-            if (message.error && message.error.data) {
-              data = `Error data: ${stringifyTrace(message.error.data)}
-
-`;
-            } else {
-              if (message.result) {
-                data = `Result: ${stringifyTrace(message.result)}
-
-`;
-              } else if (message.error === void 0) {
-                data = "No result returned.\n\n";
-              }
-            }
-          }
-          tracer.log(`Sending response '${method} - (${message.id})'. Processing request took ${Date.now() - startTime}ms`, data);
-        } else {
-          logLSPMessage("send-response", message);
-        }
-      }
-      function traceReceivedRequest(message) {
-        if (trace === Trace3.Off || !tracer) {
-          return;
-        }
-        if (traceFormat === TraceFormat.Text) {
-          let data = void 0;
-          if ((trace === Trace3.Verbose || trace === Trace3.Compact) && message.params) {
-            data = `Params: ${stringifyTrace(message.params)}
-
-`;
-          }
-          tracer.log(`Received request '${message.method} - (${message.id})'.`, data);
-        } else {
-          logLSPMessage("receive-request", message);
-        }
-      }
-      function traceReceivedNotification(message) {
-        if (trace === Trace3.Off || !tracer || message.method === LogTraceNotification.type.method) {
-          return;
-        }
-        if (traceFormat === TraceFormat.Text) {
-          let data = void 0;
-          if (trace === Trace3.Verbose || trace === Trace3.Compact) {
-            if (message.params) {
-              data = `Params: ${stringifyTrace(message.params)}
-
-`;
-            } else {
-              data = "No parameters provided.\n\n";
-            }
-          }
-          tracer.log(`Received notification '${message.method}'.`, data);
-        } else {
-          logLSPMessage("receive-notification", message);
-        }
-      }
-      function traceReceivedResponse(message, responsePromise) {
-        if (trace === Trace3.Off || !tracer) {
-          return;
-        }
-        if (traceFormat === TraceFormat.Text) {
-          let data = void 0;
-          if (trace === Trace3.Verbose || trace === Trace3.Compact) {
-            if (message.error && message.error.data) {
-              data = `Error data: ${stringifyTrace(message.error.data)}
-
-`;
-            } else {
-              if (message.result) {
-                data = `Result: ${stringifyTrace(message.result)}
-
-`;
-              } else if (message.error === void 0) {
-                data = "No result returned.\n\n";
-              }
-            }
-          }
-          if (responsePromise) {
-            const error = message.error ? ` Request failed: ${message.error.message} (${message.error.code}).` : "";
-            tracer.log(`Received response '${responsePromise.method} - (${message.id})' in ${Date.now() - responsePromise.timerStart}ms.${error}`, data);
-          } else {
-            tracer.log(`Received response ${message.id} without active response promise.`, data);
-          }
-        } else {
-          logLSPMessage("receive-response", message);
-        }
-      }
-      function logLSPMessage(type, message) {
-        if (!tracer || trace === Trace3.Off) {
-          return;
-        }
-        const lspMessage = {
-          isLSPMessage: true,
-          type,
-          message,
-          timestamp: Date.now()
-        };
-        tracer.log(lspMessage);
-      }
-      function throwIfClosedOrDisposed() {
-        if (isClosed()) {
-          throw new ConnectionError(ConnectionErrors.Closed, "Connection is closed.");
-        }
-        if (isDisposed()) {
-          throw new ConnectionError(ConnectionErrors.Disposed, "Connection is disposed.");
-        }
-      }
-      function throwIfListening() {
-        if (isListening()) {
-          throw new ConnectionError(ConnectionErrors.AlreadyListening, "Connection is already listening");
-        }
-      }
-      function throwIfNotListening() {
-        if (!isListening()) {
-          throw new Error("Call listen() first.");
-        }
-      }
-      function undefinedToNull(param) {
-        if (param === void 0) {
-          return null;
-        } else {
-          return param;
-        }
-      }
-      function nullToUndefined(param) {
-        if (param === null) {
-          return void 0;
-        } else {
-          return param;
-        }
-      }
-      function isNamedParam(param) {
-        return param !== void 0 && param !== null && !Array.isArray(param) && typeof param === "object";
-      }
-      function computeSingleParam(parameterStructures, param) {
-        switch (parameterStructures) {
-          case messages_1.ParameterStructures.auto:
-            if (isNamedParam(param)) {
-              return nullToUndefined(param);
-            } else {
-              return [undefinedToNull(param)];
-            }
-          case messages_1.ParameterStructures.byName:
-            if (!isNamedParam(param)) {
-              throw new Error(`Received parameters by name but param is not an object literal.`);
-            }
-            return nullToUndefined(param);
-          case messages_1.ParameterStructures.byPosition:
-            return [undefinedToNull(param)];
-          default:
-            throw new Error(`Unknown parameter structure ${parameterStructures.toString()}`);
-        }
-      }
-      function computeMessageParams(type, params) {
-        let result;
-        const numberOfParams = type.numberOfParams;
-        switch (numberOfParams) {
-          case 0:
-            result = void 0;
-            break;
-          case 1:
-            result = computeSingleParam(type.parameterStructures, params[0]);
-            break;
-          default:
-            result = [];
-            for (let i = 0; i < params.length && i < numberOfParams; i++) {
-              result.push(undefinedToNull(params[i]));
-            }
-            if (params.length < numberOfParams) {
-              for (let i = params.length; i < numberOfParams; i++) {
-                result.push(null);
-              }
-            }
-            break;
-        }
-        return result;
-      }
-      const connection = {
-        sendNotification: (type, ...args) => {
-          throwIfClosedOrDisposed();
-          let method;
-          let messageParams;
-          if (Is.string(type)) {
-            method = type;
-            const first = args[0];
-            let paramStart = 0;
-            let parameterStructures = messages_1.ParameterStructures.auto;
-            if (messages_1.ParameterStructures.is(first)) {
-              paramStart = 1;
-              parameterStructures = first;
-            }
-            let paramEnd = args.length;
-            const numberOfParams = paramEnd - paramStart;
-            switch (numberOfParams) {
-              case 0:
-                messageParams = void 0;
-                break;
-              case 1:
-                messageParams = computeSingleParam(parameterStructures, args[paramStart]);
-                break;
-              default:
-                if (parameterStructures === messages_1.ParameterStructures.byName) {
-                  throw new Error(`Received ${numberOfParams} parameters for 'by Name' notification parameter structure.`);
-                }
-                messageParams = args.slice(paramStart, paramEnd).map((value) => undefinedToNull(value));
-                break;
-            }
-          } else {
-            const params = args;
-            method = type.method;
-            messageParams = computeMessageParams(type, params);
-          }
-          const notificationMessage = {
-            jsonrpc: version,
-            method,
-            params: messageParams
-          };
-          traceSendingNotification(notificationMessage);
-          return messageWriter.write(notificationMessage).catch((error) => {
-            logger.error(`Sending notification failed.`);
-            throw error;
-          });
-        },
-        onNotification: (type, handler) => {
-          throwIfClosedOrDisposed();
-          let method;
-          if (Is.func(type)) {
-            starNotificationHandler = type;
-          } else if (handler) {
-            if (Is.string(type)) {
-              method = type;
-              notificationHandlers.set(type, { type: void 0, handler });
-            } else {
-              method = type.method;
-              notificationHandlers.set(type.method, { type, handler });
-            }
-          }
-          return {
-            dispose: () => {
-              if (method !== void 0) {
-                notificationHandlers.delete(method);
-              } else {
-                starNotificationHandler = void 0;
-              }
-            }
-          };
-        },
-        onProgress: (_type, token, handler) => {
-          if (progressHandlers.has(token)) {
-            throw new Error(`Progress handler for token ${token} already registered`);
-          }
-          progressHandlers.set(token, handler);
-          return {
-            dispose: () => {
-              progressHandlers.delete(token);
-            }
-          };
-        },
-        sendProgress: (_type, token, value) => {
-          return connection.sendNotification(ProgressNotification.type, { token, value });
-        },
-        onUnhandledProgress: unhandledProgressEmitter.event,
-        sendRequest: (type, ...args) => {
-          throwIfClosedOrDisposed();
-          throwIfNotListening();
-          let method;
-          let messageParams;
-          let token = void 0;
-          if (Is.string(type)) {
-            method = type;
-            const first = args[0];
-            const last = args[args.length - 1];
-            let paramStart = 0;
-            let parameterStructures = messages_1.ParameterStructures.auto;
-            if (messages_1.ParameterStructures.is(first)) {
-              paramStart = 1;
-              parameterStructures = first;
-            }
-            let paramEnd = args.length;
-            if (cancellation_1.CancellationToken.is(last)) {
-              paramEnd = paramEnd - 1;
-              token = last;
-            }
-            const numberOfParams = paramEnd - paramStart;
-            switch (numberOfParams) {
-              case 0:
-                messageParams = void 0;
-                break;
-              case 1:
-                messageParams = computeSingleParam(parameterStructures, args[paramStart]);
-                break;
-              default:
-                if (parameterStructures === messages_1.ParameterStructures.byName) {
-                  throw new Error(`Received ${numberOfParams} parameters for 'by Name' request parameter structure.`);
-                }
-                messageParams = args.slice(paramStart, paramEnd).map((value) => undefinedToNull(value));
-                break;
-            }
-          } else {
-            const params = args;
-            method = type.method;
-            messageParams = computeMessageParams(type, params);
-            const numberOfParams = type.numberOfParams;
-            token = cancellation_1.CancellationToken.is(params[numberOfParams]) ? params[numberOfParams] : void 0;
-          }
-          const id = sequenceNumber++;
-          let disposable;
-          if (token) {
-            disposable = token.onCancellationRequested(() => {
-              const p = cancellationStrategy.sender.sendCancellation(connection, id);
-              if (p === void 0) {
-                logger.log(`Received no promise from cancellation strategy when cancelling id ${id}`);
-                return Promise.resolve();
-              } else {
-                return p.catch(() => {
-                  logger.log(`Sending cancellation messages for id ${id} failed`);
-                });
-              }
-            });
-          }
-          const requestMessage = {
-            jsonrpc: version,
-            id,
-            method,
-            params: messageParams
-          };
-          traceSendingRequest(requestMessage);
-          if (typeof cancellationStrategy.sender.enableCancellation === "function") {
-            cancellationStrategy.sender.enableCancellation(requestMessage);
-          }
-          return new Promise(async (resolve, reject) => {
-            const resolveWithCleanup = (r) => {
-              resolve(r);
-              cancellationStrategy.sender.cleanup(id);
-              disposable?.dispose();
-            };
-            const rejectWithCleanup = (r) => {
-              reject(r);
-              cancellationStrategy.sender.cleanup(id);
-              disposable?.dispose();
-            };
-            const responsePromise = { method, timerStart: Date.now(), resolve: resolveWithCleanup, reject: rejectWithCleanup };
-            try {
-              responsePromises.set(id, responsePromise);
-              await messageWriter.write(requestMessage);
-            } catch (error) {
-              responsePromises.delete(id);
-              responsePromise.reject(new messages_1.ResponseError(messages_1.ErrorCodes.MessageWriteError, error.message ? error.message : "Unknown reason"));
-              logger.error(`Sending request failed.`);
-              throw error;
-            }
-          });
-        },
-        onRequest: (type, handler) => {
-          throwIfClosedOrDisposed();
-          let method = null;
-          if (StarRequestHandler.is(type)) {
-            method = void 0;
-            starRequestHandler = type;
-          } else if (Is.string(type)) {
-            method = null;
-            if (handler !== void 0) {
-              method = type;
-              requestHandlers.set(type, { handler, type: void 0 });
-            }
-          } else {
-            if (handler !== void 0) {
-              method = type.method;
-              requestHandlers.set(type.method, { type, handler });
-            }
-          }
-          return {
-            dispose: () => {
-              if (method === null) {
-                return;
-              }
-              if (method !== void 0) {
-                requestHandlers.delete(method);
-              } else {
-                starRequestHandler = void 0;
-              }
-            }
-          };
-        },
-        hasPendingResponse: () => {
-          return responsePromises.size > 0;
-        },
-        trace: async (_value, _tracer, sendNotificationOrTraceOptions) => {
-          let _sendNotification = false;
-          let _traceFormat = TraceFormat.Text;
-          if (sendNotificationOrTraceOptions !== void 0) {
-            if (Is.boolean(sendNotificationOrTraceOptions)) {
-              _sendNotification = sendNotificationOrTraceOptions;
-            } else {
-              _sendNotification = sendNotificationOrTraceOptions.sendNotification || false;
-              _traceFormat = sendNotificationOrTraceOptions.traceFormat || TraceFormat.Text;
-            }
-          }
-          trace = _value;
-          traceFormat = _traceFormat;
-          if (trace === Trace3.Off) {
-            tracer = void 0;
-          } else {
-            tracer = _tracer;
-          }
-          if (_sendNotification && !isClosed() && !isDisposed()) {
-            await connection.sendNotification(SetTraceNotification.type, { value: Trace3.toString(_value) });
-          }
-        },
-        onError: errorEmitter.event,
-        onClose: closeEmitter.event,
-        onUnhandledNotification: unhandledNotificationEmitter.event,
-        onDispose: disposeEmitter.event,
-        end: () => {
-          messageWriter.end();
-        },
-        dispose: () => {
-          if (isDisposed()) {
-            return;
-          }
-          state = ConnectionState.Disposed;
-          disposeEmitter.fire(void 0);
-          const error = new messages_1.ResponseError(messages_1.ErrorCodes.PendingResponseRejected, "Pending response rejected since connection got disposed");
-          for (const promise of responsePromises.values()) {
-            promise.reject(error);
-          }
-          responsePromises = /* @__PURE__ */ new Map();
-          requestTokens = /* @__PURE__ */ new Map();
-          knownCanceledRequests = /* @__PURE__ */ new Set();
-          messageQueue = new linkedMap_1.LinkedMap();
-          if (Is.func(messageWriter.dispose)) {
-            messageWriter.dispose();
-          }
-          if (Is.func(messageReader.dispose)) {
-            messageReader.dispose();
-          }
-        },
-        listen: () => {
-          throwIfClosedOrDisposed();
-          throwIfListening();
-          state = ConnectionState.Listening;
-          messageReader.listen(callback);
-        },
-        inspect: () => {
-          (0, ral_1.default)().console.log("inspect");
-        }
-      };
-      connection.onNotification(LogTraceNotification.type, (params) => {
-        if (trace === Trace3.Off || !tracer) {
-          return;
-        }
-        const verbose = trace === Trace3.Verbose || trace === Trace3.Compact;
-        tracer.log(params.message, verbose ? params.verbose : void 0);
-      });
-      connection.onNotification(ProgressNotification.type, (params) => {
-        const handler = progressHandlers.get(params.token);
-        if (handler) {
-          handler(params.value);
-        } else {
-          unhandledProgressEmitter.fire(params);
-        }
-      });
-      return connection;
-    }
-    exports2.createMessageConnection = createMessageConnection;
-  }
-});
-
-// node_modules/vscode-jsonrpc/lib/common/api.js
-var require_api = __commonJS({
-  "node_modules/vscode-jsonrpc/lib/common/api.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.ProgressType = exports2.ProgressToken = exports2.createMessageConnection = exports2.NullLogger = exports2.ConnectionOptions = exports2.ConnectionStrategy = exports2.AbstractMessageBuffer = exports2.WriteableStreamMessageWriter = exports2.AbstractMessageWriter = exports2.MessageWriter = exports2.ReadableStreamMessageReader = exports2.AbstractMessageReader = exports2.MessageReader = exports2.SharedArrayReceiverStrategy = exports2.SharedArraySenderStrategy = exports2.CancellationToken = exports2.CancellationTokenSource = exports2.Emitter = exports2.Event = exports2.Disposable = exports2.LRUCache = exports2.Touch = exports2.LinkedMap = exports2.ParameterStructures = exports2.NotificationType9 = exports2.NotificationType8 = exports2.NotificationType7 = exports2.NotificationType6 = exports2.NotificationType5 = exports2.NotificationType4 = exports2.NotificationType3 = exports2.NotificationType2 = exports2.NotificationType1 = exports2.NotificationType0 = exports2.NotificationType = exports2.ErrorCodes = exports2.ResponseError = exports2.RequestType9 = exports2.RequestType8 = exports2.RequestType7 = exports2.RequestType6 = exports2.RequestType5 = exports2.RequestType4 = exports2.RequestType3 = exports2.RequestType2 = exports2.RequestType1 = exports2.RequestType0 = exports2.RequestType = exports2.Message = exports2.RAL = void 0;
-    exports2.MessageStrategy = exports2.CancellationStrategy = exports2.CancellationSenderStrategy = exports2.CancellationReceiverStrategy = exports2.ConnectionError = exports2.ConnectionErrors = exports2.LogTraceNotification = exports2.SetTraceNotification = exports2.TraceFormat = exports2.TraceValues = exports2.Trace = void 0;
-    var messages_1 = require_messages();
-    Object.defineProperty(exports2, "Message", { enumerable: true, get: function() {
-      return messages_1.Message;
-    } });
-    Object.defineProperty(exports2, "RequestType", { enumerable: true, get: function() {
-      return messages_1.RequestType;
-    } });
-    Object.defineProperty(exports2, "RequestType0", { enumerable: true, get: function() {
-      return messages_1.RequestType0;
-    } });
-    Object.defineProperty(exports2, "RequestType1", { enumerable: true, get: function() {
-      return messages_1.RequestType1;
-    } });
-    Object.defineProperty(exports2, "RequestType2", { enumerable: true, get: function() {
-      return messages_1.RequestType2;
-    } });
-    Object.defineProperty(exports2, "RequestType3", { enumerable: true, get: function() {
-      return messages_1.RequestType3;
-    } });
-    Object.defineProperty(exports2, "RequestType4", { enumerable: true, get: function() {
-      return messages_1.RequestType4;
-    } });
-    Object.defineProperty(exports2, "RequestType5", { enumerable: true, get: function() {
-      return messages_1.RequestType5;
-    } });
-    Object.defineProperty(exports2, "RequestType6", { enumerable: true, get: function() {
-      return messages_1.RequestType6;
-    } });
-    Object.defineProperty(exports2, "RequestType7", { enumerable: true, get: function() {
-      return messages_1.RequestType7;
-    } });
-    Object.defineProperty(exports2, "RequestType8", { enumerable: true, get: function() {
-      return messages_1.RequestType8;
-    } });
-    Object.defineProperty(exports2, "RequestType9", { enumerable: true, get: function() {
-      return messages_1.RequestType9;
-    } });
-    Object.defineProperty(exports2, "ResponseError", { enumerable: true, get: function() {
-      return messages_1.ResponseError;
-    } });
-    Object.defineProperty(exports2, "ErrorCodes", { enumerable: true, get: function() {
-      return messages_1.ErrorCodes;
-    } });
-    Object.defineProperty(exports2, "NotificationType", { enumerable: true, get: function() {
-      return messages_1.NotificationType;
-    } });
-    Object.defineProperty(exports2, "NotificationType0", { enumerable: true, get: function() {
-      return messages_1.NotificationType0;
-    } });
-    Object.defineProperty(exports2, "NotificationType1", { enumerable: true, get: function() {
-      return messages_1.NotificationType1;
-    } });
-    Object.defineProperty(exports2, "NotificationType2", { enumerable: true, get: function() {
-      return messages_1.NotificationType2;
-    } });
-    Object.defineProperty(exports2, "NotificationType3", { enumerable: true, get: function() {
-      return messages_1.NotificationType3;
-    } });
-    Object.defineProperty(exports2, "NotificationType4", { enumerable: true, get: function() {
-      return messages_1.NotificationType4;
-    } });
-    Object.defineProperty(exports2, "NotificationType5", { enumerable: true, get: function() {
-      return messages_1.NotificationType5;
-    } });
-    Object.defineProperty(exports2, "NotificationType6", { enumerable: true, get: function() {
-      return messages_1.NotificationType6;
-    } });
-    Object.defineProperty(exports2, "NotificationType7", { enumerable: true, get: function() {
-      return messages_1.NotificationType7;
-    } });
-    Object.defineProperty(exports2, "NotificationType8", { enumerable: true, get: function() {
-      return messages_1.NotificationType8;
-    } });
-    Object.defineProperty(exports2, "NotificationType9", { enumerable: true, get: function() {
-      return messages_1.NotificationType9;
-    } });
-    Object.defineProperty(exports2, "ParameterStructures", { enumerable: true, get: function() {
-      return messages_1.ParameterStructures;
-    } });
-    var linkedMap_1 = require_linkedMap();
-    Object.defineProperty(exports2, "LinkedMap", { enumerable: true, get: function() {
-      return linkedMap_1.LinkedMap;
-    } });
-    Object.defineProperty(exports2, "LRUCache", { enumerable: true, get: function() {
-      return linkedMap_1.LRUCache;
-    } });
-    Object.defineProperty(exports2, "Touch", { enumerable: true, get: function() {
-      return linkedMap_1.Touch;
-    } });
-    var disposable_1 = require_disposable();
-    Object.defineProperty(exports2, "Disposable", { enumerable: true, get: function() {
-      return disposable_1.Disposable;
-    } });
-    var events_1 = require_events();
-    Object.defineProperty(exports2, "Event", { enumerable: true, get: function() {
-      return events_1.Event;
-    } });
-    Object.defineProperty(exports2, "Emitter", { enumerable: true, get: function() {
-      return events_1.Emitter;
-    } });
-    var cancellation_1 = require_cancellation();
-    Object.defineProperty(exports2, "CancellationTokenSource", { enumerable: true, get: function() {
-      return cancellation_1.CancellationTokenSource;
-    } });
-    Object.defineProperty(exports2, "CancellationToken", { enumerable: true, get: function() {
-      return cancellation_1.CancellationToken;
-    } });
-    var sharedArrayCancellation_1 = require_sharedArrayCancellation();
-    Object.defineProperty(exports2, "SharedArraySenderStrategy", { enumerable: true, get: function() {
-      return sharedArrayCancellation_1.SharedArraySenderStrategy;
-    } });
-    Object.defineProperty(exports2, "SharedArrayReceiverStrategy", { enumerable: true, get: function() {
-      return sharedArrayCancellation_1.SharedArrayReceiverStrategy;
-    } });
-    var messageReader_1 = require_messageReader();
-    Object.defineProperty(exports2, "MessageReader", { enumerable: true, get: function() {
-      return messageReader_1.MessageReader;
-    } });
-    Object.defineProperty(exports2, "AbstractMessageReader", { enumerable: true, get: function() {
-      return messageReader_1.AbstractMessageReader;
-    } });
-    Object.defineProperty(exports2, "ReadableStreamMessageReader", { enumerable: true, get: function() {
-      return messageReader_1.ReadableStreamMessageReader;
-    } });
-    var messageWriter_1 = require_messageWriter();
-    Object.defineProperty(exports2, "MessageWriter", { enumerable: true, get: function() {
-      return messageWriter_1.MessageWriter;
-    } });
-    Object.defineProperty(exports2, "AbstractMessageWriter", { enumerable: true, get: function() {
-      return messageWriter_1.AbstractMessageWriter;
-    } });
-    Object.defineProperty(exports2, "WriteableStreamMessageWriter", { enumerable: true, get: function() {
-      return messageWriter_1.WriteableStreamMessageWriter;
-    } });
-    var messageBuffer_1 = require_messageBuffer();
-    Object.defineProperty(exports2, "AbstractMessageBuffer", { enumerable: true, get: function() {
-      return messageBuffer_1.AbstractMessageBuffer;
-    } });
-    var connection_1 = require_connection();
-    Object.defineProperty(exports2, "ConnectionStrategy", { enumerable: true, get: function() {
-      return connection_1.ConnectionStrategy;
-    } });
-    Object.defineProperty(exports2, "ConnectionOptions", { enumerable: true, get: function() {
-      return connection_1.ConnectionOptions;
-    } });
-    Object.defineProperty(exports2, "NullLogger", { enumerable: true, get: function() {
-      return connection_1.NullLogger;
-    } });
-    Object.defineProperty(exports2, "createMessageConnection", { enumerable: true, get: function() {
-      return connection_1.createMessageConnection;
-    } });
-    Object.defineProperty(exports2, "ProgressToken", { enumerable: true, get: function() {
-      return connection_1.ProgressToken;
-    } });
-    Object.defineProperty(exports2, "ProgressType", { enumerable: true, get: function() {
-      return connection_1.ProgressType;
-    } });
-    Object.defineProperty(exports2, "Trace", { enumerable: true, get: function() {
-      return connection_1.Trace;
-    } });
-    Object.defineProperty(exports2, "TraceValues", { enumerable: true, get: function() {
-      return connection_1.TraceValues;
-    } });
-    Object.defineProperty(exports2, "TraceFormat", { enumerable: true, get: function() {
-      return connection_1.TraceFormat;
-    } });
-    Object.defineProperty(exports2, "SetTraceNotification", { enumerable: true, get: function() {
-      return connection_1.SetTraceNotification;
-    } });
-    Object.defineProperty(exports2, "LogTraceNotification", { enumerable: true, get: function() {
-      return connection_1.LogTraceNotification;
-    } });
-    Object.defineProperty(exports2, "ConnectionErrors", { enumerable: true, get: function() {
-      return connection_1.ConnectionErrors;
-    } });
-    Object.defineProperty(exports2, "ConnectionError", { enumerable: true, get: function() {
-      return connection_1.ConnectionError;
-    } });
-    Object.defineProperty(exports2, "CancellationReceiverStrategy", { enumerable: true, get: function() {
-      return connection_1.CancellationReceiverStrategy;
-    } });
-    Object.defineProperty(exports2, "CancellationSenderStrategy", { enumerable: true, get: function() {
-      return connection_1.CancellationSenderStrategy;
-    } });
-    Object.defineProperty(exports2, "CancellationStrategy", { enumerable: true, get: function() {
-      return connection_1.CancellationStrategy;
-    } });
-    Object.defineProperty(exports2, "MessageStrategy", { enumerable: true, get: function() {
-      return connection_1.MessageStrategy;
-    } });
-    var ral_1 = require_ral();
-    exports2.RAL = ral_1.default;
-  }
-});
-
-// node_modules/vscode-jsonrpc/lib/node/ril.js
-var require_ril = __commonJS({
-  "node_modules/vscode-jsonrpc/lib/node/ril.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    var util_1 = require("util");
-    var api_1 = require_api();
-    var MessageBuffer = class _MessageBuffer extends api_1.AbstractMessageBuffer {
-      constructor(encoding = "utf-8") {
-        super(encoding);
-      }
-      emptyBuffer() {
-        return _MessageBuffer.emptyBuffer;
-      }
-      fromString(value, encoding) {
-        return Buffer.from(value, encoding);
-      }
-      toString(value, encoding) {
-        if (value instanceof Buffer) {
-          return value.toString(encoding);
-        } else {
-          return new util_1.TextDecoder(encoding).decode(value);
-        }
-      }
-      asNative(buffer, length) {
-        if (length === void 0) {
-          return buffer instanceof Buffer ? buffer : Buffer.from(buffer);
-        } else {
-          return buffer instanceof Buffer ? buffer.slice(0, length) : Buffer.from(buffer, 0, length);
-        }
-      }
-      allocNative(length) {
-        return Buffer.allocUnsafe(length);
-      }
-    };
-    MessageBuffer.emptyBuffer = Buffer.allocUnsafe(0);
-    var ReadableStreamWrapper = class {
-      constructor(stream4) {
-        this.stream = stream4;
-      }
-      onClose(listener) {
-        this.stream.on("close", listener);
-        return api_1.Disposable.create(() => this.stream.off("close", listener));
-      }
-      onError(listener) {
-        this.stream.on("error", listener);
-        return api_1.Disposable.create(() => this.stream.off("error", listener));
-      }
-      onEnd(listener) {
-        this.stream.on("end", listener);
-        return api_1.Disposable.create(() => this.stream.off("end", listener));
-      }
-      onData(listener) {
-        this.stream.on("data", listener);
-        return api_1.Disposable.create(() => this.stream.off("data", listener));
-      }
-    };
-    var WritableStreamWrapper = class {
-      constructor(stream4) {
-        this.stream = stream4;
-      }
-      onClose(listener) {
-        this.stream.on("close", listener);
-        return api_1.Disposable.create(() => this.stream.off("close", listener));
-      }
-      onError(listener) {
-        this.stream.on("error", listener);
-        return api_1.Disposable.create(() => this.stream.off("error", listener));
-      }
-      onEnd(listener) {
-        this.stream.on("end", listener);
-        return api_1.Disposable.create(() => this.stream.off("end", listener));
-      }
-      write(data, encoding) {
-        return new Promise((resolve, reject) => {
-          const callback = (error) => {
-            if (error === void 0 || error === null) {
-              resolve();
-            } else {
-              reject(error);
-            }
-          };
-          if (typeof data === "string") {
-            this.stream.write(data, encoding, callback);
-          } else {
-            this.stream.write(data, callback);
-          }
-        });
-      }
-      end() {
-        this.stream.end();
-      }
-    };
-    var _ril = Object.freeze({
-      messageBuffer: Object.freeze({
-        create: (encoding) => new MessageBuffer(encoding)
-      }),
-      applicationJson: Object.freeze({
-        encoder: Object.freeze({
-          name: "application/json",
-          encode: (msg, options) => {
-            try {
-              return Promise.resolve(Buffer.from(JSON.stringify(msg, void 0, 0), options.charset));
-            } catch (err) {
-              return Promise.reject(err);
-            }
-          }
-        }),
-        decoder: Object.freeze({
-          name: "application/json",
-          decode: (buffer, options) => {
-            try {
-              if (buffer instanceof Buffer) {
-                return Promise.resolve(JSON.parse(buffer.toString(options.charset)));
-              } else {
-                return Promise.resolve(JSON.parse(new util_1.TextDecoder(options.charset).decode(buffer)));
-              }
-            } catch (err) {
-              return Promise.reject(err);
-            }
-          }
-        })
-      }),
-      stream: Object.freeze({
-        asReadableStream: (stream4) => new ReadableStreamWrapper(stream4),
-        asWritableStream: (stream4) => new WritableStreamWrapper(stream4)
-      }),
-      console,
-      timer: Object.freeze({
-        setTimeout(callback, ms, ...args) {
-          const handle = setTimeout(callback, ms, ...args);
-          return { dispose: () => clearTimeout(handle) };
-        },
-        setImmediate(callback, ...args) {
-          const handle = setImmediate(callback, ...args);
-          return { dispose: () => clearImmediate(handle) };
-        },
-        setInterval(callback, ms, ...args) {
-          const handle = setInterval(callback, ms, ...args);
-          return { dispose: () => clearInterval(handle) };
-        }
-      })
-    });
-    function RIL() {
-      return _ril;
-    }
-    (function(RIL2) {
-      function install() {
-        api_1.RAL.install(_ril);
-      }
-      RIL2.install = install;
-    })(RIL || (RIL = {}));
-    exports2.default = RIL;
-  }
-});
-
-// node_modules/vscode-jsonrpc/lib/node/main.js
-var require_main = __commonJS({
-  "node_modules/vscode-jsonrpc/lib/node/main.js"(exports2) {
-    "use strict";
-    var __createBinding = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
-      if (k2 === void 0) k2 = k;
-      var desc = Object.getOwnPropertyDescriptor(m, k);
-      if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-        desc = { enumerable: true, get: function() {
-          return m[k];
-        } };
-      }
-      Object.defineProperty(o, k2, desc);
-    } : function(o, m, k, k2) {
-      if (k2 === void 0) k2 = k;
-      o[k2] = m[k];
-    });
-    var __exportStar = exports2 && exports2.__exportStar || function(m, exports3) {
-      for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports3, p)) __createBinding(exports3, m, p);
-    };
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.createMessageConnection = exports2.createServerSocketTransport = exports2.createClientSocketTransport = exports2.createServerPipeTransport = exports2.createClientPipeTransport = exports2.generateRandomPipeName = exports2.StreamMessageWriter = exports2.StreamMessageReader = exports2.SocketMessageWriter = exports2.SocketMessageReader = exports2.PortMessageWriter = exports2.PortMessageReader = exports2.IPCMessageWriter = exports2.IPCMessageReader = void 0;
-    var ril_1 = require_ril();
-    ril_1.default.install();
-    var path2 = require("path");
-    var os = require("os");
-    var crypto_1 = require("crypto");
-    var net_1 = require("net");
-    var api_1 = require_api();
-    __exportStar(require_api(), exports2);
-    var IPCMessageReader = class extends api_1.AbstractMessageReader {
-      constructor(process2) {
-        super();
-        this.process = process2;
-        let eventEmitter = this.process;
-        eventEmitter.on("error", (error) => this.fireError(error));
-        eventEmitter.on("close", () => this.fireClose());
-      }
-      listen(callback) {
-        this.process.on("message", callback);
-        return api_1.Disposable.create(() => this.process.off("message", callback));
-      }
-    };
-    exports2.IPCMessageReader = IPCMessageReader;
-    var IPCMessageWriter = class extends api_1.AbstractMessageWriter {
-      constructor(process2) {
-        super();
-        this.process = process2;
-        this.errorCount = 0;
-        const eventEmitter = this.process;
-        eventEmitter.on("error", (error) => this.fireError(error));
-        eventEmitter.on("close", () => this.fireClose);
-      }
-      write(msg) {
-        try {
-          if (typeof this.process.send === "function") {
-            this.process.send(msg, void 0, void 0, (error) => {
-              if (error) {
-                this.errorCount++;
-                this.handleError(error, msg);
-              } else {
-                this.errorCount = 0;
-              }
-            });
-          }
-          return Promise.resolve();
-        } catch (error) {
-          this.handleError(error, msg);
-          return Promise.reject(error);
-        }
-      }
-      handleError(error, msg) {
-        this.errorCount++;
-        this.fireError(error, msg, this.errorCount);
-      }
-      end() {
-      }
-    };
-    exports2.IPCMessageWriter = IPCMessageWriter;
-    var PortMessageReader = class extends api_1.AbstractMessageReader {
-      constructor(port) {
-        super();
-        this.onData = new api_1.Emitter();
-        port.on("close", () => this.fireClose);
-        port.on("error", (error) => this.fireError(error));
-        port.on("message", (message) => {
-          this.onData.fire(message);
-        });
-      }
-      listen(callback) {
-        return this.onData.event(callback);
-      }
-    };
-    exports2.PortMessageReader = PortMessageReader;
-    var PortMessageWriter = class extends api_1.AbstractMessageWriter {
-      constructor(port) {
-        super();
-        this.port = port;
-        this.errorCount = 0;
-        port.on("close", () => this.fireClose());
-        port.on("error", (error) => this.fireError(error));
-      }
-      write(msg) {
-        try {
-          this.port.postMessage(msg);
-          return Promise.resolve();
-        } catch (error) {
-          this.handleError(error, msg);
-          return Promise.reject(error);
-        }
-      }
-      handleError(error, msg) {
-        this.errorCount++;
-        this.fireError(error, msg, this.errorCount);
-      }
-      end() {
-      }
-    };
-    exports2.PortMessageWriter = PortMessageWriter;
-    var SocketMessageReader = class extends api_1.ReadableStreamMessageReader {
-      constructor(socket, encoding = "utf-8") {
-        super((0, ril_1.default)().stream.asReadableStream(socket), encoding);
-      }
-    };
-    exports2.SocketMessageReader = SocketMessageReader;
-    var SocketMessageWriter = class extends api_1.WriteableStreamMessageWriter {
-      constructor(socket, options) {
-        super((0, ril_1.default)().stream.asWritableStream(socket), options);
-        this.socket = socket;
-      }
-      dispose() {
-        super.dispose();
-        this.socket.destroy();
-      }
-    };
-    exports2.SocketMessageWriter = SocketMessageWriter;
-    var StreamMessageReader = class extends api_1.ReadableStreamMessageReader {
-      constructor(readable, encoding) {
-        super((0, ril_1.default)().stream.asReadableStream(readable), encoding);
-      }
-    };
-    exports2.StreamMessageReader = StreamMessageReader;
-    var StreamMessageWriter = class extends api_1.WriteableStreamMessageWriter {
-      constructor(writable, options) {
-        super((0, ril_1.default)().stream.asWritableStream(writable), options);
-      }
-    };
-    exports2.StreamMessageWriter = StreamMessageWriter;
-    var XDG_RUNTIME_DIR = process.env["XDG_RUNTIME_DIR"];
-    var safeIpcPathLengths = /* @__PURE__ */ new Map([
-      ["linux", 107],
-      ["darwin", 103]
-    ]);
-    function generateRandomPipeName() {
-      const randomSuffix = (0, crypto_1.randomBytes)(21).toString("hex");
-      if (process.platform === "win32") {
-        return `\\\\.\\pipe\\vscode-jsonrpc-${randomSuffix}-sock`;
-      }
-      let result;
-      if (XDG_RUNTIME_DIR) {
-        result = path2.join(XDG_RUNTIME_DIR, `vscode-ipc-${randomSuffix}.sock`);
-      } else {
-        result = path2.join(os.tmpdir(), `vscode-${randomSuffix}.sock`);
-      }
-      const limit = safeIpcPathLengths.get(process.platform);
-      if (limit !== void 0 && result.length > limit) {
-        (0, ril_1.default)().console.warn(`WARNING: IPC handle "${result}" is longer than ${limit} characters.`);
-      }
-      return result;
-    }
-    exports2.generateRandomPipeName = generateRandomPipeName;
-    function createClientPipeTransport(pipeName, encoding = "utf-8") {
-      let connectResolve;
-      const connected = new Promise((resolve, _reject) => {
-        connectResolve = resolve;
-      });
-      return new Promise((resolve, reject) => {
-        let server = (0, net_1.createServer)((socket) => {
-          server.close();
-          connectResolve([
-            new SocketMessageReader(socket, encoding),
-            new SocketMessageWriter(socket, encoding)
-          ]);
-        });
-        server.on("error", reject);
-        server.listen(pipeName, () => {
-          server.removeListener("error", reject);
-          resolve({
-            onConnected: () => {
-              return connected;
-            }
-          });
-        });
-      });
-    }
-    exports2.createClientPipeTransport = createClientPipeTransport;
-    function createServerPipeTransport(pipeName, encoding = "utf-8") {
-      const socket = (0, net_1.createConnection)(pipeName);
-      return [
-        new SocketMessageReader(socket, encoding),
-        new SocketMessageWriter(socket, encoding)
-      ];
-    }
-    exports2.createServerPipeTransport = createServerPipeTransport;
-    function createClientSocketTransport(port, encoding = "utf-8") {
-      let connectResolve;
-      const connected = new Promise((resolve, _reject) => {
-        connectResolve = resolve;
-      });
-      return new Promise((resolve, reject) => {
-        const server = (0, net_1.createServer)((socket) => {
-          server.close();
-          connectResolve([
-            new SocketMessageReader(socket, encoding),
-            new SocketMessageWriter(socket, encoding)
-          ]);
-        });
-        server.on("error", reject);
-        server.listen(port, "127.0.0.1", () => {
-          server.removeListener("error", reject);
-          resolve({
-            onConnected: () => {
-              return connected;
-            }
-          });
-        });
-      });
-    }
-    exports2.createClientSocketTransport = createClientSocketTransport;
-    function createServerSocketTransport(port, encoding = "utf-8") {
-      const socket = (0, net_1.createConnection)(port, "127.0.0.1");
-      return [
-        new SocketMessageReader(socket, encoding),
-        new SocketMessageWriter(socket, encoding)
-      ];
-    }
-    exports2.createServerSocketTransport = createServerSocketTransport;
-    function isReadableStream2(value) {
-      const candidate = value;
-      return candidate.read !== void 0 && candidate.addListener !== void 0;
-    }
-    function isWritableStream(value) {
-      const candidate = value;
-      return candidate.write !== void 0 && candidate.addListener !== void 0;
-    }
-    function createMessageConnection(input, output, logger, options) {
-      if (!logger) {
-        logger = api_1.NullLogger;
-      }
-      const reader = isReadableStream2(input) ? new StreamMessageReader(input) : input;
-      const writer = isWritableStream(output) ? new StreamMessageWriter(output) : output;
-      if (api_1.ConnectionStrategy.is(options)) {
-        options = { connectionStrategy: options };
-      }
-      return (0, api_1.createMessageConnection)(reader, writer, logger, options);
-    }
-    exports2.createMessageConnection = createMessageConnection;
-  }
-});
-
 // node_modules/vscode-languageclient/lib/common/utils/is.js
-var require_is2 = __commonJS({
+var require_is = __commonJS({
   "node_modules/vscode-languageclient/lib/common/utils/is.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -3335,7 +87,7 @@ var require_is2 = __commonJS({
 });
 
 // node_modules/vscode-languageserver-protocol/node_modules/vscode-jsonrpc/lib/common/is.js
-var require_is3 = __commonJS({
+var require_is2 = __commonJS({
   "node_modules/vscode-languageserver-protocol/node_modules/vscode-jsonrpc/lib/common/is.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -3372,12 +124,12 @@ var require_is3 = __commonJS({
 });
 
 // node_modules/vscode-languageserver-protocol/node_modules/vscode-jsonrpc/lib/common/messages.js
-var require_messages2 = __commonJS({
+var require_messages = __commonJS({
   "node_modules/vscode-languageserver-protocol/node_modules/vscode-jsonrpc/lib/common/messages.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.Message = exports2.NotificationType9 = exports2.NotificationType8 = exports2.NotificationType7 = exports2.NotificationType6 = exports2.NotificationType5 = exports2.NotificationType4 = exports2.NotificationType3 = exports2.NotificationType2 = exports2.NotificationType1 = exports2.NotificationType0 = exports2.NotificationType = exports2.RequestType9 = exports2.RequestType8 = exports2.RequestType7 = exports2.RequestType6 = exports2.RequestType5 = exports2.RequestType4 = exports2.RequestType3 = exports2.RequestType2 = exports2.RequestType1 = exports2.RequestType = exports2.RequestType0 = exports2.AbstractMessageSignature = exports2.ParameterStructures = exports2.ResponseError = exports2.ErrorCodes = void 0;
-    var is = require_is3();
+    var is = require_is2();
     var ErrorCodes;
     (function(ErrorCodes2) {
       ErrorCodes2.ParseError = -32700;
@@ -3610,7 +362,7 @@ var require_messages2 = __commonJS({
 });
 
 // node_modules/vscode-languageserver-protocol/node_modules/vscode-jsonrpc/lib/common/linkedMap.js
-var require_linkedMap2 = __commonJS({
+var require_linkedMap = __commonJS({
   "node_modules/vscode-languageserver-protocol/node_modules/vscode-jsonrpc/lib/common/linkedMap.js"(exports2) {
     "use strict";
     var _a;
@@ -3980,7 +732,7 @@ var require_linkedMap2 = __commonJS({
 });
 
 // node_modules/vscode-languageserver-protocol/node_modules/vscode-jsonrpc/lib/common/disposable.js
-var require_disposable2 = __commonJS({
+var require_disposable = __commonJS({
   "node_modules/vscode-languageserver-protocol/node_modules/vscode-jsonrpc/lib/common/disposable.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -3998,7 +750,7 @@ var require_disposable2 = __commonJS({
 });
 
 // node_modules/vscode-languageserver-protocol/node_modules/vscode-jsonrpc/lib/common/ral.js
-var require_ral2 = __commonJS({
+var require_ral = __commonJS({
   "node_modules/vscode-languageserver-protocol/node_modules/vscode-jsonrpc/lib/common/ral.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -4023,12 +775,12 @@ var require_ral2 = __commonJS({
 });
 
 // node_modules/vscode-languageserver-protocol/node_modules/vscode-jsonrpc/lib/common/events.js
-var require_events2 = __commonJS({
+var require_events = __commonJS({
   "node_modules/vscode-languageserver-protocol/node_modules/vscode-jsonrpc/lib/common/events.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.Emitter = exports2.Event = void 0;
-    var ral_1 = require_ral2();
+    var ral_1 = require_ral();
     var Event;
     (function(Event2) {
       const _disposable = { dispose() {
@@ -4152,14 +904,14 @@ var require_events2 = __commonJS({
 });
 
 // node_modules/vscode-languageserver-protocol/node_modules/vscode-jsonrpc/lib/common/cancellation.js
-var require_cancellation2 = __commonJS({
+var require_cancellation = __commonJS({
   "node_modules/vscode-languageserver-protocol/node_modules/vscode-jsonrpc/lib/common/cancellation.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.CancellationTokenSource = exports2.CancellationToken = void 0;
-    var ral_1 = require_ral2();
-    var Is = require_is3();
-    var events_1 = require_events2();
+    var ral_1 = require_ral();
+    var Is = require_is2();
+    var events_1 = require_events();
     var CancellationToken;
     (function(CancellationToken2) {
       CancellationToken2.None = Object.freeze({
@@ -4241,12 +993,12 @@ var require_cancellation2 = __commonJS({
 });
 
 // node_modules/vscode-languageserver-protocol/node_modules/vscode-jsonrpc/lib/common/sharedArrayCancellation.js
-var require_sharedArrayCancellation2 = __commonJS({
+var require_sharedArrayCancellation = __commonJS({
   "node_modules/vscode-languageserver-protocol/node_modules/vscode-jsonrpc/lib/common/sharedArrayCancellation.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.SharedArrayReceiverStrategy = exports2.SharedArraySenderStrategy = void 0;
-    var cancellation_1 = require_cancellation2();
+    var cancellation_1 = require_cancellation();
     var CancellationState;
     (function(CancellationState2) {
       CancellationState2.Continue = 0;
@@ -4319,12 +1071,12 @@ var require_sharedArrayCancellation2 = __commonJS({
 });
 
 // node_modules/vscode-languageserver-protocol/node_modules/vscode-jsonrpc/lib/common/semaphore.js
-var require_semaphore2 = __commonJS({
+var require_semaphore = __commonJS({
   "node_modules/vscode-languageserver-protocol/node_modules/vscode-jsonrpc/lib/common/semaphore.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.Semaphore = void 0;
-    var ral_1 = require_ral2();
+    var ral_1 = require_ral();
     var Semaphore = class {
       constructor(capacity = 1) {
         if (capacity <= 0) {
@@ -4387,15 +1139,15 @@ var require_semaphore2 = __commonJS({
 });
 
 // node_modules/vscode-languageserver-protocol/node_modules/vscode-jsonrpc/lib/common/messageReader.js
-var require_messageReader2 = __commonJS({
+var require_messageReader = __commonJS({
   "node_modules/vscode-languageserver-protocol/node_modules/vscode-jsonrpc/lib/common/messageReader.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.ReadableStreamMessageReader = exports2.AbstractMessageReader = exports2.MessageReader = void 0;
-    var ral_1 = require_ral2();
-    var Is = require_is3();
-    var events_1 = require_events2();
-    var semaphore_1 = require_semaphore2();
+    var ral_1 = require_ral();
+    var Is = require_is2();
+    var events_1 = require_events();
+    var semaphore_1 = require_semaphore();
     var MessageReader;
     (function(MessageReader2) {
       function is(value) {
@@ -4576,15 +1328,15 @@ ${JSON.stringify(Object.fromEntries(headers))}`));
 });
 
 // node_modules/vscode-languageserver-protocol/node_modules/vscode-jsonrpc/lib/common/messageWriter.js
-var require_messageWriter2 = __commonJS({
+var require_messageWriter = __commonJS({
   "node_modules/vscode-languageserver-protocol/node_modules/vscode-jsonrpc/lib/common/messageWriter.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.WriteableStreamMessageWriter = exports2.AbstractMessageWriter = exports2.MessageWriter = void 0;
-    var ral_1 = require_ral2();
-    var Is = require_is3();
-    var semaphore_1 = require_semaphore2();
-    var events_1 = require_events2();
+    var ral_1 = require_ral();
+    var Is = require_is2();
+    var semaphore_1 = require_semaphore();
+    var events_1 = require_events();
     var ContentLength = "Content-Length: ";
     var CRLF2 = "\r\n";
     var MessageWriter;
@@ -4688,7 +1440,7 @@ var require_messageWriter2 = __commonJS({
 });
 
 // node_modules/vscode-languageserver-protocol/node_modules/vscode-jsonrpc/lib/common/messageBuffer.js
-var require_messageBuffer2 = __commonJS({
+var require_messageBuffer = __commonJS({
   "node_modules/vscode-languageserver-protocol/node_modules/vscode-jsonrpc/lib/common/messageBuffer.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -4836,17 +1588,17 @@ ${header}`);
 });
 
 // node_modules/vscode-languageserver-protocol/node_modules/vscode-jsonrpc/lib/common/connection.js
-var require_connection2 = __commonJS({
+var require_connection = __commonJS({
   "node_modules/vscode-languageserver-protocol/node_modules/vscode-jsonrpc/lib/common/connection.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.createMessageConnection = exports2.ConnectionOptions = exports2.MessageStrategy = exports2.CancellationStrategy = exports2.CancellationSenderStrategy = exports2.CancellationReceiverStrategy = exports2.RequestCancellationReceiverStrategy = exports2.IdCancellationReceiverStrategy = exports2.ConnectionStrategy = exports2.ConnectionError = exports2.ConnectionErrors = exports2.LogTraceNotification = exports2.SetTraceNotification = exports2.TraceFormat = exports2.TraceValues = exports2.Trace = exports2.NullLogger = exports2.ProgressType = exports2.ProgressToken = void 0;
-    var ral_1 = require_ral2();
-    var Is = require_is3();
-    var messages_1 = require_messages2();
-    var linkedMap_1 = require_linkedMap2();
-    var events_1 = require_events2();
-    var cancellation_1 = require_cancellation2();
+    var ral_1 = require_ral();
+    var Is = require_is2();
+    var messages_1 = require_messages();
+    var linkedMap_1 = require_linkedMap();
+    var events_1 = require_events();
+    var cancellation_1 = require_cancellation();
     var CancelNotification;
     (function(CancelNotification2) {
       CancelNotification2.type = new messages_1.NotificationType("$/cancelRequest");
@@ -4884,13 +1636,13 @@ var require_connection2 = __commonJS({
       log: () => {
       }
     });
-    var Trace3;
-    (function(Trace4) {
-      Trace4[Trace4["Off"] = 0] = "Off";
-      Trace4[Trace4["Messages"] = 1] = "Messages";
-      Trace4[Trace4["Compact"] = 2] = "Compact";
-      Trace4[Trace4["Verbose"] = 3] = "Verbose";
-    })(Trace3 || (exports2.Trace = Trace3 = {}));
+    var Trace2;
+    (function(Trace3) {
+      Trace3[Trace3["Off"] = 0] = "Off";
+      Trace3[Trace3["Messages"] = 1] = "Messages";
+      Trace3[Trace3["Compact"] = 2] = "Compact";
+      Trace3[Trace3["Verbose"] = 3] = "Verbose";
+    })(Trace2 || (exports2.Trace = Trace2 = {}));
     var TraceValues;
     (function(TraceValues2) {
       TraceValues2.Off = "off";
@@ -4898,42 +1650,42 @@ var require_connection2 = __commonJS({
       TraceValues2.Compact = "compact";
       TraceValues2.Verbose = "verbose";
     })(TraceValues || (exports2.TraceValues = TraceValues = {}));
-    (function(Trace4) {
+    (function(Trace3) {
       function fromString(value) {
         if (!Is.string(value)) {
-          return Trace4.Off;
+          return Trace3.Off;
         }
         value = value.toLowerCase();
         switch (value) {
           case "off":
-            return Trace4.Off;
+            return Trace3.Off;
           case "messages":
-            return Trace4.Messages;
+            return Trace3.Messages;
           case "compact":
-            return Trace4.Compact;
+            return Trace3.Compact;
           case "verbose":
-            return Trace4.Verbose;
+            return Trace3.Verbose;
           default:
-            return Trace4.Off;
+            return Trace3.Off;
         }
       }
-      Trace4.fromString = fromString;
+      Trace3.fromString = fromString;
       function toString3(value) {
         switch (value) {
-          case Trace4.Off:
+          case Trace3.Off:
             return "off";
-          case Trace4.Messages:
+          case Trace3.Messages:
             return "messages";
-          case Trace4.Compact:
+          case Trace3.Compact:
             return "compact";
-          case Trace4.Verbose:
+          case Trace3.Verbose:
             return "verbose";
           default:
             return "off";
         }
       }
-      Trace4.toString = toString3;
-    })(Trace3 || (exports2.Trace = Trace3 = {}));
+      Trace3.toString = toString3;
+    })(Trace2 || (exports2.Trace = Trace2 = {}));
     var TraceFormat;
     (function(TraceFormat2) {
       TraceFormat2["Text"] = "text";
@@ -5077,7 +1829,7 @@ var require_connection2 = __commonJS({
       let responsePromises = /* @__PURE__ */ new Map();
       let knownCanceledRequests = /* @__PURE__ */ new Set();
       let requestTokens = /* @__PURE__ */ new Map();
-      let trace = Trace3.Off;
+      let trace = Trace2.Off;
       let traceFormat = TraceFormat.Text;
       let tracer;
       let state = ConnectionState.New;
@@ -5446,21 +2198,21 @@ ${JSON.stringify(message, null, 4)}`);
           return void 0;
         }
         switch (trace) {
-          case Trace3.Verbose:
+          case Trace2.Verbose:
             return JSON.stringify(params, null, 4);
-          case Trace3.Compact:
+          case Trace2.Compact:
             return JSON.stringify(params);
           default:
             return void 0;
         }
       }
       function traceSendingRequest(message) {
-        if (trace === Trace3.Off || !tracer) {
+        if (trace === Trace2.Off || !tracer) {
           return;
         }
         if (traceFormat === TraceFormat.Text) {
           let data = void 0;
-          if ((trace === Trace3.Verbose || trace === Trace3.Compact) && message.params) {
+          if ((trace === Trace2.Verbose || trace === Trace2.Compact) && message.params) {
             data = `Params: ${stringifyTrace(message.params)}
 
 `;
@@ -5471,12 +2223,12 @@ ${JSON.stringify(message, null, 4)}`);
         }
       }
       function traceSendingNotification(message) {
-        if (trace === Trace3.Off || !tracer) {
+        if (trace === Trace2.Off || !tracer) {
           return;
         }
         if (traceFormat === TraceFormat.Text) {
           let data = void 0;
-          if (trace === Trace3.Verbose || trace === Trace3.Compact) {
+          if (trace === Trace2.Verbose || trace === Trace2.Compact) {
             if (message.params) {
               data = `Params: ${stringifyTrace(message.params)}
 
@@ -5491,12 +2243,12 @@ ${JSON.stringify(message, null, 4)}`);
         }
       }
       function traceSendingResponse(message, method, startTime) {
-        if (trace === Trace3.Off || !tracer) {
+        if (trace === Trace2.Off || !tracer) {
           return;
         }
         if (traceFormat === TraceFormat.Text) {
           let data = void 0;
-          if (trace === Trace3.Verbose || trace === Trace3.Compact) {
+          if (trace === Trace2.Verbose || trace === Trace2.Compact) {
             if (message.error && message.error.data) {
               data = `Error data: ${stringifyTrace(message.error.data)}
 
@@ -5517,12 +2269,12 @@ ${JSON.stringify(message, null, 4)}`);
         }
       }
       function traceReceivedRequest(message) {
-        if (trace === Trace3.Off || !tracer) {
+        if (trace === Trace2.Off || !tracer) {
           return;
         }
         if (traceFormat === TraceFormat.Text) {
           let data = void 0;
-          if ((trace === Trace3.Verbose || trace === Trace3.Compact) && message.params) {
+          if ((trace === Trace2.Verbose || trace === Trace2.Compact) && message.params) {
             data = `Params: ${stringifyTrace(message.params)}
 
 `;
@@ -5533,12 +2285,12 @@ ${JSON.stringify(message, null, 4)}`);
         }
       }
       function traceReceivedNotification(message) {
-        if (trace === Trace3.Off || !tracer || message.method === LogTraceNotification.type.method) {
+        if (trace === Trace2.Off || !tracer || message.method === LogTraceNotification.type.method) {
           return;
         }
         if (traceFormat === TraceFormat.Text) {
           let data = void 0;
-          if (trace === Trace3.Verbose || trace === Trace3.Compact) {
+          if (trace === Trace2.Verbose || trace === Trace2.Compact) {
             if (message.params) {
               data = `Params: ${stringifyTrace(message.params)}
 
@@ -5553,12 +2305,12 @@ ${JSON.stringify(message, null, 4)}`);
         }
       }
       function traceReceivedResponse(message, responsePromise) {
-        if (trace === Trace3.Off || !tracer) {
+        if (trace === Trace2.Off || !tracer) {
           return;
         }
         if (traceFormat === TraceFormat.Text) {
           let data = void 0;
-          if (trace === Trace3.Verbose || trace === Trace3.Compact) {
+          if (trace === Trace2.Verbose || trace === Trace2.Compact) {
             if (message.error && message.error.data) {
               data = `Error data: ${stringifyTrace(message.error.data)}
 
@@ -5584,7 +2336,7 @@ ${JSON.stringify(message, null, 4)}`);
         }
       }
       function logLSPMessage(type, message) {
-        if (!tracer || trace === Trace3.Off) {
+        if (!tracer || trace === Trace2.Off) {
           return;
         }
         const lspMessage = {
@@ -5895,13 +2647,13 @@ ${JSON.stringify(message, null, 4)}`);
           }
           trace = _value;
           traceFormat = _traceFormat;
-          if (trace === Trace3.Off) {
+          if (trace === Trace2.Off) {
             tracer = void 0;
           } else {
             tracer = _tracer;
           }
           if (_sendNotification && !isClosed() && !isDisposed()) {
-            await connection.sendNotification(SetTraceNotification.type, { value: Trace3.toString(_value) });
+            await connection.sendNotification(SetTraceNotification.type, { value: Trace2.toString(_value) });
           }
         },
         onError: errorEmitter.event,
@@ -5943,10 +2695,10 @@ ${JSON.stringify(message, null, 4)}`);
         }
       };
       connection.onNotification(LogTraceNotification.type, (params) => {
-        if (trace === Trace3.Off || !tracer) {
+        if (trace === Trace2.Off || !tracer) {
           return;
         }
-        const verbose = trace === Trace3.Verbose || trace === Trace3.Compact;
+        const verbose = trace === Trace2.Verbose || trace === Trace2.Compact;
         tracer.log(params.message, verbose ? params.verbose : void 0);
       });
       connection.onNotification(ProgressNotification.type, (params) => {
@@ -5964,13 +2716,13 @@ ${JSON.stringify(message, null, 4)}`);
 });
 
 // node_modules/vscode-languageserver-protocol/node_modules/vscode-jsonrpc/lib/common/api.js
-var require_api2 = __commonJS({
+var require_api = __commonJS({
   "node_modules/vscode-languageserver-protocol/node_modules/vscode-jsonrpc/lib/common/api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.ProgressType = exports2.ProgressToken = exports2.createMessageConnection = exports2.NullLogger = exports2.ConnectionOptions = exports2.ConnectionStrategy = exports2.AbstractMessageBuffer = exports2.WriteableStreamMessageWriter = exports2.AbstractMessageWriter = exports2.MessageWriter = exports2.ReadableStreamMessageReader = exports2.AbstractMessageReader = exports2.MessageReader = exports2.SharedArrayReceiverStrategy = exports2.SharedArraySenderStrategy = exports2.CancellationToken = exports2.CancellationTokenSource = exports2.Emitter = exports2.Event = exports2.Disposable = exports2.LRUCache = exports2.Touch = exports2.LinkedMap = exports2.ParameterStructures = exports2.NotificationType9 = exports2.NotificationType8 = exports2.NotificationType7 = exports2.NotificationType6 = exports2.NotificationType5 = exports2.NotificationType4 = exports2.NotificationType3 = exports2.NotificationType2 = exports2.NotificationType1 = exports2.NotificationType0 = exports2.NotificationType = exports2.ErrorCodes = exports2.ResponseError = exports2.RequestType9 = exports2.RequestType8 = exports2.RequestType7 = exports2.RequestType6 = exports2.RequestType5 = exports2.RequestType4 = exports2.RequestType3 = exports2.RequestType2 = exports2.RequestType1 = exports2.RequestType0 = exports2.RequestType = exports2.Message = exports2.RAL = void 0;
     exports2.MessageStrategy = exports2.CancellationStrategy = exports2.CancellationSenderStrategy = exports2.CancellationReceiverStrategy = exports2.ConnectionError = exports2.ConnectionErrors = exports2.LogTraceNotification = exports2.SetTraceNotification = exports2.TraceFormat = exports2.TraceValues = exports2.Trace = void 0;
-    var messages_1 = require_messages2();
+    var messages_1 = require_messages();
     Object.defineProperty(exports2, "Message", { enumerable: true, get: function() {
       return messages_1.Message;
     } });
@@ -6049,7 +2801,7 @@ var require_api2 = __commonJS({
     Object.defineProperty(exports2, "ParameterStructures", { enumerable: true, get: function() {
       return messages_1.ParameterStructures;
     } });
-    var linkedMap_1 = require_linkedMap2();
+    var linkedMap_1 = require_linkedMap();
     Object.defineProperty(exports2, "LinkedMap", { enumerable: true, get: function() {
       return linkedMap_1.LinkedMap;
     } });
@@ -6059,32 +2811,32 @@ var require_api2 = __commonJS({
     Object.defineProperty(exports2, "Touch", { enumerable: true, get: function() {
       return linkedMap_1.Touch;
     } });
-    var disposable_1 = require_disposable2();
+    var disposable_1 = require_disposable();
     Object.defineProperty(exports2, "Disposable", { enumerable: true, get: function() {
       return disposable_1.Disposable;
     } });
-    var events_1 = require_events2();
+    var events_1 = require_events();
     Object.defineProperty(exports2, "Event", { enumerable: true, get: function() {
       return events_1.Event;
     } });
     Object.defineProperty(exports2, "Emitter", { enumerable: true, get: function() {
       return events_1.Emitter;
     } });
-    var cancellation_1 = require_cancellation2();
+    var cancellation_1 = require_cancellation();
     Object.defineProperty(exports2, "CancellationTokenSource", { enumerable: true, get: function() {
       return cancellation_1.CancellationTokenSource;
     } });
     Object.defineProperty(exports2, "CancellationToken", { enumerable: true, get: function() {
       return cancellation_1.CancellationToken;
     } });
-    var sharedArrayCancellation_1 = require_sharedArrayCancellation2();
+    var sharedArrayCancellation_1 = require_sharedArrayCancellation();
     Object.defineProperty(exports2, "SharedArraySenderStrategy", { enumerable: true, get: function() {
       return sharedArrayCancellation_1.SharedArraySenderStrategy;
     } });
     Object.defineProperty(exports2, "SharedArrayReceiverStrategy", { enumerable: true, get: function() {
       return sharedArrayCancellation_1.SharedArrayReceiverStrategy;
     } });
-    var messageReader_1 = require_messageReader2();
+    var messageReader_1 = require_messageReader();
     Object.defineProperty(exports2, "MessageReader", { enumerable: true, get: function() {
       return messageReader_1.MessageReader;
     } });
@@ -6094,7 +2846,7 @@ var require_api2 = __commonJS({
     Object.defineProperty(exports2, "ReadableStreamMessageReader", { enumerable: true, get: function() {
       return messageReader_1.ReadableStreamMessageReader;
     } });
-    var messageWriter_1 = require_messageWriter2();
+    var messageWriter_1 = require_messageWriter();
     Object.defineProperty(exports2, "MessageWriter", { enumerable: true, get: function() {
       return messageWriter_1.MessageWriter;
     } });
@@ -6104,11 +2856,11 @@ var require_api2 = __commonJS({
     Object.defineProperty(exports2, "WriteableStreamMessageWriter", { enumerable: true, get: function() {
       return messageWriter_1.WriteableStreamMessageWriter;
     } });
-    var messageBuffer_1 = require_messageBuffer2();
+    var messageBuffer_1 = require_messageBuffer();
     Object.defineProperty(exports2, "AbstractMessageBuffer", { enumerable: true, get: function() {
       return messageBuffer_1.AbstractMessageBuffer;
     } });
-    var connection_1 = require_connection2();
+    var connection_1 = require_connection();
     Object.defineProperty(exports2, "ConnectionStrategy", { enumerable: true, get: function() {
       return connection_1.ConnectionStrategy;
     } });
@@ -6160,18 +2912,18 @@ var require_api2 = __commonJS({
     Object.defineProperty(exports2, "MessageStrategy", { enumerable: true, get: function() {
       return connection_1.MessageStrategy;
     } });
-    var ral_1 = require_ral2();
+    var ral_1 = require_ral();
     exports2.RAL = ral_1.default;
   }
 });
 
 // node_modules/vscode-languageserver-protocol/node_modules/vscode-jsonrpc/lib/node/ril.js
-var require_ril2 = __commonJS({
+var require_ril = __commonJS({
   "node_modules/vscode-languageserver-protocol/node_modules/vscode-jsonrpc/lib/node/ril.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     var util_1 = require("util");
-    var api_1 = require_api2();
+    var api_1 = require_api();
     var MessageBuffer = class _MessageBuffer extends api_1.AbstractMessageBuffer {
       constructor(encoding = "utf-8") {
         super(encoding);
@@ -6322,7 +3074,7 @@ var require_ril2 = __commonJS({
 });
 
 // node_modules/vscode-languageserver-protocol/node_modules/vscode-jsonrpc/lib/node/main.js
-var require_main2 = __commonJS({
+var require_main = __commonJS({
   "node_modules/vscode-languageserver-protocol/node_modules/vscode-jsonrpc/lib/node/main.js"(exports2) {
     "use strict";
     var __createBinding = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
@@ -6343,14 +3095,14 @@ var require_main2 = __commonJS({
     };
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.createMessageConnection = exports2.createServerSocketTransport = exports2.createClientSocketTransport = exports2.createServerPipeTransport = exports2.createClientPipeTransport = exports2.generateRandomPipeName = exports2.StreamMessageWriter = exports2.StreamMessageReader = exports2.SocketMessageWriter = exports2.SocketMessageReader = exports2.PortMessageWriter = exports2.PortMessageReader = exports2.IPCMessageWriter = exports2.IPCMessageReader = void 0;
-    var ril_1 = require_ril2();
+    var ril_1 = require_ril();
     ril_1.default.install();
     var path2 = require("path");
     var os = require("os");
     var crypto_1 = require("crypto");
     var net_1 = require("net");
-    var api_1 = require_api2();
-    __exportStar(require_api2(), exports2);
+    var api_1 = require_api();
+    __exportStar(require_api(), exports2);
     var IPCMessageReader = class extends api_1.AbstractMessageReader {
       constructor(process2) {
         super();
@@ -6585,12 +3337,12 @@ var require_main2 = __commonJS({
 var require_node = __commonJS({
   "node_modules/vscode-languageserver-protocol/node_modules/vscode-jsonrpc/node.js"(exports2, module2) {
     "use strict";
-    module2.exports = require_main2();
+    module2.exports = require_main();
   }
 });
 
 // node_modules/vscode-languageserver-types/lib/umd/main.js
-var require_main3 = __commonJS({
+var require_main2 = __commonJS({
   "node_modules/vscode-languageserver-types/lib/umd/main.js"(exports2, module2) {
     (function(factory) {
       if (typeof module2 === "object" && typeof module2.exports === "object") {
@@ -8107,12 +4859,12 @@ var require_main3 = __commonJS({
 });
 
 // node_modules/vscode-languageserver-protocol/lib/common/messages.js
-var require_messages3 = __commonJS({
+var require_messages2 = __commonJS({
   "node_modules/vscode-languageserver-protocol/lib/common/messages.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.ProtocolNotificationType = exports2.ProtocolNotificationType0 = exports2.ProtocolRequestType = exports2.ProtocolRequestType0 = exports2.RegistrationType = exports2.MessageDirection = void 0;
-    var vscode_jsonrpc_1 = require_main2();
+    var vscode_jsonrpc_1 = require_main();
     var MessageDirection;
     (function(MessageDirection2) {
       MessageDirection2["clientToServer"] = "clientToServer";
@@ -8153,7 +4905,7 @@ var require_messages3 = __commonJS({
 });
 
 // node_modules/vscode-languageserver-protocol/lib/common/utils/is.js
-var require_is4 = __commonJS({
+var require_is3 = __commonJS({
   "node_modules/vscode-languageserver-protocol/lib/common/utils/is.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -8203,7 +4955,7 @@ var require_protocol_implementation = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.ImplementationRequest = void 0;
-    var messages_1 = require_messages3();
+    var messages_1 = require_messages2();
     var ImplementationRequest;
     (function(ImplementationRequest2) {
       ImplementationRequest2.method = "textDocument/implementation";
@@ -8219,7 +4971,7 @@ var require_protocol_typeDefinition = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.TypeDefinitionRequest = void 0;
-    var messages_1 = require_messages3();
+    var messages_1 = require_messages2();
     var TypeDefinitionRequest;
     (function(TypeDefinitionRequest2) {
       TypeDefinitionRequest2.method = "textDocument/typeDefinition";
@@ -8235,7 +4987,7 @@ var require_protocol_workspaceFolder = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.DidChangeWorkspaceFoldersNotification = exports2.WorkspaceFoldersRequest = void 0;
-    var messages_1 = require_messages3();
+    var messages_1 = require_messages2();
     var WorkspaceFoldersRequest;
     (function(WorkspaceFoldersRequest2) {
       WorkspaceFoldersRequest2.method = "workspace/workspaceFolders";
@@ -8257,7 +5009,7 @@ var require_protocol_configuration = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.ConfigurationRequest = void 0;
-    var messages_1 = require_messages3();
+    var messages_1 = require_messages2();
     var ConfigurationRequest;
     (function(ConfigurationRequest2) {
       ConfigurationRequest2.method = "workspace/configuration";
@@ -8273,7 +5025,7 @@ var require_protocol_colorProvider = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.ColorPresentationRequest = exports2.DocumentColorRequest = void 0;
-    var messages_1 = require_messages3();
+    var messages_1 = require_messages2();
     var DocumentColorRequest;
     (function(DocumentColorRequest2) {
       DocumentColorRequest2.method = "textDocument/documentColor";
@@ -8295,7 +5047,7 @@ var require_protocol_foldingRange = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.FoldingRangeRefreshRequest = exports2.FoldingRangeRequest = void 0;
-    var messages_1 = require_messages3();
+    var messages_1 = require_messages2();
     var FoldingRangeRequest;
     (function(FoldingRangeRequest2) {
       FoldingRangeRequest2.method = "textDocument/foldingRange";
@@ -8317,7 +5069,7 @@ var require_protocol_declaration = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.DeclarationRequest = void 0;
-    var messages_1 = require_messages3();
+    var messages_1 = require_messages2();
     var DeclarationRequest;
     (function(DeclarationRequest2) {
       DeclarationRequest2.method = "textDocument/declaration";
@@ -8333,7 +5085,7 @@ var require_protocol_selectionRange = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.SelectionRangeRequest = void 0;
-    var messages_1 = require_messages3();
+    var messages_1 = require_messages2();
     var SelectionRangeRequest;
     (function(SelectionRangeRequest2) {
       SelectionRangeRequest2.method = "textDocument/selectionRange";
@@ -8349,8 +5101,8 @@ var require_protocol_progress = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.WorkDoneProgressCancelNotification = exports2.WorkDoneProgressCreateRequest = exports2.WorkDoneProgress = void 0;
-    var vscode_jsonrpc_1 = require_main2();
-    var messages_1 = require_messages3();
+    var vscode_jsonrpc_1 = require_main();
+    var messages_1 = require_messages2();
     var WorkDoneProgress;
     (function(WorkDoneProgress2) {
       WorkDoneProgress2.type = new vscode_jsonrpc_1.ProgressType();
@@ -8380,7 +5132,7 @@ var require_protocol_callHierarchy = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.CallHierarchyOutgoingCallsRequest = exports2.CallHierarchyIncomingCallsRequest = exports2.CallHierarchyPrepareRequest = void 0;
-    var messages_1 = require_messages3();
+    var messages_1 = require_messages2();
     var CallHierarchyPrepareRequest;
     (function(CallHierarchyPrepareRequest2) {
       CallHierarchyPrepareRequest2.method = "textDocument/prepareCallHierarchy";
@@ -8408,7 +5160,7 @@ var require_protocol_semanticTokens = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.SemanticTokensRefreshRequest = exports2.SemanticTokensRangeRequest = exports2.SemanticTokensDeltaRequest = exports2.SemanticTokensRequest = exports2.SemanticTokensRegistrationType = exports2.TokenFormat = void 0;
-    var messages_1 = require_messages3();
+    var messages_1 = require_messages2();
     var TokenFormat;
     (function(TokenFormat2) {
       TokenFormat2.Relative = "relative";
@@ -8454,7 +5206,7 @@ var require_protocol_showDocument = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.ShowDocumentRequest = void 0;
-    var messages_1 = require_messages3();
+    var messages_1 = require_messages2();
     var ShowDocumentRequest;
     (function(ShowDocumentRequest2) {
       ShowDocumentRequest2.method = "window/showDocument";
@@ -8470,7 +5222,7 @@ var require_protocol_linkedEditingRange = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.LinkedEditingRangeRequest = void 0;
-    var messages_1 = require_messages3();
+    var messages_1 = require_messages2();
     var LinkedEditingRangeRequest;
     (function(LinkedEditingRangeRequest2) {
       LinkedEditingRangeRequest2.method = "textDocument/linkedEditingRange";
@@ -8486,7 +5238,7 @@ var require_protocol_fileOperations = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.WillDeleteFilesRequest = exports2.DidDeleteFilesNotification = exports2.DidRenameFilesNotification = exports2.WillRenameFilesRequest = exports2.DidCreateFilesNotification = exports2.WillCreateFilesRequest = exports2.FileOperationPatternKind = void 0;
-    var messages_1 = require_messages3();
+    var messages_1 = require_messages2();
     var FileOperationPatternKind;
     (function(FileOperationPatternKind2) {
       FileOperationPatternKind2.file = "file";
@@ -8537,7 +5289,7 @@ var require_protocol_moniker = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.MonikerRequest = exports2.MonikerKind = exports2.UniquenessLevel = void 0;
-    var messages_1 = require_messages3();
+    var messages_1 = require_messages2();
     var UniquenessLevel;
     (function(UniquenessLevel2) {
       UniquenessLevel2.document = "document";
@@ -8567,7 +5319,7 @@ var require_protocol_typeHierarchy = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.TypeHierarchySubtypesRequest = exports2.TypeHierarchySupertypesRequest = exports2.TypeHierarchyPrepareRequest = void 0;
-    var messages_1 = require_messages3();
+    var messages_1 = require_messages2();
     var TypeHierarchyPrepareRequest;
     (function(TypeHierarchyPrepareRequest2) {
       TypeHierarchyPrepareRequest2.method = "textDocument/prepareTypeHierarchy";
@@ -8595,7 +5347,7 @@ var require_protocol_inlineValue = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.InlineValueRefreshRequest = exports2.InlineValueRequest = void 0;
-    var messages_1 = require_messages3();
+    var messages_1 = require_messages2();
     var InlineValueRequest;
     (function(InlineValueRequest2) {
       InlineValueRequest2.method = "textDocument/inlineValue";
@@ -8617,7 +5369,7 @@ var require_protocol_inlayHint = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.InlayHintRefreshRequest = exports2.InlayHintResolveRequest = exports2.InlayHintRequest = void 0;
-    var messages_1 = require_messages3();
+    var messages_1 = require_messages2();
     var InlayHintRequest;
     (function(InlayHintRequest2) {
       InlayHintRequest2.method = "textDocument/inlayHint";
@@ -8645,9 +5397,9 @@ var require_protocol_diagnostic = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.DiagnosticRefreshRequest = exports2.WorkspaceDiagnosticRequest = exports2.DocumentDiagnosticRequest = exports2.DocumentDiagnosticReportKind = exports2.DiagnosticServerCancellationData = void 0;
-    var vscode_jsonrpc_1 = require_main2();
-    var Is = require_is4();
-    var messages_1 = require_messages3();
+    var vscode_jsonrpc_1 = require_main();
+    var Is = require_is3();
+    var messages_1 = require_messages2();
     var DiagnosticServerCancellationData;
     (function(DiagnosticServerCancellationData2) {
       function is(value) {
@@ -8690,9 +5442,9 @@ var require_protocol_notebook = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.DidCloseNotebookDocumentNotification = exports2.DidSaveNotebookDocumentNotification = exports2.DidChangeNotebookDocumentNotification = exports2.NotebookCellArrayChange = exports2.DidOpenNotebookDocumentNotification = exports2.NotebookDocumentSyncRegistrationType = exports2.NotebookDocument = exports2.NotebookCell = exports2.ExecutionSummary = exports2.NotebookCellKind = void 0;
-    var vscode_languageserver_types_1 = require_main3();
-    var Is = require_is4();
-    var messages_1 = require_messages3();
+    var vscode_languageserver_types_1 = require_main2();
+    var Is = require_is3();
+    var messages_1 = require_messages2();
     var NotebookCellKind;
     (function(NotebookCellKind2) {
       NotebookCellKind2.Markup = 1;
@@ -8879,7 +5631,7 @@ var require_protocol_inlineCompletion = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.InlineCompletionRequest = void 0;
-    var messages_1 = require_messages3();
+    var messages_1 = require_messages2();
     var InlineCompletionRequest;
     (function(InlineCompletionRequest2) {
       InlineCompletionRequest2.method = "textDocument/inlineCompletion";
@@ -8897,9 +5649,9 @@ var require_protocol = __commonJS({
     exports2.WorkspaceSymbolRequest = exports2.CodeActionResolveRequest = exports2.CodeActionRequest = exports2.DocumentSymbolRequest = exports2.DocumentHighlightRequest = exports2.ReferencesRequest = exports2.DefinitionRequest = exports2.SignatureHelpRequest = exports2.SignatureHelpTriggerKind = exports2.HoverRequest = exports2.CompletionResolveRequest = exports2.CompletionRequest = exports2.CompletionTriggerKind = exports2.PublishDiagnosticsNotification = exports2.WatchKind = exports2.RelativePattern = exports2.FileChangeType = exports2.DidChangeWatchedFilesNotification = exports2.WillSaveTextDocumentWaitUntilRequest = exports2.WillSaveTextDocumentNotification = exports2.TextDocumentSaveReason = exports2.DidSaveTextDocumentNotification = exports2.DidCloseTextDocumentNotification = exports2.DidChangeTextDocumentNotification = exports2.TextDocumentContentChangeEvent = exports2.DidOpenTextDocumentNotification = exports2.TextDocumentSyncKind = exports2.TelemetryEventNotification = exports2.LogMessageNotification = exports2.ShowMessageRequest = exports2.ShowMessageNotification = exports2.MessageType = exports2.DidChangeConfigurationNotification = exports2.ExitNotification = exports2.ShutdownRequest = exports2.InitializedNotification = exports2.InitializeErrorCodes = exports2.InitializeRequest = exports2.WorkDoneProgressOptions = exports2.TextDocumentRegistrationOptions = exports2.StaticRegistrationOptions = exports2.PositionEncodingKind = exports2.FailureHandlingKind = exports2.ResourceOperationKind = exports2.UnregistrationRequest = exports2.RegistrationRequest = exports2.DocumentSelector = exports2.NotebookCellTextDocumentFilter = exports2.NotebookDocumentFilter = exports2.TextDocumentFilter = void 0;
     exports2.MonikerRequest = exports2.MonikerKind = exports2.UniquenessLevel = exports2.WillDeleteFilesRequest = exports2.DidDeleteFilesNotification = exports2.WillRenameFilesRequest = exports2.DidRenameFilesNotification = exports2.WillCreateFilesRequest = exports2.DidCreateFilesNotification = exports2.FileOperationPatternKind = exports2.LinkedEditingRangeRequest = exports2.ShowDocumentRequest = exports2.SemanticTokensRegistrationType = exports2.SemanticTokensRefreshRequest = exports2.SemanticTokensRangeRequest = exports2.SemanticTokensDeltaRequest = exports2.SemanticTokensRequest = exports2.TokenFormat = exports2.CallHierarchyPrepareRequest = exports2.CallHierarchyOutgoingCallsRequest = exports2.CallHierarchyIncomingCallsRequest = exports2.WorkDoneProgressCancelNotification = exports2.WorkDoneProgressCreateRequest = exports2.WorkDoneProgress = exports2.SelectionRangeRequest = exports2.DeclarationRequest = exports2.FoldingRangeRefreshRequest = exports2.FoldingRangeRequest = exports2.ColorPresentationRequest = exports2.DocumentColorRequest = exports2.ConfigurationRequest = exports2.DidChangeWorkspaceFoldersNotification = exports2.WorkspaceFoldersRequest = exports2.TypeDefinitionRequest = exports2.ImplementationRequest = exports2.ApplyWorkspaceEditRequest = exports2.ExecuteCommandRequest = exports2.PrepareRenameRequest = exports2.RenameRequest = exports2.PrepareSupportDefaultBehavior = exports2.DocumentOnTypeFormattingRequest = exports2.DocumentRangesFormattingRequest = exports2.DocumentRangeFormattingRequest = exports2.DocumentFormattingRequest = exports2.DocumentLinkResolveRequest = exports2.DocumentLinkRequest = exports2.CodeLensRefreshRequest = exports2.CodeLensResolveRequest = exports2.CodeLensRequest = exports2.WorkspaceSymbolResolveRequest = void 0;
     exports2.InlineCompletionRequest = exports2.DidCloseNotebookDocumentNotification = exports2.DidSaveNotebookDocumentNotification = exports2.DidChangeNotebookDocumentNotification = exports2.NotebookCellArrayChange = exports2.DidOpenNotebookDocumentNotification = exports2.NotebookDocumentSyncRegistrationType = exports2.NotebookDocument = exports2.NotebookCell = exports2.ExecutionSummary = exports2.NotebookCellKind = exports2.DiagnosticRefreshRequest = exports2.WorkspaceDiagnosticRequest = exports2.DocumentDiagnosticRequest = exports2.DocumentDiagnosticReportKind = exports2.DiagnosticServerCancellationData = exports2.InlayHintRefreshRequest = exports2.InlayHintResolveRequest = exports2.InlayHintRequest = exports2.InlineValueRefreshRequest = exports2.InlineValueRequest = exports2.TypeHierarchySupertypesRequest = exports2.TypeHierarchySubtypesRequest = exports2.TypeHierarchyPrepareRequest = void 0;
-    var messages_1 = require_messages3();
-    var vscode_languageserver_types_1 = require_main3();
-    var Is = require_is4();
+    var messages_1 = require_messages2();
+    var vscode_languageserver_types_1 = require_main2();
+    var Is = require_is3();
     var protocol_implementation_1 = require_protocol_implementation();
     Object.defineProperty(exports2, "ImplementationRequest", { enumerable: true, get: function() {
       return protocol_implementation_1.ImplementationRequest;
@@ -9526,12 +6278,12 @@ var require_protocol = __commonJS({
 });
 
 // node_modules/vscode-languageserver-protocol/lib/common/connection.js
-var require_connection3 = __commonJS({
+var require_connection2 = __commonJS({
   "node_modules/vscode-languageserver-protocol/lib/common/connection.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.createProtocolConnection = void 0;
-    var vscode_jsonrpc_1 = require_main2();
+    var vscode_jsonrpc_1 = require_main();
     function createProtocolConnection(input, output, logger, options) {
       if (vscode_jsonrpc_1.ConnectionStrategy.is(options)) {
         options = { connectionStrategy: options };
@@ -9543,7 +6295,7 @@ var require_connection3 = __commonJS({
 });
 
 // node_modules/vscode-languageserver-protocol/lib/common/api.js
-var require_api3 = __commonJS({
+var require_api2 = __commonJS({
   "node_modules/vscode-languageserver-protocol/lib/common/api.js"(exports2) {
     "use strict";
     var __createBinding = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
@@ -9564,11 +6316,11 @@ var require_api3 = __commonJS({
     };
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.LSPErrorCodes = exports2.createProtocolConnection = void 0;
+    __exportStar(require_main(), exports2);
     __exportStar(require_main2(), exports2);
-    __exportStar(require_main3(), exports2);
-    __exportStar(require_messages3(), exports2);
+    __exportStar(require_messages2(), exports2);
     __exportStar(require_protocol(), exports2);
-    var connection_1 = require_connection3();
+    var connection_1 = require_connection2();
     Object.defineProperty(exports2, "createProtocolConnection", { enumerable: true, get: function() {
       return connection_1.createProtocolConnection;
     } });
@@ -9585,7 +6337,7 @@ var require_api3 = __commonJS({
 });
 
 // node_modules/vscode-languageserver-protocol/lib/node/main.js
-var require_main4 = __commonJS({
+var require_main3 = __commonJS({
   "node_modules/vscode-languageserver-protocol/lib/node/main.js"(exports2) {
     "use strict";
     var __createBinding = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
@@ -9608,7 +6360,7 @@ var require_main4 = __commonJS({
     exports2.createProtocolConnection = void 0;
     var node_1 = require_node();
     __exportStar(require_node(), exports2);
-    __exportStar(require_api3(), exports2);
+    __exportStar(require_api2(), exports2);
     function createProtocolConnection(input, output, logger, options) {
       return (0, node_1.createMessageConnection)(input, output, logger, options);
     }
@@ -9622,7 +6374,7 @@ var require_async = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.forEach = exports2.mapAsync = exports2.map = exports2.clearTestMode = exports2.setTestMode = exports2.Semaphore = exports2.Delayer = void 0;
-    var vscode_languageserver_protocol_1 = require_main4();
+    var vscode_languageserver_protocol_1 = require_main3();
     var Delayer = class {
       constructor(defaultDelay) {
         this.defaultDelay = defaultDelay;
@@ -9947,7 +6699,7 @@ var require_protocolDiagnostic = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.ProtocolDiagnostic = exports2.DiagnosticCode = void 0;
     var vscode4 = require("vscode");
-    var Is = require_is2();
+    var Is = require_is();
     var DiagnosticCode;
     (function(DiagnosticCode2) {
       function is(value) {
@@ -10045,8 +6797,8 @@ var require_codeConverter = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.createConverter = void 0;
     var code = require("vscode");
-    var proto = require_main4();
-    var Is = require_is2();
+    var proto = require_main3();
+    var Is = require_is();
     var async = require_async();
     var protocolCompletionItem_1 = require_protocolCompletionItem();
     var protocolCodeLens_1 = require_protocolCodeLens();
@@ -10905,8 +7657,8 @@ var require_protocolConverter = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.createConverter = void 0;
     var code = require("vscode");
-    var ls = require_main4();
-    var Is = require_is2();
+    var ls = require_main3();
+    var Is = require_is();
     var async = require_async();
     var protocolCompletionItem_1 = require_protocolCompletionItem();
     var protocolCodeLens_1 = require_protocolCodeLens();
@@ -10917,7 +7669,7 @@ var require_protocolConverter = __commonJS({
     var protocolTypeHierarchyItem_1 = require_protocolTypeHierarchyItem();
     var protocolWorkspaceSymbol_1 = require_protocolWorkspaceSymbol();
     var protocolInlayHint_1 = require_protocolInlayHint();
-    var vscode_languageserver_protocol_1 = require_main4();
+    var vscode_languageserver_protocol_1 = require_main3();
     var CodeBlock;
     (function(CodeBlock2) {
       function is(value) {
@@ -12076,8 +8828,8 @@ var require_progressPart = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.ProgressPart = void 0;
     var vscode_1 = require("vscode");
-    var vscode_languageserver_protocol_1 = require_main4();
-    var Is = require_is2();
+    var vscode_languageserver_protocol_1 = require_main3();
+    var Is = require_is();
     var ProgressPart = class {
       constructor(_client, _token, done) {
         this._client = _client;
@@ -12170,8 +8922,8 @@ var require_features = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.WorkspaceFeature = exports2.TextDocumentLanguageFeature = exports2.TextDocumentEventFeature = exports2.DynamicDocumentFeature = exports2.DynamicFeature = exports2.StaticFeature = exports2.ensure = exports2.LSPCancellationError = void 0;
     var vscode_1 = require("vscode");
-    var vscode_languageserver_protocol_1 = require_main4();
-    var Is = require_is2();
+    var vscode_languageserver_protocol_1 = require_main3();
+    var Is = require_is();
     var UUID = require_uuid();
     var LSPCancellationError = class extends vscode_1.CancellationError {
       constructor(data) {
@@ -13213,7 +9965,7 @@ var require_diagnostic = __commonJS({
     exports2.DiagnosticFeature = exports2.DiagnosticPullMode = exports2.vsdiag = void 0;
     var minimatch = require_minimatch();
     var vscode_1 = require("vscode");
-    var vscode_languageserver_protocol_1 = require_main4();
+    var vscode_languageserver_protocol_1 = require_main3();
     var uuid_1 = require_uuid();
     var features_1 = require_features();
     function ensure(target, key) {
@@ -13958,9 +10710,9 @@ var require_notebook = __commonJS({
     exports2.NotebookDocumentSyncFeature = void 0;
     var vscode4 = require("vscode");
     var minimatch = require_minimatch();
-    var proto = require_main4();
+    var proto = require_main3();
     var UUID = require_uuid();
-    var Is = require_is2();
+    var Is = require_is();
     function ensure(target, key) {
       if (target[key] === void 0) {
         target[key] = {};
@@ -14740,8 +11492,8 @@ var require_configuration = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.SyncConfigurationFeature = exports2.toJSONObject = exports2.ConfigurationFeature = void 0;
     var vscode_1 = require("vscode");
-    var vscode_languageserver_protocol_1 = require_main4();
-    var Is = require_is2();
+    var vscode_languageserver_protocol_1 = require_main3();
+    var Is = require_is();
     var UUID = require_uuid();
     var features_1 = require_features();
     var ConfigurationFeature = class {
@@ -14777,17 +11529,17 @@ var require_configuration = __commonJS({
           if (index === -1) {
             result = toJSONObject2(vscode_1.workspace.getConfiguration(void 0, resource).get(section));
           } else {
-            let config2 = vscode_1.workspace.getConfiguration(section.substr(0, index), resource);
-            if (config2) {
-              result = toJSONObject2(config2.get(section.substr(index + 1)));
+            let config = vscode_1.workspace.getConfiguration(section.substr(0, index), resource);
+            if (config) {
+              result = toJSONObject2(config.get(section.substr(index + 1)));
             }
           }
         } else {
-          let config2 = vscode_1.workspace.getConfiguration(void 0, resource);
+          let config = vscode_1.workspace.getConfiguration(void 0, resource);
           result = {};
-          for (let key of Object.keys(config2)) {
-            if (config2.has(key)) {
-              result[key] = toJSONObject2(config2.get(key));
+          for (let key of Object.keys(config)) {
+            if (config.has(key)) {
+              result[key] = toJSONObject2(config.get(key));
             }
           }
         }
@@ -14896,8 +11648,8 @@ var require_configuration = __commonJS({
         });
       }
       extractSettingsInformation(keys) {
-        function ensurePath(config2, path2) {
-          let current = config2;
+        function ensurePath(config, path2) {
+          let current = config;
           for (let i = 0; i < path2.length - 1; i++) {
             let obj = current[path2[i]];
             if (!obj) {
@@ -14913,15 +11665,15 @@ var require_configuration = __commonJS({
         for (let i = 0; i < keys.length; i++) {
           let key = keys[i];
           let index = key.indexOf(".");
-          let config2 = null;
+          let config = null;
           if (index >= 0) {
-            config2 = vscode_1.workspace.getConfiguration(key.substr(0, index), resource).get(key.substr(index + 1));
+            config = vscode_1.workspace.getConfiguration(key.substr(0, index), resource).get(key.substr(index + 1));
           } else {
-            config2 = vscode_1.workspace.getConfiguration(void 0, resource).get(key);
+            config = vscode_1.workspace.getConfiguration(void 0, resource).get(key);
           }
-          if (config2) {
+          if (config) {
             let path2 = keys[i].split(".");
-            ensurePath(result, path2)[path2[path2.length - 1]] = toJSONObject2(config2);
+            ensurePath(result, path2)[path2[path2.length - 1]] = toJSONObject2(config);
           }
         }
         return result;
@@ -14938,7 +11690,7 @@ var require_textSynchronization = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.DidSaveTextDocumentFeature = exports2.WillSaveWaitUntilFeature = exports2.WillSaveFeature = exports2.DidChangeTextDocumentFeature = exports2.DidCloseTextDocumentFeature = exports2.DidOpenTextDocumentFeature = void 0;
     var vscode_1 = require("vscode");
-    var vscode_languageserver_protocol_1 = require_main4();
+    var vscode_languageserver_protocol_1 = require_main3();
     var features_1 = require_features();
     var UUID = require_uuid();
     var DidOpenTextDocumentFeature = class extends features_1.TextDocumentEventFeature {
@@ -15328,7 +12080,7 @@ var require_completion = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.CompletionItemFeature = void 0;
     var vscode_1 = require("vscode");
-    var vscode_languageserver_protocol_1 = require_main4();
+    var vscode_languageserver_protocol_1 = require_main3();
     var features_1 = require_features();
     var UUID = require_uuid();
     var SupportedCompletionItemKinds = [
@@ -15454,7 +12206,7 @@ var require_hover = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.HoverFeature = void 0;
     var vscode_1 = require("vscode");
-    var vscode_languageserver_protocol_1 = require_main4();
+    var vscode_languageserver_protocol_1 = require_main3();
     var features_1 = require_features();
     var UUID = require_uuid();
     var HoverFeature = class extends features_1.TextDocumentLanguageFeature {
@@ -15512,7 +12264,7 @@ var require_definition = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.DefinitionFeature = void 0;
     var vscode_1 = require("vscode");
-    var vscode_languageserver_protocol_1 = require_main4();
+    var vscode_languageserver_protocol_1 = require_main3();
     var features_1 = require_features();
     var UUID = require_uuid();
     var DefinitionFeature = class extends features_1.TextDocumentLanguageFeature {
@@ -15567,7 +12319,7 @@ var require_signatureHelp = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.SignatureHelpFeature = void 0;
     var vscode_1 = require("vscode");
-    var vscode_languageserver_protocol_1 = require_main4();
+    var vscode_languageserver_protocol_1 = require_main3();
     var features_1 = require_features();
     var UUID = require_uuid();
     var SignatureHelpFeature = class extends features_1.TextDocumentLanguageFeature {
@@ -15575,12 +12327,12 @@ var require_signatureHelp = __commonJS({
         super(client2, vscode_languageserver_protocol_1.SignatureHelpRequest.type);
       }
       fillClientCapabilities(capabilities) {
-        let config2 = (0, features_1.ensure)((0, features_1.ensure)(capabilities, "textDocument"), "signatureHelp");
-        config2.dynamicRegistration = true;
-        config2.signatureInformation = { documentationFormat: [vscode_languageserver_protocol_1.MarkupKind.Markdown, vscode_languageserver_protocol_1.MarkupKind.PlainText] };
-        config2.signatureInformation.parameterInformation = { labelOffsetSupport: true };
-        config2.signatureInformation.activeParameterSupport = true;
-        config2.contextSupport = true;
+        let config = (0, features_1.ensure)((0, features_1.ensure)(capabilities, "textDocument"), "signatureHelp");
+        config.dynamicRegistration = true;
+        config.signatureInformation = { documentationFormat: [vscode_languageserver_protocol_1.MarkupKind.Markdown, vscode_languageserver_protocol_1.MarkupKind.PlainText] };
+        config.signatureInformation.parameterInformation = { labelOffsetSupport: true };
+        config.signatureInformation.activeParameterSupport = true;
+        config.contextSupport = true;
       }
       initialize(capabilities, documentSelector) {
         const options = this.getRegistrationOptions(documentSelector, capabilities.signatureHelpProvider);
@@ -15637,7 +12389,7 @@ var require_documentHighlight = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.DocumentHighlightFeature = void 0;
     var vscode_1 = require("vscode");
-    var vscode_languageserver_protocol_1 = require_main4();
+    var vscode_languageserver_protocol_1 = require_main3();
     var features_1 = require_features();
     var UUID = require_uuid();
     var DocumentHighlightFeature = class extends features_1.TextDocumentLanguageFeature {
@@ -15687,7 +12439,7 @@ var require_documentSymbol = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.DocumentSymbolFeature = exports2.SupportedSymbolTags = exports2.SupportedSymbolKinds = void 0;
     var vscode_1 = require("vscode");
-    var vscode_languageserver_protocol_1 = require_main4();
+    var vscode_languageserver_protocol_1 = require_main3();
     var features_1 = require_features();
     var UUID = require_uuid();
     exports2.SupportedSymbolKinds = [
@@ -15788,7 +12540,7 @@ var require_workspaceSymbol = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.WorkspaceSymbolFeature = void 0;
     var vscode_1 = require("vscode");
-    var vscode_languageserver_protocol_1 = require_main4();
+    var vscode_languageserver_protocol_1 = require_main3();
     var features_1 = require_features();
     var documentSymbol_1 = require_documentSymbol();
     var UUID = require_uuid();
@@ -15863,7 +12615,7 @@ var require_reference = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.ReferencesFeature = void 0;
     var vscode_1 = require("vscode");
-    var vscode_languageserver_protocol_1 = require_main4();
+    var vscode_languageserver_protocol_1 = require_main3();
     var features_1 = require_features();
     var UUID = require_uuid();
     var ReferencesFeature = class extends features_1.TextDocumentLanguageFeature {
@@ -15916,7 +12668,7 @@ var require_codeAction = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.CodeActionFeature = void 0;
     var vscode_1 = require("vscode");
-    var vscode_languageserver_protocol_1 = require_main4();
+    var vscode_languageserver_protocol_1 = require_main3();
     var UUID = require_uuid();
     var features_1 = require_features();
     var CodeActionFeature = class extends features_1.TextDocumentLanguageFeature {
@@ -16008,7 +12760,7 @@ var require_codeLens = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.CodeLensFeature = void 0;
     var vscode_1 = require("vscode");
-    var vscode_languageserver_protocol_1 = require_main4();
+    var vscode_languageserver_protocol_1 = require_main3();
     var UUID = require_uuid();
     var features_1 = require_features();
     var CodeLensFeature = class extends features_1.TextDocumentLanguageFeature {
@@ -16082,7 +12834,7 @@ var require_formatting = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.DocumentOnTypeFormattingFeature = exports2.DocumentRangeFormattingFeature = exports2.DocumentFormattingFeature = void 0;
     var vscode_1 = require("vscode");
-    var vscode_languageserver_protocol_1 = require_main4();
+    var vscode_languageserver_protocol_1 = require_main3();
     var UUID = require_uuid();
     var features_1 = require_features();
     var FileFormattingOptions;
@@ -16258,9 +13010,9 @@ var require_rename = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.RenameFeature = void 0;
     var vscode_1 = require("vscode");
-    var vscode_languageserver_protocol_1 = require_main4();
+    var vscode_languageserver_protocol_1 = require_main3();
     var UUID = require_uuid();
-    var Is = require_is2();
+    var Is = require_is();
     var features_1 = require_features();
     var RenameFeature = class extends features_1.TextDocumentLanguageFeature {
       constructor(client2) {
@@ -16361,7 +13113,7 @@ var require_documentLink = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.DocumentLinkFeature = void 0;
     var vscode_1 = require("vscode");
-    var vscode_languageserver_protocol_1 = require_main4();
+    var vscode_languageserver_protocol_1 = require_main3();
     var features_1 = require_features();
     var UUID = require_uuid();
     var DocumentLinkFeature = class extends features_1.TextDocumentLanguageFeature {
@@ -16428,7 +13180,7 @@ var require_executeCommand = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.ExecuteCommandFeature = void 0;
     var vscode_1 = require("vscode");
-    var vscode_languageserver_protocol_1 = require_main4();
+    var vscode_languageserver_protocol_1 = require_main3();
     var UUID = require_uuid();
     var features_1 = require_features();
     var ExecuteCommandFeature = class {
@@ -16500,7 +13252,7 @@ var require_fileSystemWatcher = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.FileSystemWatcherFeature = void 0;
     var vscode_1 = require("vscode");
-    var vscode_languageserver_protocol_1 = require_main4();
+    var vscode_languageserver_protocol_1 = require_main3();
     var features_1 = require_features();
     var FileSystemWatcherFeature = class {
       constructor(client2, notifyFileEvent) {
@@ -16597,7 +13349,7 @@ var require_colorProvider = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.ColorProviderFeature = void 0;
     var vscode_1 = require("vscode");
-    var vscode_languageserver_protocol_1 = require_main4();
+    var vscode_languageserver_protocol_1 = require_main3();
     var features_1 = require_features();
     var ColorProviderFeature = class extends features_1.TextDocumentLanguageFeature {
       constructor(client2) {
@@ -16669,7 +13421,7 @@ var require_implementation = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.ImplementationFeature = void 0;
     var vscode_1 = require("vscode");
-    var vscode_languageserver_protocol_1 = require_main4();
+    var vscode_languageserver_protocol_1 = require_main3();
     var features_1 = require_features();
     var ImplementationFeature = class extends features_1.TextDocumentLanguageFeature {
       constructor(client2) {
@@ -16723,7 +13475,7 @@ var require_typeDefinition = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.TypeDefinitionFeature = void 0;
     var vscode_1 = require("vscode");
-    var vscode_languageserver_protocol_1 = require_main4();
+    var vscode_languageserver_protocol_1 = require_main3();
     var features_1 = require_features();
     var TypeDefinitionFeature = class extends features_1.TextDocumentLanguageFeature {
       constructor(client2) {
@@ -16779,7 +13531,7 @@ var require_workspaceFolder = __commonJS({
     exports2.WorkspaceFoldersFeature = exports2.arrayDiff = void 0;
     var UUID = require_uuid();
     var vscode_1 = require("vscode");
-    var vscode_languageserver_protocol_1 = require_main4();
+    var vscode_languageserver_protocol_1 = require_main3();
     function access(target, key) {
       if (target === void 0 || target === null) {
         return void 0;
@@ -16920,7 +13672,7 @@ var require_foldingRange = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.FoldingRangeFeature = void 0;
     var vscode_1 = require("vscode");
-    var vscode_languageserver_protocol_1 = require_main4();
+    var vscode_languageserver_protocol_1 = require_main3();
     var features_1 = require_features();
     var FoldingRangeFeature = class extends features_1.TextDocumentLanguageFeature {
       constructor(client2) {
@@ -16985,7 +13737,7 @@ var require_declaration = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.DeclarationFeature = void 0;
     var vscode_1 = require("vscode");
-    var vscode_languageserver_protocol_1 = require_main4();
+    var vscode_languageserver_protocol_1 = require_main3();
     var features_1 = require_features();
     var DeclarationFeature = class extends features_1.TextDocumentLanguageFeature {
       constructor(client2) {
@@ -17039,7 +13791,7 @@ var require_selectionRange = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.SelectionRangeFeature = void 0;
     var vscode_1 = require("vscode");
-    var vscode_languageserver_protocol_1 = require_main4();
+    var vscode_languageserver_protocol_1 = require_main3();
     var features_1 = require_features();
     var SelectionRangeFeature = class extends features_1.TextDocumentLanguageFeature {
       constructor(client2) {
@@ -17095,7 +13847,7 @@ var require_progress = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.ProgressFeature = void 0;
-    var vscode_languageserver_protocol_1 = require_main4();
+    var vscode_languageserver_protocol_1 = require_main3();
     var progressPart_1 = require_progressPart();
     function ensure(target, key) {
       if (target[key] === void 0) {
@@ -17142,7 +13894,7 @@ var require_callHierarchy = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.CallHierarchyFeature = void 0;
     var vscode_1 = require("vscode");
-    var vscode_languageserver_protocol_1 = require_main4();
+    var vscode_languageserver_protocol_1 = require_main3();
     var features_1 = require_features();
     var CallHierarchyProvider = class {
       constructor(client2) {
@@ -17235,9 +13987,9 @@ var require_semanticTokens = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.SemanticTokensFeature = void 0;
     var vscode4 = require("vscode");
-    var vscode_languageserver_protocol_1 = require_main4();
+    var vscode_languageserver_protocol_1 = require_main3();
     var features_1 = require_features();
-    var Is = require_is2();
+    var Is = require_is();
     var SemanticTokensFeature = class extends features_1.TextDocumentLanguageFeature {
       constructor(client2) {
         super(client2, vscode_languageserver_protocol_1.SemanticTokensRegistrationType.type);
@@ -17404,7 +14156,7 @@ var require_fileOperations = __commonJS({
     exports2.WillDeleteFilesFeature = exports2.WillRenameFilesFeature = exports2.WillCreateFilesFeature = exports2.DidDeleteFilesFeature = exports2.DidRenameFilesFeature = exports2.DidCreateFilesFeature = void 0;
     var code = require("vscode");
     var minimatch = require_minimatch();
-    var proto = require_main4();
+    var proto = require_main3();
     var UUID = require_uuid();
     function ensure(target, key) {
       if (target[key] === void 0) {
@@ -17701,7 +14453,7 @@ var require_linkedEditingRange = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.LinkedEditingFeature = void 0;
     var code = require("vscode");
-    var proto = require_main4();
+    var proto = require_main3();
     var features_1 = require_features();
     var LinkedEditingFeature = class extends features_1.TextDocumentLanguageFeature {
       constructor(client2) {
@@ -17754,7 +14506,7 @@ var require_typeHierarchy = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.TypeHierarchyFeature = void 0;
     var vscode_1 = require("vscode");
-    var vscode_languageserver_protocol_1 = require_main4();
+    var vscode_languageserver_protocol_1 = require_main3();
     var features_1 = require_features();
     var TypeHierarchyProvider = class {
       constructor(client2) {
@@ -17846,7 +14598,7 @@ var require_inlineValue = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.InlineValueFeature = void 0;
     var vscode_1 = require("vscode");
-    var vscode_languageserver_protocol_1 = require_main4();
+    var vscode_languageserver_protocol_1 = require_main3();
     var features_1 = require_features();
     var InlineValueFeature = class extends features_1.TextDocumentLanguageFeature {
       constructor(client2) {
@@ -17911,7 +14663,7 @@ var require_inlayHint = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.InlayHintsFeature = void 0;
     var vscode_1 = require("vscode");
-    var vscode_languageserver_protocol_1 = require_main4();
+    var vscode_languageserver_protocol_1 = require_main3();
     var features_1 = require_features();
     var InlayHintsFeature = class extends features_1.TextDocumentLanguageFeature {
       constructor(client2) {
@@ -17997,7 +14749,7 @@ var require_inlineCompletion = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.InlineCompletionItemFeature = void 0;
     var vscode_1 = require("vscode");
-    var vscode_languageserver_protocol_1 = require_main4();
+    var vscode_languageserver_protocol_1 = require_main3();
     var features_1 = require_features();
     var UUID = require_uuid();
     var InlineCompletionItemFeature = class extends features_1.TextDocumentLanguageFeature {
@@ -18051,10 +14803,10 @@ var require_client = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.ProposedFeatures = exports2.BaseLanguageClient = exports2.MessageTransports = exports2.SuspendMode = exports2.State = exports2.CloseAction = exports2.ErrorAction = exports2.RevealOutputChannelOn = void 0;
     var vscode_1 = require("vscode");
-    var vscode_languageserver_protocol_1 = require_main4();
+    var vscode_languageserver_protocol_1 = require_main3();
     var c2p = require_codeConverter();
     var p2c = require_protocolConverter();
-    var Is = require_is2();
+    var Is = require_is();
     var async_1 = require_async();
     var UUID = require_uuid();
     var progressPart_1 = require_progressPart();
@@ -19118,16 +15870,16 @@ ${error.message}`, void 0, handlerResult.handled === true ? false : "force");
         }));
       }
       refreshTrace(connection, sendNotification = false) {
-        const config2 = vscode_1.workspace.getConfiguration(this._id);
+        const config = vscode_1.workspace.getConfiguration(this._id);
         let trace = vscode_languageserver_protocol_1.Trace.Off;
         let traceFormat = vscode_languageserver_protocol_1.TraceFormat.Text;
-        if (config2) {
-          const traceConfig = config2.get("trace.server", "off");
+        if (config) {
+          const traceConfig = config.get("trace.server", "off");
           if (typeof traceConfig === "string") {
             trace = vscode_languageserver_protocol_1.Trace.fromString(traceConfig);
           } else {
-            trace = vscode_languageserver_protocol_1.Trace.fromString(config2.get("trace.server.verbosity", "off"));
-            traceFormat = vscode_languageserver_protocol_1.TraceFormat.fromString(config2.get("trace.server.format", "text"));
+            trace = vscode_languageserver_protocol_1.Trace.fromString(config.get("trace.server.verbosity", "off"));
+            traceFormat = vscode_languageserver_protocol_1.TraceFormat.fromString(config.get("trace.server.format", "text"));
           }
         }
         this._trace = trace;
@@ -19532,7 +16284,7 @@ var require_processes = __commonJS({
 var require_node2 = __commonJS({
   "node_modules/vscode-languageserver-protocol/node.js"(exports2, module2) {
     "use strict";
-    module2.exports = require_main4();
+    module2.exports = require_main3();
   }
 });
 
@@ -20616,7 +17368,7 @@ var require_satisfies = __commonJS({
 });
 
 // node_modules/vscode-languageclient/lib/common/api.js
-var require_api4 = __commonJS({
+var require_api3 = __commonJS({
   "node_modules/vscode-languageclient/lib/common/api.js"(exports2) {
     "use strict";
     var __createBinding = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
@@ -20637,7 +17389,7 @@ var require_api4 = __commonJS({
     };
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.DiagnosticPullMode = exports2.vsdiag = void 0;
-    __exportStar(require_main4(), exports2);
+    __exportStar(require_main3(), exports2);
     __exportStar(require_features(), exports2);
     var diagnostic_1 = require_diagnostic();
     Object.defineProperty(exports2, "vsdiag", { enumerable: true, get: function() {
@@ -20651,7 +17403,7 @@ var require_api4 = __commonJS({
 });
 
 // node_modules/vscode-languageclient/lib/node/main.js
-var require_main5 = __commonJS({
+var require_main4 = __commonJS({
   "node_modules/vscode-languageclient/lib/node/main.js"(exports2) {
     "use strict";
     var __createBinding = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
@@ -20676,14 +17428,14 @@ var require_main5 = __commonJS({
     var fs2 = require("fs");
     var path2 = require("path");
     var vscode_1 = require("vscode");
-    var Is = require_is2();
+    var Is = require_is();
     var client_1 = require_client();
     var processes_1 = require_processes();
     var node_1 = require_node2();
     var semverParse = require_parse();
     var semverSatisfies = require_satisfies();
     __exportStar(require_node2(), exports2);
-    __exportStar(require_api4(), exports2);
+    __exportStar(require_api3(), exports2);
     var REQUIRED_VSCODE_VERSION = "^1.82.0";
     var TransportKind;
     (function(TransportKind2) {
@@ -20730,7 +17482,7 @@ var require_main5 = __commonJS({
       }
       ChildProcessInfo2.is = is;
     })(ChildProcessInfo || (ChildProcessInfo = {}));
-    var LanguageClient3 = class extends client_1.BaseLanguageClient {
+    var LanguageClient2 = class extends client_1.BaseLanguageClient {
       constructor(arg1, arg2, arg3, arg4, arg5) {
         let id;
         let name;
@@ -21136,7 +17888,7 @@ var require_main5 = __commonJS({
         return Promise.resolve(void 0);
       }
     };
-    exports2.LanguageClient = LanguageClient3;
+    exports2.LanguageClient = LanguageClient2;
     var SettingMonitor = class {
       constructor(_client, _setting) {
         this._client = _client;
@@ -33427,7 +30179,7 @@ var require_BufferList = __commonJS({
         this.head = this.tail = null;
         this.length = 0;
       };
-      BufferList.prototype.join = function join2(s) {
+      BufferList.prototype.join = function join(s) {
         if (this.length === 0) return "";
         var p = this.head;
         var ret = "" + p.data;
@@ -40979,11 +37731,9 @@ __export(extension_exports, {
   deactivate: () => deactivate2
 });
 module.exports = __toCommonJS(extension_exports);
-var import_vscode_jsonrpc = __toESM(require_main());
-var import_vscode_languageclient2 = __toESM(require_main5());
 
 // src/lsp.js
-var import_vscode_languageclient = __toESM(require_main5());
+var import_vscode_languageclient = __toESM(require_main4());
 var import_os = require("os");
 var import_child_process = __toESM(require("child_process"));
 
@@ -41374,7 +38124,7 @@ var utils_default = {
 };
 
 // node_modules/axios/lib/core/AxiosError.js
-function AxiosError(message, code, config2, request, response2) {
+function AxiosError(message, code, config, request, response2) {
   Error.call(this);
   if (Error.captureStackTrace) {
     Error.captureStackTrace(this, this.constructor);
@@ -41384,7 +38134,7 @@ function AxiosError(message, code, config2, request, response2) {
   this.message = message;
   this.name = "AxiosError";
   code && (this.code = code);
-  config2 && (this.config = config2);
+  config && (this.config = config);
   request && (this.request = request);
   if (response2) {
     this.response = response2;
@@ -41433,14 +38183,14 @@ var descriptors = {};
 });
 Object.defineProperties(AxiosError, descriptors);
 Object.defineProperty(prototype, "isAxiosError", { value: true });
-AxiosError.from = (error, code, config2, request, response2, customProps) => {
+AxiosError.from = (error, code, config, request, response2, customProps) => {
   const axiosError = Object.create(prototype);
   utils_default.toFlatObject(error, axiosError, function filter2(obj) {
     return obj !== Error.prototype;
   }, (prop) => {
     return prop !== "isAxiosError";
   });
-  AxiosError.call(axiosError, error.message, code, config2, request, response2);
+  AxiosError.call(axiosError, error.message, code, config, request, response2);
   axiosError.cause = error;
   axiosError.name = error.name;
   customProps && Object.assign(axiosError, customProps);
@@ -42176,12 +38926,12 @@ var AxiosHeaders_default = AxiosHeaders;
 
 // node_modules/axios/lib/core/transformData.js
 function transformData(fns, response2) {
-  const config2 = this || defaults_default;
-  const context2 = response2 || config2;
+  const config = this || defaults_default;
+  const context2 = response2 || config;
   const headers = AxiosHeaders_default.from(context2.headers);
   let data = context2.data;
   utils_default.forEach(fns, function transform(fn) {
-    data = fn.call(config2, data, headers.normalize(), response2 ? response2.status : void 0);
+    data = fn.call(config, data, headers.normalize(), response2 ? response2.status : void 0);
   });
   headers.normalize();
   return data;
@@ -42193,8 +38943,8 @@ function isCancel(value) {
 }
 
 // node_modules/axios/lib/cancel/CanceledError.js
-function CanceledError(message, config2, request) {
-  AxiosError_default.call(this, message == null ? "canceled" : message, AxiosError_default.ERR_CANCELED, config2, request);
+function CanceledError(message, config, request) {
+  AxiosError_default.call(this, message == null ? "canceled" : message, AxiosError_default.ERR_CANCELED, config, request);
   this.name = "CanceledError";
 }
 utils_default.inherits(CanceledError, AxiosError_default, {
@@ -42735,11 +39485,11 @@ var resolveFamily = ({ address, family }) => {
   };
 };
 var buildAddressEntry = (address, family) => resolveFamily(utils_default.isObject(address) ? address : { address, family });
-var http_default = isHttpAdapterSupported && function httpAdapter(config2) {
+var http_default = isHttpAdapterSupported && function httpAdapter(config) {
   return wrapAsync(async function dispatchHttpRequest(resolve, reject, onDone) {
-    let { data, lookup, family } = config2;
-    const { responseType, responseEncoding } = config2;
-    const method = config2.method.toUpperCase();
+    let { data, lookup, family } = config;
+    const { responseType, responseEncoding } = config;
+    const method = config.method.toUpperCase();
     let isDone;
     let rejected = false;
     let req;
@@ -42757,11 +39507,11 @@ var http_default = isHttpAdapterSupported && function httpAdapter(config2) {
     }
     const emitter = new import_events.EventEmitter();
     const onFinished = () => {
-      if (config2.cancelToken) {
-        config2.cancelToken.unsubscribe(abort);
+      if (config.cancelToken) {
+        config.cancelToken.unsubscribe(abort);
       }
-      if (config2.signal) {
-        config2.signal.removeEventListener("abort", abort);
+      if (config.signal) {
+        config.signal.removeEventListener("abort", abort);
       }
       emitter.removeAllListeners();
     };
@@ -42773,16 +39523,16 @@ var http_default = isHttpAdapterSupported && function httpAdapter(config2) {
       }
     });
     function abort(reason) {
-      emitter.emit("abort", !reason || reason.type ? new CanceledError_default(null, config2, req) : reason);
+      emitter.emit("abort", !reason || reason.type ? new CanceledError_default(null, config, req) : reason);
     }
     emitter.once("abort", reject);
-    if (config2.cancelToken || config2.signal) {
-      config2.cancelToken && config2.cancelToken.subscribe(abort);
-      if (config2.signal) {
-        config2.signal.aborted ? abort() : config2.signal.addEventListener("abort", abort);
+    if (config.cancelToken || config.signal) {
+      config.cancelToken && config.cancelToken.subscribe(abort);
+      if (config.signal) {
+        config.signal.aborted ? abort() : config.signal.addEventListener("abort", abort);
       }
     }
-    const fullPath = buildFullPath(config2.baseURL, config2.url);
+    const fullPath = buildFullPath(config.baseURL, config.url);
     const parsed = new URL(fullPath, platform_default.hasBrowserEnv ? platform_default.origin : void 0);
     const protocol = parsed.protocol || supportedProtocols[0];
     if (protocol === "data:") {
@@ -42792,15 +39542,15 @@ var http_default = isHttpAdapterSupported && function httpAdapter(config2) {
           status: 405,
           statusText: "method not allowed",
           headers: {},
-          config: config2
+          config
         });
       }
       try {
-        convertedData = fromDataURI(config2.url, responseType === "blob", {
-          Blob: config2.env && config2.env.Blob
+        convertedData = fromDataURI(config.url, responseType === "blob", {
+          Blob: config.env && config.env.Blob
         });
       } catch (err) {
-        throw AxiosError_default.from(err, AxiosError_default.ERR_BAD_REQUEST, config2);
+        throw AxiosError_default.from(err, AxiosError_default.ERR_BAD_REQUEST, config);
       }
       if (responseType === "text") {
         convertedData = convertedData.toString(responseEncoding);
@@ -42815,20 +39565,20 @@ var http_default = isHttpAdapterSupported && function httpAdapter(config2) {
         status: 200,
         statusText: "OK",
         headers: new AxiosHeaders_default(),
-        config: config2
+        config
       });
     }
     if (supportedProtocols.indexOf(protocol) === -1) {
       return reject(new AxiosError_default(
         "Unsupported protocol " + protocol,
         AxiosError_default.ERR_BAD_REQUEST,
-        config2
+        config
       ));
     }
-    const headers = AxiosHeaders_default.from(config2.headers).normalize();
+    const headers = AxiosHeaders_default.from(config.headers).normalize();
     headers.set("User-Agent", "axios/" + VERSION, false);
-    const { onUploadProgress, onDownloadProgress } = config2;
-    const maxRate = config2.maxRate;
+    const { onUploadProgress, onDownloadProgress } = config;
+    const maxRate = config.maxRate;
     let maxUploadRate = void 0;
     let maxDownloadRate = void 0;
     if (utils_default.isSpecCompliantForm(data)) {
@@ -42862,15 +39612,15 @@ var http_default = isHttpAdapterSupported && function httpAdapter(config2) {
         return reject(new AxiosError_default(
           "Data after transformation must be a string, an ArrayBuffer, a Buffer, or a Stream",
           AxiosError_default.ERR_BAD_REQUEST,
-          config2
+          config
         ));
       }
       headers.setContentLength(data.length, false);
-      if (config2.maxBodyLength > -1 && data.length > config2.maxBodyLength) {
+      if (config.maxBodyLength > -1 && data.length > config.maxBodyLength) {
         return reject(new AxiosError_default(
           "Request body larger than maxBodyLength limit",
           AxiosError_default.ERR_BAD_REQUEST,
-          config2
+          config
         ));
       }
     }
@@ -42897,9 +39647,9 @@ var http_default = isHttpAdapterSupported && function httpAdapter(config2) {
       ));
     }
     let auth = void 0;
-    if (config2.auth) {
-      const username = config2.auth.username || "";
-      const password = config2.auth.password || "";
+    if (config.auth) {
+      const username = config.auth.username || "";
+      const password = config.auth.password || "";
       auth = username + ":" + password;
     }
     if (!auth && parsed.username) {
@@ -42912,13 +39662,13 @@ var http_default = isHttpAdapterSupported && function httpAdapter(config2) {
     try {
       path2 = buildURL(
         parsed.pathname + parsed.search,
-        config2.params,
-        config2.paramsSerializer
+        config.params,
+        config.paramsSerializer
       ).replace(/^\?/, "");
     } catch (err) {
       const customErr = new Error(err.message);
-      customErr.config = config2;
-      customErr.url = config2.url;
+      customErr.config = config;
+      customErr.url = config.url;
       customErr.exists = true;
       return reject(customErr);
     }
@@ -42931,7 +39681,7 @@ var http_default = isHttpAdapterSupported && function httpAdapter(config2) {
       path: path2,
       method,
       headers: headers.toJSON(),
-      agents: { http: config2.httpAgent, https: config2.httpsAgent },
+      agents: { http: config.httpAgent, https: config.httpsAgent },
       auth,
       protocol,
       family,
@@ -42939,36 +39689,36 @@ var http_default = isHttpAdapterSupported && function httpAdapter(config2) {
       beforeRedirects: {}
     };
     !utils_default.isUndefined(lookup) && (options.lookup = lookup);
-    if (config2.socketPath) {
-      options.socketPath = config2.socketPath;
+    if (config.socketPath) {
+      options.socketPath = config.socketPath;
     } else {
       options.hostname = parsed.hostname.startsWith("[") ? parsed.hostname.slice(1, -1) : parsed.hostname;
       options.port = parsed.port;
-      setProxy(options, config2.proxy, protocol + "//" + parsed.hostname + (parsed.port ? ":" + parsed.port : "") + options.path);
+      setProxy(options, config.proxy, protocol + "//" + parsed.hostname + (parsed.port ? ":" + parsed.port : "") + options.path);
     }
     let transport;
     const isHttpsRequest = isHttps.test(options.protocol);
-    options.agent = isHttpsRequest ? config2.httpsAgent : config2.httpAgent;
-    if (config2.transport) {
-      transport = config2.transport;
-    } else if (config2.maxRedirects === 0) {
+    options.agent = isHttpsRequest ? config.httpsAgent : config.httpAgent;
+    if (config.transport) {
+      transport = config.transport;
+    } else if (config.maxRedirects === 0) {
       transport = isHttpsRequest ? import_https.default : import_http.default;
     } else {
-      if (config2.maxRedirects) {
-        options.maxRedirects = config2.maxRedirects;
+      if (config.maxRedirects) {
+        options.maxRedirects = config.maxRedirects;
       }
-      if (config2.beforeRedirect) {
-        options.beforeRedirects.config = config2.beforeRedirect;
+      if (config.beforeRedirect) {
+        options.beforeRedirects.config = config.beforeRedirect;
       }
       transport = isHttpsRequest ? httpsFollow : httpFollow;
     }
-    if (config2.maxBodyLength > -1) {
-      options.maxBodyLength = config2.maxBodyLength;
+    if (config.maxBodyLength > -1) {
+      options.maxBodyLength = config.maxBodyLength;
     } else {
       options.maxBodyLength = Infinity;
     }
-    if (config2.insecureHTTPParser) {
-      options.insecureHTTPParser = config2.insecureHTTPParser;
+    if (config.insecureHTTPParser) {
+      options.insecureHTTPParser = config.insecureHTTPParser;
     }
     req = transport.request(options, function handleResponse(res) {
       if (req.destroyed) return;
@@ -42989,7 +39739,7 @@ var http_default = isHttpAdapterSupported && function httpAdapter(config2) {
       }
       let responseStream = res;
       const lastRequest = res.req || req;
-      if (config2.decompress !== false && res.headers["content-encoding"]) {
+      if (config.decompress !== false && res.headers["content-encoding"]) {
         if (method === "HEAD" || res.statusCode === 204) {
           delete res.headers["content-encoding"];
         }
@@ -43022,7 +39772,7 @@ var http_default = isHttpAdapterSupported && function httpAdapter(config2) {
         status: res.statusCode,
         statusText: res.statusMessage,
         headers: new AxiosHeaders_default(res.headers),
-        config: config2,
+        config,
         request: lastRequest
       };
       if (responseType === "stream") {
@@ -43034,13 +39784,13 @@ var http_default = isHttpAdapterSupported && function httpAdapter(config2) {
         responseStream.on("data", function handleStreamData(chunk) {
           responseBuffer.push(chunk);
           totalResponseBytes += chunk.length;
-          if (config2.maxContentLength > -1 && totalResponseBytes > config2.maxContentLength) {
+          if (config.maxContentLength > -1 && totalResponseBytes > config.maxContentLength) {
             rejected = true;
             responseStream.destroy();
             reject(new AxiosError_default(
-              "maxContentLength size of " + config2.maxContentLength + " exceeded",
+              "maxContentLength size of " + config.maxContentLength + " exceeded",
               AxiosError_default.ERR_BAD_RESPONSE,
-              config2,
+              config,
               lastRequest
             ));
           }
@@ -43050,9 +39800,9 @@ var http_default = isHttpAdapterSupported && function httpAdapter(config2) {
             return;
           }
           const err = new AxiosError_default(
-            "maxContentLength size of " + config2.maxContentLength + " exceeded",
+            "maxContentLength size of " + config.maxContentLength + " exceeded",
             AxiosError_default.ERR_BAD_RESPONSE,
-            config2,
+            config,
             lastRequest
           );
           responseStream.destroy(err);
@@ -43060,7 +39810,7 @@ var http_default = isHttpAdapterSupported && function httpAdapter(config2) {
         });
         responseStream.on("error", function handleStreamError(err) {
           if (req.destroyed) return;
-          reject(AxiosError_default.from(err, null, config2, lastRequest));
+          reject(AxiosError_default.from(err, null, config, lastRequest));
         });
         responseStream.on("end", function handleStreamEnd() {
           try {
@@ -43073,7 +39823,7 @@ var http_default = isHttpAdapterSupported && function httpAdapter(config2) {
             }
             response2.data = responseData;
           } catch (err) {
-            return reject(AxiosError_default.from(err, null, config2, response2.request, response2));
+            return reject(AxiosError_default.from(err, null, config, response2.request, response2));
           }
           settle(resolve, reject, response2);
         });
@@ -43090,33 +39840,33 @@ var http_default = isHttpAdapterSupported && function httpAdapter(config2) {
       req.destroy(err);
     });
     req.on("error", function handleRequestError(err) {
-      reject(AxiosError_default.from(err, null, config2, req));
+      reject(AxiosError_default.from(err, null, config, req));
     });
     req.on("socket", function handleRequestSocket(socket) {
       socket.setKeepAlive(true, 1e3 * 60);
     });
-    if (config2.timeout) {
-      const timeout = parseInt(config2.timeout, 10);
+    if (config.timeout) {
+      const timeout = parseInt(config.timeout, 10);
       if (Number.isNaN(timeout)) {
         reject(new AxiosError_default(
           "error trying to parse `config.timeout` to int",
           AxiosError_default.ERR_BAD_OPTION_VALUE,
-          config2,
+          config,
           req
         ));
         return;
       }
       req.setTimeout(timeout, function handleRequestTimeout() {
         if (isDone) return;
-        let timeoutErrorMessage = config2.timeout ? "timeout of " + config2.timeout + "ms exceeded" : "timeout exceeded";
-        const transitional2 = config2.transitional || transitional_default;
-        if (config2.timeoutErrorMessage) {
-          timeoutErrorMessage = config2.timeoutErrorMessage;
+        let timeoutErrorMessage = config.timeout ? "timeout of " + config.timeout + "ms exceeded" : "timeout exceeded";
+        const transitional2 = config.transitional || transitional_default;
+        if (config.timeoutErrorMessage) {
+          timeoutErrorMessage = config.timeoutErrorMessage;
         }
         reject(new AxiosError_default(
           timeoutErrorMessage,
           transitional2.clarifyTimeoutError ? AxiosError_default.ETIMEDOUT : AxiosError_default.ECONNABORTED,
-          config2,
+          config,
           req
         ));
         abort();
@@ -43134,7 +39884,7 @@ var http_default = isHttpAdapterSupported && function httpAdapter(config2) {
       });
       data.on("close", () => {
         if (!ended && !errored) {
-          abort(new CanceledError_default("Request stream has been aborted", config2, req));
+          abort(new CanceledError_default("Request stream has been aborted", config, req));
         }
       });
       data.pipe(req);
@@ -43222,7 +39972,7 @@ var cookies_default = platform_default.hasStandardBrowserEnv ? (
 var headersToObject = (thing) => thing instanceof AxiosHeaders_default ? { ...thing } : thing;
 function mergeConfig(config1, config2) {
   config2 = config2 || {};
-  const config3 = {};
+  const config = {};
   function getMergedValue(target, source, caseless) {
     if (utils_default.isPlainObject(target) && utils_default.isPlainObject(source)) {
       return utils_default.merge.call({ caseless }, target, source);
@@ -43293,17 +40043,17 @@ function mergeConfig(config1, config2) {
   utils_default.forEach(Object.keys(Object.assign({}, config1, config2)), function computeConfigValue(prop) {
     const merge2 = mergeMap[prop] || mergeDeepProperties;
     const configValue = merge2(config1[prop], config2[prop], prop);
-    utils_default.isUndefined(configValue) && merge2 !== mergeDirectKeys || (config3[prop] = configValue);
+    utils_default.isUndefined(configValue) && merge2 !== mergeDirectKeys || (config[prop] = configValue);
   });
-  return config3;
+  return config;
 }
 
 // node_modules/axios/lib/helpers/resolveConfig.js
-var resolveConfig_default = (config2) => {
-  const newConfig = mergeConfig({}, config2);
+var resolveConfig_default = (config) => {
+  const newConfig = mergeConfig({}, config);
   let { data, withXSRFToken, xsrfHeaderName, xsrfCookieName, headers, auth } = newConfig;
   newConfig.headers = headers = AxiosHeaders_default.from(headers);
-  newConfig.url = buildURL(buildFullPath(newConfig.baseURL, newConfig.url), config2.params, config2.paramsSerializer);
+  newConfig.url = buildURL(buildFullPath(newConfig.baseURL, newConfig.url), config.params, config.paramsSerializer);
   if (auth) {
     headers.set(
       "Authorization",
@@ -43333,9 +40083,9 @@ var resolveConfig_default = (config2) => {
 
 // node_modules/axios/lib/adapters/xhr.js
 var isXHRAdapterSupported = typeof XMLHttpRequest !== "undefined";
-var xhr_default = isXHRAdapterSupported && function(config2) {
+var xhr_default = isXHRAdapterSupported && function(config) {
   return new Promise(function dispatchXhrRequest(resolve, reject) {
-    const _config = resolveConfig_default(config2);
+    const _config = resolveConfig_default(config);
     let requestData = _config.data;
     const requestHeaders = AxiosHeaders_default.from(_config.headers).normalize();
     let { responseType, onUploadProgress, onDownloadProgress } = _config;
@@ -43364,7 +40114,7 @@ var xhr_default = isXHRAdapterSupported && function(config2) {
         status: request.status,
         statusText: request.statusText,
         headers: responseHeaders,
-        config: config2,
+        config,
         request
       };
       settle(function _resolve(value) {
@@ -43393,11 +40143,11 @@ var xhr_default = isXHRAdapterSupported && function(config2) {
       if (!request) {
         return;
       }
-      reject(new AxiosError_default("Request aborted", AxiosError_default.ECONNABORTED, config2, request));
+      reject(new AxiosError_default("Request aborted", AxiosError_default.ECONNABORTED, config, request));
       request = null;
     };
     request.onerror = function handleError() {
-      reject(new AxiosError_default("Network Error", AxiosError_default.ERR_NETWORK, config2, request));
+      reject(new AxiosError_default("Network Error", AxiosError_default.ERR_NETWORK, config, request));
       request = null;
     };
     request.ontimeout = function handleTimeout() {
@@ -43409,7 +40159,7 @@ var xhr_default = isXHRAdapterSupported && function(config2) {
       reject(new AxiosError_default(
         timeoutErrorMessage,
         transitional2.clarifyTimeoutError ? AxiosError_default.ETIMEDOUT : AxiosError_default.ECONNABORTED,
-        config2,
+        config,
         request
       ));
       request = null;
@@ -43440,7 +40190,7 @@ var xhr_default = isXHRAdapterSupported && function(config2) {
         if (!request) {
           return;
         }
-        reject(!cancel || cancel.type ? new CanceledError_default(null, config2, request) : cancel);
+        reject(!cancel || cancel.type ? new CanceledError_default(null, config, request) : cancel);
         request.abort();
         request = null;
       };
@@ -43451,7 +40201,7 @@ var xhr_default = isXHRAdapterSupported && function(config2) {
     }
     const protocol = parseProtocol(_config.url);
     if (protocol && platform_default.protocols.indexOf(protocol) === -1) {
-      reject(new AxiosError_default("Unsupported protocol " + protocol + ":", AxiosError_default.ERR_BAD_REQUEST, config2));
+      reject(new AxiosError_default("Unsupported protocol " + protocol + ":", AxiosError_default.ERR_BAD_REQUEST, config));
       return;
     }
     request.send(requestData || null);
@@ -43601,8 +40351,8 @@ var resolvers = {
 };
 isFetchSupported && ((res) => {
   ["text", "arrayBuffer", "blob", "formData", "stream"].forEach((type) => {
-    !resolvers[type] && (resolvers[type] = utils_default.isFunction(res[type]) ? (res2) => res2[type]() : (_, config2) => {
-      throw new AxiosError_default(`Response type '${type}' is not supported`, AxiosError_default.ERR_NOT_SUPPORT, config2);
+    !resolvers[type] && (resolvers[type] = utils_default.isFunction(res[type]) ? (res2) => res2[type]() : (_, config) => {
+      throw new AxiosError_default(`Response type '${type}' is not supported`, AxiosError_default.ERR_NOT_SUPPORT, config);
     });
   });
 })(new Response());
@@ -43634,7 +40384,7 @@ var resolveBodyLength = async (headers, body) => {
   const length = utils_default.toFiniteNumber(headers.getContentLength());
   return length == null ? getBodyLength(body) : length;
 };
-var fetch_default = isFetchSupported && (async (config2) => {
+var fetch_default = isFetchSupported && (async (config) => {
   let {
     url: url2,
     method,
@@ -43648,7 +40398,7 @@ var fetch_default = isFetchSupported && (async (config2) => {
     headers,
     withCredentials = "same-origin",
     fetchOptions
-  } = resolveConfig_default(config2);
+  } = resolveConfig_default(config);
   responseType = responseType ? (responseType + "").toLowerCase() : "text";
   let composedSignal = composeSignals_default([signal, cancelToken && cancelToken.toAbortSignal()], timeout);
   let request;
@@ -43709,7 +40459,7 @@ var fetch_default = isFetchSupported && (async (config2) => {
       );
     }
     responseType = responseType || "text";
-    let responseData = await resolvers[utils_default.findKey(resolvers, responseType) || "text"](response2, config2);
+    let responseData = await resolvers[utils_default.findKey(resolvers, responseType) || "text"](response2, config);
     !isStreamResponse && unsubscribe && unsubscribe();
     return await new Promise((resolve, reject) => {
       settle(resolve, reject, {
@@ -43717,7 +40467,7 @@ var fetch_default = isFetchSupported && (async (config2) => {
         headers: AxiosHeaders_default.from(response2.headers),
         status: response2.status,
         statusText: response2.statusText,
-        config: config2,
+        config,
         request
       });
     });
@@ -43725,13 +40475,13 @@ var fetch_default = isFetchSupported && (async (config2) => {
     unsubscribe && unsubscribe();
     if (err && err.name === "TypeError" && /fetch/i.test(err.message)) {
       throw Object.assign(
-        new AxiosError_default("Network Error", AxiosError_default.ERR_NETWORK, config2, request),
+        new AxiosError_default("Network Error", AxiosError_default.ERR_NETWORK, config, request),
         {
           cause: err.cause || err
         }
       );
     }
-    throw AxiosError_default.from(err, err && err.code, config2, request);
+    throw AxiosError_default.from(err, err && err.code, config, request);
   }
 });
 
@@ -43790,41 +40540,41 @@ var adapters_default = {
 };
 
 // node_modules/axios/lib/core/dispatchRequest.js
-function throwIfCancellationRequested(config2) {
-  if (config2.cancelToken) {
-    config2.cancelToken.throwIfRequested();
+function throwIfCancellationRequested(config) {
+  if (config.cancelToken) {
+    config.cancelToken.throwIfRequested();
   }
-  if (config2.signal && config2.signal.aborted) {
-    throw new CanceledError_default(null, config2);
+  if (config.signal && config.signal.aborted) {
+    throw new CanceledError_default(null, config);
   }
 }
-function dispatchRequest(config2) {
-  throwIfCancellationRequested(config2);
-  config2.headers = AxiosHeaders_default.from(config2.headers);
-  config2.data = transformData.call(
-    config2,
-    config2.transformRequest
+function dispatchRequest(config) {
+  throwIfCancellationRequested(config);
+  config.headers = AxiosHeaders_default.from(config.headers);
+  config.data = transformData.call(
+    config,
+    config.transformRequest
   );
-  if (["post", "put", "patch"].indexOf(config2.method) !== -1) {
-    config2.headers.setContentType("application/x-www-form-urlencoded", false);
+  if (["post", "put", "patch"].indexOf(config.method) !== -1) {
+    config.headers.setContentType("application/x-www-form-urlencoded", false);
   }
-  const adapter = adapters_default.getAdapter(config2.adapter || defaults_default.adapter);
-  return adapter(config2).then(function onAdapterResolution(response2) {
-    throwIfCancellationRequested(config2);
+  const adapter = adapters_default.getAdapter(config.adapter || defaults_default.adapter);
+  return adapter(config).then(function onAdapterResolution(response2) {
+    throwIfCancellationRequested(config);
     response2.data = transformData.call(
-      config2,
-      config2.transformResponse,
+      config,
+      config.transformResponse,
       response2
     );
     response2.headers = AxiosHeaders_default.from(response2.headers);
     return response2;
   }, function onAdapterRejection(reason) {
     if (!isCancel(reason)) {
-      throwIfCancellationRequested(config2);
+      throwIfCancellationRequested(config);
       if (reason && reason.response) {
         reason.response.data = transformData.call(
-          config2,
-          config2.transformResponse,
+          config,
+          config.transformResponse,
           reason.response
         );
         reason.response.headers = AxiosHeaders_default.from(reason.response.headers);
@@ -43910,9 +40660,9 @@ var Axios = class {
    *
    * @returns {Promise} The Promise to be fulfilled
    */
-  async request(configOrUrl, config2) {
+  async request(configOrUrl, config) {
     try {
-      return await this._request(configOrUrl, config2);
+      return await this._request(configOrUrl, config);
     } catch (err) {
       if (err instanceof Error) {
         let dummy;
@@ -43930,15 +40680,15 @@ var Axios = class {
       throw err;
     }
   }
-  _request(configOrUrl, config2) {
+  _request(configOrUrl, config) {
     if (typeof configOrUrl === "string") {
-      config2 = config2 || {};
-      config2.url = configOrUrl;
+      config = config || {};
+      config.url = configOrUrl;
     } else {
-      config2 = configOrUrl || {};
+      config = configOrUrl || {};
     }
-    config2 = mergeConfig(this.defaults, config2);
-    const { transitional: transitional2, paramsSerializer, headers } = config2;
+    config = mergeConfig(this.defaults, config);
+    const { transitional: transitional2, paramsSerializer, headers } = config;
     if (transitional2 !== void 0) {
       validator_default.assertOptions(transitional2, {
         silentJSONParsing: validators2.transitional(validators2.boolean),
@@ -43948,7 +40698,7 @@ var Axios = class {
     }
     if (paramsSerializer != null) {
       if (utils_default.isFunction(paramsSerializer)) {
-        config2.paramsSerializer = {
+        config.paramsSerializer = {
           serialize: paramsSerializer
         };
       } else {
@@ -43958,10 +40708,10 @@ var Axios = class {
         }, true);
       }
     }
-    config2.method = (config2.method || this.defaults.method || "get").toLowerCase();
+    config.method = (config.method || this.defaults.method || "get").toLowerCase();
     let contextHeaders = headers && utils_default.merge(
       headers.common,
-      headers[config2.method]
+      headers[config.method]
     );
     headers && utils_default.forEach(
       ["delete", "get", "head", "post", "put", "patch", "common"],
@@ -43969,11 +40719,11 @@ var Axios = class {
         delete headers[method];
       }
     );
-    config2.headers = AxiosHeaders_default.concat(contextHeaders, headers);
+    config.headers = AxiosHeaders_default.concat(contextHeaders, headers);
     const requestInterceptorChain = [];
     let synchronousRequestInterceptors = true;
     this.interceptors.request.forEach(function unshiftRequestInterceptors(interceptor) {
-      if (typeof interceptor.runWhen === "function" && interceptor.runWhen(config2) === false) {
+      if (typeof interceptor.runWhen === "function" && interceptor.runWhen(config) === false) {
         return;
       }
       synchronousRequestInterceptors = synchronousRequestInterceptors && interceptor.synchronous;
@@ -43991,14 +40741,14 @@ var Axios = class {
       chain.unshift.apply(chain, requestInterceptorChain);
       chain.push.apply(chain, responseInterceptorChain);
       len = chain.length;
-      promise = Promise.resolve(config2);
+      promise = Promise.resolve(config);
       while (i < len) {
         promise = promise.then(chain[i++], chain[i++]);
       }
       return promise;
     }
     len = requestInterceptorChain.length;
-    let newConfig = config2;
+    let newConfig = config;
     i = 0;
     while (i < len) {
       const onFulfilled = requestInterceptorChain[i++];
@@ -44022,25 +40772,25 @@ var Axios = class {
     }
     return promise;
   }
-  getUri(config2) {
-    config2 = mergeConfig(this.defaults, config2);
-    const fullPath = buildFullPath(config2.baseURL, config2.url);
-    return buildURL(fullPath, config2.params, config2.paramsSerializer);
+  getUri(config) {
+    config = mergeConfig(this.defaults, config);
+    const fullPath = buildFullPath(config.baseURL, config.url);
+    return buildURL(fullPath, config.params, config.paramsSerializer);
   }
 };
 utils_default.forEach(["delete", "get", "head", "options"], function forEachMethodNoData(method) {
-  Axios.prototype[method] = function(url2, config2) {
-    return this.request(mergeConfig(config2 || {}, {
+  Axios.prototype[method] = function(url2, config) {
+    return this.request(mergeConfig(config || {}, {
       method,
       url: url2,
-      data: (config2 || {}).data
+      data: (config || {}).data
     }));
   };
 });
 utils_default.forEach(["post", "put", "patch"], function forEachMethodWithData(method) {
   function generateHTTPMethod(isForm) {
-    return function httpMethod(url2, data, config2) {
-      return this.request(mergeConfig(config2 || {}, {
+    return function httpMethod(url2, data, config) {
+      return this.request(mergeConfig(config || {}, {
         method,
         headers: isForm ? {
           "Content-Type": "multipart/form-data"
@@ -44085,11 +40835,11 @@ var CancelToken = class _CancelToken {
       };
       return promise;
     };
-    executor(function cancel(message, config2, request) {
+    executor(function cancel(message, config, request) {
       if (token.reason) {
         return;
       }
-      token.reason = new CanceledError_default(message, config2, request);
+      token.reason = new CanceledError_default(message, config, request);
       resolvePromise(token.reason);
     });
   }
@@ -44291,20 +41041,20 @@ var {
 
 // src/lsp.js
 var import_semver = __toESM(require_semver2());
-var import_vscode3 = __toESM(require("vscode"));
+var import_vscode2 = __toESM(require("vscode"));
 
 // src/utils.js
 var import_decompress = __toESM(require_decompress());
 var import_path = __toESM(require("path"));
 var import_fs = __toESM(require("fs"));
 var import_util3 = require("util");
-var import_vscode2 = __toESM(require("vscode"));
+var import_vscode = __toESM(require("vscode"));
 var chmod = (0, import_util3.promisify)(import_fs.default.chmod);
 async function downloadAndExtractArtifact(title, executableName, installDir, artifactUrl, extraTarArgs) {
-  return await import_vscode2.default.window.withProgress(
+  return await import_vscode.default.window.withProgress(
     {
       title: `Installing ${title}`,
-      location: import_vscode2.default.ProgressLocation.Notification
+      location: import_vscode.default.ProgressLocation.Notification
     },
     async (progress) => {
       progress.report({ message: `downloading ${title} zip...` });
@@ -44320,19 +41070,19 @@ async function downloadAndExtractArtifact(title, executableName, installDir, art
           }
         }
       });
-      const zipUri = import_vscode2.default.Uri.joinPath(installDir, import_path.default.basename(artifactUrl));
+      const zipUri = import_vscode.default.Uri.joinPath(installDir, import_path.default.basename(artifactUrl));
       try {
-        await import_vscode2.default.workspace.fs.delete(installDir, { recursive: true, useTrash: false });
+        await import_vscode.default.workspace.fs.delete(installDir, { recursive: true, useTrash: false });
       } catch {
       }
-      await import_vscode2.default.workspace.fs.createDirectory(installDir);
-      await import_vscode2.default.workspace.fs.writeFile(zipUri, response2.data);
+      await import_vscode.default.workspace.fs.createDirectory(installDir);
+      await import_vscode.default.workspace.fs.writeFile(zipUri, response2.data);
       progress.report({ message: "Extracting..." });
       try {
         const files = await (0, import_decompress.default)(zipUri.path, installDir.path);
       } catch (err) {
         if (err instanceof Error) {
-          void import_vscode2.default.window.showErrorMessage(`Failed to extract ${title} zip: ${err.message}`);
+          void import_vscode.default.window.showErrorMessage(`Failed to extract ${title} zip: ${err.message}`);
         } else {
           throw err;
         }
@@ -44341,13 +41091,12 @@ async function downloadAndExtractArtifact(title, executableName, installDir, art
       progress.report({ message: "Installing..." });
       const isWindows = process.platform === "win32";
       const exeName = `${executableName}${isWindows ? ".exe" : ""}`;
-      const exePath = import_vscode2.default.Uri.joinPath(installDir, exeName).fsPath;
+      const exePath = import_vscode.default.Uri.joinPath(installDir, exeName).fsPath;
       const exeNameDeprecated = `${"c3-lsp"}${isWindows ? ".exe" : ""}`;
-      const exePathDeprecated = import_vscode2.default.Uri.joinPath(installDir, exeNameDeprecated).fsPath;
-      import_fs.default.rename(exePathDeprecated, exePath, (err) => {
+      const exePathDeprecated = import_vscode.default.Uri.joinPath(installDir, exeNameDeprecated).fsPath;
+      await import_fs.default.promises.rename(exePathDeprecated, exePath, (err) => {
         if (err) {
-          console.error("Error renombrando el archivo:", err);
-          void import_vscode.default.window.showErrorMessage(`Error renombrando el archivo: ${err}`);
+          void import_vscode.default.window.showErrorMessage(`Error renaming file: ${err}`);
         }
       });
       await chmod(exePath, 493);
@@ -44358,38 +41107,26 @@ async function downloadAndExtractArtifact(title, executableName, installDir, art
 
 // src/lsp.js
 var client = null;
-var config = import_vscode3.default.workspace.getConfiguration("c3.lsp");
 async function activate(context2) {
-  const enabled = config.get("enable");
+  const config = import_vscode2.default.workspace.getConfiguration("c3");
+  const lsConfig = import_vscode2.default.workspace.getConfiguration("c3.lsp");
+  const enabled = lsConfig.get("enable");
   if (!enabled) {
     return;
   }
-  let executablePath = config.get("path");
+  let executablePath = lsConfig.get("path");
   if (executablePath == "") {
-    switch ((0, import_os.platform)()) {
-      case "win32": {
-        executablePath = join(context2.extensionPath, "c3-lsp.exe");
-        break;
-      }
-      case "darwin": {
-        executablePath = join(context2.extensionPath, "c3-lsp");
-        break;
-      }
-      case "linux": {
-        executablePath = join(context2.extensionPath, "c3-lsp");
-        break;
-      }
-    }
+    return;
   }
   let args = [];
-  if (config.get("sendCrashReports")) {
+  if (lsConfig.get("sendCrashReports")) {
     args.push("--send-crash-reports");
   }
-  if (config.get("log.path") != "") {
-    args.push("--log-path " + config.get("log.path"));
+  if (lsConfig.get("log.path") != "") {
+    args.push("--log-path=" + lsConfig.get("log.path"));
   }
   if (config.get("version") != "") {
-    args.push("--lang-version " + config.get("version"));
+    args.push("--lang-version=" + config.get("version"));
   }
   const serverOptions = {
     run: {
@@ -44405,14 +41142,14 @@ async function activate(context2) {
   const clientOptions = {
     documentSelector: [{ scheme: "file", language: "c3" }],
     synchronize: {
-      fileEvents: import_vscode3.default.workspace.createFileSystemWatcher("**/*.c3")
+      fileEvents: import_vscode2.default.workspace.createFileSystemWatcher("**/*.c3")
     }
   };
-  if (config.get("checkForUpdate")) {
+  if (lsConfig.get("checkForUpdate")) {
     await checkUpdate(context2);
   }
   client = new import_vscode_languageclient.LanguageClient("C3LSP", serverOptions, clientOptions);
-  if (config.get("debug")) {
+  if (lsConfig.get("debug")) {
     client.setTrace(Trace.Verbose);
   }
   client.start();
@@ -44425,25 +41162,13 @@ async function deactivate() {
   client = null;
 }
 async function fetchVersion() {
-  response = {
-    "releases": [
-      {
-        "version": "0.3.0",
-        "date": "2024-09-01",
-        "artifacts": {
-          "x86_64-win32": {
-            "url": "https://github.com/pherrymason/c3-lsp/releases/download/v0.3.0/c3-lsp-windows-amd64.zip"
-          },
-          "arm64-darwin": {
-            "url": "https://github.com/pherrymason/c3-lsp/releases/download/v0.3.0/c3-lsp-darwin-arm64.zip"
-          },
-          "x86_64-linux": {
-            "url": "https://github.com/pherrymason/c3-lsp/releases/download/v0.3.0/c3-lsp-linux-amd64.zip"
-          }
-        }
-      }
-    ]
-  };
+  try {
+    response = (await axios_default.get(
+      "https://pherrymason.github.io/c3-lsp/releases.json"
+    )).data;
+  } catch (err) {
+    console.log("Error: ", err);
+  }
   lastVersion = response.releases.length - 1;
   return {
     version: new import_semver.default.SemVer(response.releases[lastVersion].version),
@@ -44451,14 +41176,14 @@ async function fetchVersion() {
   };
 }
 async function checkUpdate(context2) {
-  const configuration = import_vscode3.default.workspace.getConfiguration("c3.lsp");
+  const configuration = import_vscode2.default.workspace.getConfiguration("c3.lsp");
   const c3lspPath = configuration.get("path");
   const currentVersion = getVersion(c3lspPath, "--version");
   if (!currentVersion) return;
   const result = await fetchVersion();
   if (!result) return;
   if (import_semver.default.gte(currentVersion, result.version)) return;
-  const response2 = await import_vscode3.default.window.showInformationMessage("New version of C3LSP available: " + result.version, "Install", "Ignore");
+  const response2 = await import_vscode2.default.window.showInformationMessage("New version of C3LSP available: " + result.version, "Install", "Ignore");
   switch (response2) {
     case "Install":
       await installLSPVersion(context2, result.artifacts);
@@ -44480,18 +41205,17 @@ function getVersion(filePath, arg) {
 async function installLSPVersion(context2, artifact) {
   const key = (0, import_os.machine)() + "-" + (0, import_os.platform)();
   if (!artifact[key]) {
-    import_vscode3.default.window.showErrorMessage(`No pre-build version available for your architecture/OS ${key}`);
+    import_vscode2.default.window.showErrorMessage(`No pre-build version available for your architecture/OS ${key}`);
     return;
   }
   const lsPath = await downloadAndExtractArtifact(
     "C3LSP",
     "c3lsp",
-    import_vscode3.default.Uri.joinPath(context2.globalStorageUri, "c3lsp_install"),
+    import_vscode2.default.Uri.joinPath(context2.globalStorageUri, "c3lsp_install"),
     artifact[key].url,
-    //artifact.shasum,
     []
   );
-  const configuration = import_vscode3.default.workspace.getConfiguration("c3.lsp", null);
+  const configuration = import_vscode2.default.workspace.getConfiguration("c3.lsp", null);
   await configuration.update("path", lsPath ?? void 0, true);
 }
 async function installLSP(context2) {
@@ -44501,14 +41225,14 @@ async function installLSP(context2) {
 }
 
 // src/setupC3.js
-var import_vscode4 = __toESM(require("vscode"));
+var import_vscode3 = __toESM(require("vscode"));
 async function setupC3(context2) {
-  initialSetup(context2);
+  await initialSetup(context2);
 }
 async function initialSetup(context2) {
-  const lsConfig = import_vscode4.default.workspace.getConfiguration("c3.lsp");
+  const lsConfig = import_vscode3.default.workspace.getConfiguration("c3.lsp");
   if (!lsConfig.get("path")) {
-    const response2 = await import_vscode4.default.window.showInformationMessage(
+    const response2 = await import_vscode3.default.window.showInformationMessage(
       "You can enable C3LSP (the C3 Language Server) for a better editing experience. Would you like to install it?",
       { modal: true },
       "Install",
@@ -44517,10 +41241,10 @@ async function initialSetup(context2) {
     );
     switch (response2) {
       case "Install":
-        installLSP(context2);
+        await installLSP(context2);
         break;
       case "Specify path":
-        const uris = await import_vscode4.default.window.showOpenDialog({
+        const uris = await import_vscode3.default.window.showOpenDialog({
           canSelectFiles: true,
           canSelectFolders: false,
           canSelectMany: false,

@@ -1,12 +1,9 @@
 import vscode from "vscode";
 import { installLSP } from "./lsp";
 
-
 export async function setupC3(context) {
-    initialSetup(context)
+    await initialSetup(context)
 }
-
-
 
 async function initialSetup(context) {
     const lsConfig = vscode.workspace.getConfiguration("c3.lsp");
@@ -22,8 +19,7 @@ async function initialSetup(context) {
 
         switch (response) {
             case "Install":
-                // TODO installC3LSP(context,false);
-                installLSP(context)
+                await installLSP(context)
                 break;
             case "Specify path":
                 const uris = await vscode.window.showOpenDialog({
