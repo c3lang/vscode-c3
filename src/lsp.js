@@ -7,42 +7,29 @@ import vscode from "vscode";
 import { downloadAndExtractArtifact } from "./utils";
 
 let client = null;
-const config = vscode.workspace.getConfiguration("c3.lsp");
-
 export async function activate(context) {
-    const enabled = config.get("enable");
+    const config = vscode.workspace.getConfiguration("c3");
+    const lsConfig = vscode.workspace.getConfiguration("c3.lsp");
+    const enabled = lsConfig.get("enable");
     if (!enabled) {
         return;
     }
 
-    let executablePath = config.get("path");
+    let executablePath = lsConfig.get("path");
 
     if (executablePath == "") {
-        switch (platform()) {
-            case "win32": {
-                executablePath = join(context.extensionPath, "c3-lsp.exe");
-                break;
-            }
-            case "darwin": {
-                executablePath = join(context.extensionPath, "c3-lsp");
-                break;
-            }
-            case "linux": {
-                executablePath = join(context.extensionPath, "c3-lsp");
-                break;
-            }
-        }
+        return;
     }
 
     let args = [];
-    if (config.get("sendCrashReports")) {
+    if (lsConfig.get("sendCrashReports")) {
         args.push("--send-crash-reports");
     }
-    if (config.get("log.path") != "") {
-        args.push("--log-path " + config.get("log.path"));
+    if (lsConfig.get("log.path") != "") {
+        args.push("--log-path=" + lsConfig.get("log.path"));
     }
     if (config.get("version") != "") {
-        args.push("--lang-version " + config.get("version"));
+        args.push("--lang-version=" + config.get("version"));
     }
     const serverOptions = {
         run: {
@@ -64,12 +51,12 @@ export async function activate(context) {
     };
 
 
-    if (config.get("checkForUpdate")) {
+    if (lsConfig.get("checkForUpdate")) {
         await checkUpdate(context);
     }
 
     client = new LanguageClient("C3LSP", serverOptions, clientOptions);
-    if (config.get("debug")) {
+    if (lsConfig.get("debug")) {
         client.setTrace(Trace.Verbose);
     }
     client.start();
@@ -84,36 +71,13 @@ export async function deactivate() {
     client = null;
 }
 
-
-
 async function fetchVersion() {
-    /*
     try {
         response = (await axios.get(
             'https://pherrymason.github.io/c3-lsp/releases.json'
         )).data;
     } catch (err) {
         console.log("Error: ", err)
-    }
-*/
-    response = {
-        "releases": [
-            {
-                "version": "0.3.0",
-                "date": "2024-09-01",
-                "artifacts": {
-                    "x86_64-win32": {
-                        "url": "https://github.com/pherrymason/c3-lsp/releases/download/v0.3.0/c3-lsp-windows-amd64.zip"
-                    },
-                    "arm64-darwin": {
-                        "url": "https://github.com/pherrymason/c3-lsp/releases/download/v0.3.0/c3-lsp-darwin-arm64.zip"
-                    },
-                    "x86_64-linux": {
-                        "url": "https://github.com/pherrymason/c3-lsp/releases/download/v0.3.0/c3-lsp-linux-amd64.zip"
-                    }
-                }
-            }
-        ]
     }
 
     lastVersion = response.releases.length - 1
@@ -127,11 +91,6 @@ async function fetchVersion() {
 async function checkUpdate(context) {
     const configuration = vscode.workspace.getConfiguration("c3.lsp");
     const c3lspPath = configuration.get("path");
-    // const c3lspBinPath = vscode.Uri.joinPath(context.globalStorageUri, "c3lsp_install", "c3lsp").fsPath;
-    // if (!c3lspPath?.startsWith(c3lspBinPath)) return;
-
-    //const zigVersion = getVersion(getZigPath(), "version");
-    //if (!zigVersion) return;
 
     const currentVersion = getVersion(c3lspPath, "--version");
     if (!currentVersion) return;
@@ -176,7 +135,6 @@ export async function installLSPVersion(context, artifact) {
         "c3lsp",
         vscode.Uri.joinPath(context.globalStorageUri, "c3lsp_install"),
         artifact[key].url,
-        //artifact.shasum,
         [],
     );
 

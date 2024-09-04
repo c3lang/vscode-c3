@@ -4,7 +4,6 @@ import path from "path";
 import fs from "fs";
 import { promisify } from "util";
 import vscode from "vscode";
-import {platform} from "os";
 
 const chmod = promisify(fs.chmod);
 
@@ -21,7 +20,6 @@ export async function downloadAndExtractArtifact(
     /** Extract arguments that should be passed to `tar`. e.g. `--strip-components=1` */
     extraTarArgs ,
 ) {
-    //assert.strictEqual(sha256.length, 64);
 
     return await vscode.window.withProgress(
         {
@@ -44,21 +42,6 @@ export async function downloadAndExtractArtifact(
                     }
                 },
             });
-            /*
-            const tarHash = crypto.createHash("sha256").update(response.data).digest("hex");
-            if (tarHash !== sha256) {
-                throw Error(`hash of downloaded tarball ${tarHash} does not match expected hash ${sha256}`);
-            }*/
-
-            
-            /*
-            const tarPath = await which("tar", { nothrow: true });
-            if (!tarPath) {
-                void vscode.window.showErrorMessage(
-                    `Downloaded ${title} tarball can't be extracted because 'tar' could not be found`,
-                );
-                return null;
-            }*/
 
             const zipUri = vscode.Uri.joinPath(installDir, path.basename(artifactUrl));
 
@@ -70,9 +53,7 @@ export async function downloadAndExtractArtifact(
             
             progress.report({ message: "Extracting..." });
             try {
-                //fs.createReadStream(zipUri).pipe(unzip.Extract({path: installDir}));
                 const files = await decompress(zipUri.path, installDir.path);
-                
             } catch (err) {
                 if (err instanceof Error) {
                     void vscode.window.showErrorMessage(`Failed to extract ${title} zip: ${err.message}`);
@@ -82,25 +63,6 @@ export async function downloadAndExtractArtifact(
                 return null;
             }
             
-            /*
-            progress.report({ message: "Extracting..." });
-            try {
-                await execFile(tarPath, ["-xf", tarballUri.fsPath, "-C", installDir.fsPath].concat(extraTarArgs), {
-                    timeout: 60000, // 60 seconds
-                });
-            } catch (err) {
-                if (err instanceof Error) {
-                    void vscode.window.showErrorMessage(`Failed to extract ${title} tarball: ${err.message}`);
-                } else {
-                    throw err;
-                }
-                return null;
-            } finally {
-                try {
-                    await vscode.workspace.fs.delete(tarballUri, { useTrash: false });
-                } catch {}
-            }
-            */
             progress.report({ message: "Installing..." });
 
             const isWindows = process.platform === "win32";
@@ -111,14 +73,11 @@ export async function downloadAndExtractArtifact(
             const exeNameDeprecated = `${"c3-lsp"}${isWindows ? ".exe" : ""}`;
             const exePathDeprecated = vscode.Uri.joinPath(installDir, exeNameDeprecated).fsPath;
 
-            fs.rename(exePathDeprecated, exePath, (err) => {
+            await fs.promises.rename(exePathDeprecated, exePath, (err) => {
                 if (err) {
-                    console.error('Error renombrando el archivo:', err);
-                    void import_vscode.default.window.showErrorMessage(`Error renombrando el archivo: ${err}`);
+                    void vscode.window.showErrorMessage(`Error renaming file: ${err}`);
                 }
             });
-
-
 
             await chmod(exePath, 0o755);
 
