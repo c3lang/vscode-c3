@@ -43,44 +43,61 @@
                 "path": "./snippets/snippets.json"
             }
         ],
-        "configuration": {
-            "title": "Language Server",
-            "properties": {
-                "c3.lsp.enable": {
-                    "type": "boolean",
-                    "default": false,
-                    "description": "Enables the language server"
-                },
-                "c3.lsp.path": {
-                    "type": "string",
-                    "default": "c3-lsp",
-                    "markdownDescription": "The path to **c3-lsp** binary"
-                },
-                "c3.lsp.debug": {
-                    "type": "boolean",
-                    "default": true,
-                    "markdownDescription": "Enables debug information logging"
-                },
-                "c3.lsp.log.path": {
-                    "type": "string",
-                    "default": "",
-                    "description": "Saves log to specified file"
-                },
-                "c3.lsp.sendCrashReports": {
-                    "type": "boolean",
-                    "default": false,
-                    "markdownDescription": "Sends crash reports to server to help fixing bugs."
-                },
-                "c3.lsp.version": {
-                    "type": "string",
-                    "default": "",
-                    "markdownDescription": "Specify C3 language version. If omited, LSP will use the last version it supports."
+        "configuration": [
+            {
+                "type": "object",
+                "title": "C3",
+                "properties": {
+                    "c3.version": {
+                        "type": "string",
+                        "default": "0.6.1",
+                        "markdownDescription": "Specify C3 language version."
+                    }
+                }
+            },
+            {
+                "type": "object",
+                "title": "Language Server",
+                "properties": {
+                    "c3.lsp.enable": {
+                        "type": "boolean",
+                        "default": false,
+                        "description": "Enables the language server"
+                    },
+                    "c3.lsp.path": {
+                        "type": "string",
+                        "default": "c3-lsp",
+                        "markdownDescription": "The path to **c3-lsp** binary"
+                    },
+                    "c3.lsp.checkForUpdate": {
+                        "type": "boolean",
+                        "description": "Whether to automatically check for new versions",
+                        "default": true
+                    },
+                    "c3.lsp.sendCrashReports": {
+                        "type": "boolean",
+                        "default": false,
+                        "markdownDescription": "Sends crash reports to server to help fixing bugs."
+                    },
+                    "c3.lsp.debug": {
+                        "type": "boolean",
+                        "default": true,
+                        "markdownDescription": "Enables debug information logging"
+                    },
+                    "c3.lsp.log.path": {
+                        "type": "string",
+                        "default": "",
+                        "description": "Saves log to specified file"
+                    }
                 }
             }
-        }
+        ]
     },
     "main": "./dist/extension.js",
     "dependencies": {
+        "axios": "^1.7.7",
+        "decompress": "^4.2.1",
+        "semver": "^7.6.3",
         "vscode-jsonrpc": "^8.2.1",
         "vscode-languageclient": "^9.0.1"
     },
@@ -90,7 +107,7 @@
     },
     "scripts": {
         "vscode:prepublish": "npm run esbuild-base -- --minify",
-        "esbuild-base": "esbuild ./extension.js --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node",
+        "esbuild-base": "esbuild ./src/extension.js --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node",
         "esbuild": "npm run esbuild-base -- --sourcemap",
         "build-syntax": "node ./build_syntax.js"
     }
