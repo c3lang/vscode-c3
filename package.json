@@ -93,7 +93,7 @@
                         "type": "integer",
                         "default": 2000,
                         "markdownDescription": "Delay calculation of code diagnostics after modifications in source. In milliseconds, default 2000 ms."
-                    },
+                    }
                 }
             }
         ]
