@@ -20,7 +20,6 @@ export async function downloadAndExtractArtifact(
     /** Extract arguments that should be passed to `tar`. e.g. `--strip-components=1` */
     extraTarArgs ,
 ) {
-
     return await vscode.window.withProgress(
         {
             title: `Installing ${title}`,
@@ -45,39 +44,27 @@ export async function downloadAndExtractArtifact(
 
             const zipUri = vscode.Uri.joinPath(installDir, path.basename(artifactUrl));
 
-            try {
-                await vscode.workspace.fs.delete(installDir, { recursive: true, useTrash: false });
-            } catch {}
+            // Delete old lsp folder
+            await vscode.workspace.fs.delete(installDir, { recursive: true, useTrash: false }).catch((err) => {})
             await vscode.workspace.fs.createDirectory(installDir);
-            await vscode.workspace.fs.writeFile(zipUri, response.data);            
+            await vscode.workspace.fs.writeFile(zipUri, response.data);
             
             progress.report({ message: "Extracting..." });
-            try {
-                const files = await decompress(zipUri.path, installDir.path);
-            } catch (err) {
-                if (err instanceof Error) {
-                    void vscode.window.showErrorMessage(`Failed to extract ${title} zip: ${err.message}`);
-                } else {
-                    throw err;
-                }
-                return null;
-            }
-            
-            progress.report({ message: "Installing..." });
-
-            const isWindows = process.platform === "win32";
-            const exeName = `${executableName}${isWindows ? ".exe" : ""}`;
-            const exePath = vscode.Uri.joinPath(installDir, exeName).fsPath;
-
-
-            const exeNameDeprecated = `${"c3-lsp"}${isWindows ? ".exe" : ""}`;
-            const exePathDeprecated = vscode.Uri.joinPath(installDir, exeNameDeprecated).fsPath;
-
-            await fs.promises.rename(exePathDeprecated, exePath, (err) => {
-                if (err) {
-                    void vscode.window.showErrorMessage(`Error renaming file: ${err}`);
+            const files = await decompress(zipUri.path, installDir.path, {
+                map: file => {
+                    const isWindows = process.platform === "win32";
+                    file.path = `${file.path}${isWindows ? ".exe" : ""}`;
+                    return file;
                 }
             });
+            
+            const exePath = vscode.Uri.joinPath(installDir, files[0].path).fsPath;
+
+            // await fs.promises.rename(exePathDeprecated, exePath, (err) => {
+            //     if (err) {
+            //         void vscode.window.showErrorMessage(`Error renaming file: ${err}`);
+            //     }
+            // });
 
             await chmod(exePath, 0o755);
 
