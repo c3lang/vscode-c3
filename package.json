@@ -2,9 +2,12 @@
     "name": "vscode-c3",
     "displayName": "C3 Language Support for VSCode",
     "description": "C3 Language Support for VSCode - Syntax Highlighting and Code Snippets",
-    "publisher": "c3lang",
+    "publisher": "c3",
     "repository": "https://github.com/c3lang/vscode-c3.git",
     "version": "0.1.0",
+    "activationEvents": [
+	    "onLanguage:c3"
+     ],
     "engines": {
         "vscode": "^1.75.0"
     },
@@ -46,19 +49,13 @@
         "configuration": [
             {
                 "type": "object",
-                "title": "C3",
+                "title": "Language Server",
                 "properties": {
                     "c3.version": {
                         "type": "string",
-                        "default": "0.6.1",
+                        "default": "0.6.5",
                         "markdownDescription": "Specify C3 language version."
-                    }
-                }
-            },
-            {
-                "type": "object",
-                "title": "Language Server",
-                "properties": {
+                    },
                     "c3.lsp.enable": {
                         "type": "boolean",
                         "default": false,
@@ -66,7 +63,7 @@
                     },
                     "c3.lsp.path": {
                         "type": "string",
-                        "default": "c3-lsp",
+                        "default": null,
                         "markdownDescription": "The path to **c3-lsp** binary"
                     },
                     "c3.lsp.checkForUpdate": {
@@ -111,9 +108,8 @@
         "js-yaml": "^4.1.0"
     },
     "scripts": {
-        "vscode:prepublish": "npm run esbuild-base -- --minify",
-        "esbuild-base": "esbuild ./src/extension.js --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node",
-        "esbuild": "npm run esbuild-base -- --sourcemap",
-        "build-syntax": "node ./build_syntax.js"
+        "build": "node ./build_syntax.js && npm run esbuild-base -- --minify && vsce package",
+		"esbuild-base": "esbuild ./src/extension.js --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node",
+		"esbuild": "npm run esbuild-base -- --sourcemap"
     }
 }

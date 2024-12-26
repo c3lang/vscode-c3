@@ -1,23 +1,25 @@
-import { LanguageClient } from "vscode-languageclient";
 import { platform, machine } from "os";
 import childProcess from "child_process";
 import axios from "axios";
 import semver from "semver";
 import vscode from "vscode";
 import { downloadAndExtractArtifact } from "./utils";
+import { LanguageClient } from 'vscode-languageclient/node';
+import { Trace } from 'vscode-jsonrpc';
 
 let client = null;
 export async function activate(context) {
     const config = vscode.workspace.getConfiguration("c3");
     const lsConfig = vscode.workspace.getConfiguration("c3.lsp");
     const enabled = lsConfig.get("enable");
+
     if (!enabled) {
         return;
     }
 
     let executablePath = lsConfig.get("path");
 
-    if (executablePath == "") {
+    if (!executablePath) {
         return;
     }
 
@@ -43,13 +45,15 @@ export async function activate(context) {
         },
     };
 
-    const clientOptions = {
-        documentSelector: [{ scheme: "file", language: "c3" }],
-        synchronize: {
-            fileEvents: vscode.workspace.createFileSystemWatcher("**/*.c3"),
-        },
-    };
-
+	// Options to control the language client
+	const clientOptions = {
+		// Register the server for plain text documents
+		documentSelector: [{ scheme: "file", language: "c3" }],
+		synchronize: {
+			// Notify the server about file changes to '.c3' or '.c3i' files contained in the workspace
+			fileEvents: vscode.workspace.createFileSystemWatcher("**/*.{c3,c3i}"),
+		}
+	};
 
     if (lsConfig.get("checkForUpdate")) {
         await checkUpdate(context);
@@ -72,6 +76,7 @@ export async function deactivate() {
 }
 
 async function fetchVersion() {
+    let response;
     try {
         response = (await axios.get(
             'https://pherrymason.github.io/c3-lsp/releases.json'
@@ -129,7 +134,7 @@ export async function installLSPVersion(context, artifact) {
         vscode.window.showErrorMessage(`No pre-build version available for your architecture/OS ${key}`);
         return
     }
-
+    
     const lsPath = await downloadAndExtractArtifact(
         "C3LSP",
         "c3lsp",
@@ -146,6 +151,5 @@ export async function installLSPVersion(context, artifact) {
 export async function installLSP(context) {
     const result = await fetchVersion();
     if (!result) return;
-
     await installLSPVersion(context, result.artifacts);
 }
