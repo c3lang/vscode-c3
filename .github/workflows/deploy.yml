@@ -20,5 +20,6 @@ jobs:
           nvm install 22 
           nvm use 22
           npm install
+          npm install --only-dev
           npm run build
-          vsce publish
+          
