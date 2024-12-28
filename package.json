@@ -4,10 +4,10 @@
     "description": "C3 Language Support for VSCode - Syntax Highlighting and Code Snippets",
     "publisher": "c3",
     "repository": "https://github.com/c3lang/vscode-c3.git",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "activationEvents": [
-	    "onLanguage:c3"
-     ],
+        "onLanguage:c3"
+    ],
     "engines": {
         "vscode": "^1.75.0"
     },
@@ -105,11 +105,12 @@
     },
     "devDependencies": {
         "esbuild": "0.23.0",
-        "js-yaml": "^4.1.0"
+        "js-yaml": "^4.1.0",
+        "vsce": "^2.15.0"
     },
     "scripts": {
         "build": "node ./build_syntax.js && npm run esbuild-base -- --minify && vsce package",
-		"esbuild-base": "esbuild ./src/extension.js --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node",
-		"esbuild": "npm run esbuild-base -- --sourcemap"
+        "esbuild-base": "esbuild ./src/extension.js --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node",
+        "esbuild": "npm run esbuild-base -- --sourcemap"
     }
 }
