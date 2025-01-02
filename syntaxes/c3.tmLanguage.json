@@ -1054,13 +1054,13 @@
       ]
     },
     "doc_comment": {
-      "begin": "/\\*\\*",
+      "begin": "<\\*",
       "beginCaptures": {
         "0": {
           "name": "comment.block.documentation.c3 punctuation.definition.comment.begin.c3"
         }
       },
-      "end": "\\*/",
+      "end": "\\*>",
       "endCaptures": {
         "0": {
           "name": "comment.block.documentation.c3 punctuation.definition.comment.end.c3"
