@@ -49,7 +49,7 @@
         "configuration": [
             {
                 "type": "object",
-                "title": "Language Server",
+                "title": "Extension settings",
                 "properties": {
                     "c3.stdlib-path": {
                         "type": "string",
