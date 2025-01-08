@@ -4,7 +4,7 @@
     "description": "C3 Language Support for VSCode - Syntax Highlighting and Code Snippets",
     "publisher": "c3",
     "repository": "https://github.com/c3lang/vscode-c3.git",
-    "version": "0.1.2",
+    "version": "0.1.3",
     "activationEvents": [
         "onLanguage:c3"
     ],
@@ -51,14 +51,14 @@
                 "type": "object",
                 "title": "Language Server",
                 "properties": {
-                    "c3.version": {
+                    "c3.stdlib-path": {
                         "type": "string",
-                        "default": "0.6.5",
-                        "markdownDescription": "Specify C3 language version."
+                        "default": null,
+                        "markdownDescription": "Path to c3c stdlib"
                     },
                     "c3.lsp.enable": {
                         "type": "boolean",
-                        "default": false,
+                        "default": true,
                         "description": "Enables the language server"
                     },
                     "c3.lsp.path": {
@@ -78,7 +78,7 @@
                     },
                     "c3.lsp.debug": {
                         "type": "boolean",
-                        "default": true,
+                        "default": false,
                         "markdownDescription": "Enables debug information logging"
                     },
                     "c3.lsp.log.path": {
@@ -104,9 +104,9 @@
         "vscode-languageclient": "^9.0.1"
     },
     "devDependencies": {
+        "@vscode/vsce": "^3.2.1",
         "esbuild": "0.23.0",
-        "js-yaml": "^4.1.0",
-        "vsce": "^2.15.0"
+        "js-yaml": "^4.1.0"
     },
     "scripts": {
         "build": "node ./build_syntax.js && npm run esbuild-base -- --minify && vsce package",

@@ -28,11 +28,12 @@ export async function activate(context) {
         args.push("--send-crash-reports");
     }
     if (lsConfig.get("log.path") != "") {
-        args.push("--log-path=" + lsConfig.get("log.path"));
+        args.push(`--log-path=${lsConfig.get("log.path")}`);
     }
-    if (config.get("version") != "") {
-        args.push("--lang-version=" + config.get("version"));
-    }
+    if (config.get('stdlib-path')) {
+		args.push(`--stdlib-path=${config.get('stdlib-path')}`);
+	}
+    
     const serverOptions = {
         run: {
             command: executablePath,
@@ -85,11 +86,12 @@ async function fetchVersion() {
         console.log("Error: ", err)
     }
 
-    lastVersion = response.releases.length - 1
+    // Get latest version
+    let version_data = response["releases"].sort((current, next) => current.version > next.version)[0];
 
     return {
-        version: new semver.SemVer(response.releases[lastVersion].version),
-        artifacts: response.releases[lastVersion].artifacts
+        version: new semver.SemVer(version_data.version),
+        artifacts: version_data.artifacts
     };
 }
 

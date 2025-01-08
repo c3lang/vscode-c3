@@ -51,12 +51,12 @@ export async function downloadAndExtractArtifact(
 			const zip_path = isWindows ? zipUri.path.slice(1) : zipUri.path;
 			const install_path = isWindows ? installDir.path.slice(1) : installDir.path;
 
-			const files = await decompress(zip_path, install_path, {
+			const files = (await decompress(zip_path, install_path, {
 				map: (file) => {
 					file.path = file.path;
 					return file;
 				},
-			});
+			})).filter((file) => !file.path.includes("_"));
 
 			const exePath = vscode.Uri.joinPath(installDir, files[0].path).fsPath;
 			await chmod(exePath, 0o755);
