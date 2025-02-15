@@ -1412,13 +1412,13 @@
           "include": "#control_statements"
         },
         {
-          "include": "#block"
-        },
-        {
           "include": "#declaration"
         },
         {
           "include": "#expression"
+        },
+        {
+          "include": "#block"
         }
       ]
     },
