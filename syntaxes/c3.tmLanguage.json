@@ -1201,29 +1201,6 @@
     "declaration": {
       "patterns": [
         {
-          "begin": "\\bvar\\b",
-          "beginCaptures": {
-            "0": {
-              "name": "storage.type.var.c3"
-            }
-          },
-          "end": ";",
-          "endCaptures": {
-            "0": {
-              "name": "punctuation.terminator.c3"
-            }
-          },
-          "patterns": [
-            {
-              "match": "\\$(?:_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*)",
-              "name": "support.type.c3"
-            },
-            {
-              "include": "#declaration_after_type"
-            }
-          ]
-        },
-        {
           "begin": "(?=\\$(typeof|typefrom|vatype|evaltype)\\b)",
           "end": ";",
           "endCaptures": {
@@ -1239,6 +1216,9 @@
               "include": "#declaration_after_type"
             }
           ]
+        },
+        {
+          "include": "#path"
         },
         {
           "begin": "(?=\\$?\\b(?:_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*)\\b|\\b(?:void|bool|char|double|float|float16|int128|ichar|int|iptr|isz|long|short|uint128|uint|ulong|uptr|ushort|usz|float128|any|anyfault|typeid)\\b)",

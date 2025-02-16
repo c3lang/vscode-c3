@@ -619,17 +619,6 @@ repository:
 
   declaration:
     patterns:
-      - begin: \bvar\b
-        beginCaptures:
-          0: { name: storage.type.var.c3 }
-        end: ;
-        endCaptures:
-          0: { name: punctuation.terminator.c3 }
-        patterns:
-          # CT type
-          - match: '\${{TYPE}}'
-            name: support.type.c3
-          - include: "#declaration_after_type"
       - begin: '(?=\$(typeof|typefrom|vatype|evaltype)\b)'
         end: ;
         endCaptures:
@@ -637,6 +626,7 @@ repository:
         patterns:
           - include: "#type"
           - include: "#declaration_after_type"
+      - include: "#path"
       - begin: '(?=\$?\b{{TYPE}}\b|\b(?:{{base_type}})\b)'
         end: ;
         endCaptures:
