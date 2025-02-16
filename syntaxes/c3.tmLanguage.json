@@ -1201,6 +1201,29 @@
     "declaration": {
       "patterns": [
         {
+          "begin": "\\bvar\\b",
+          "beginCaptures": {
+            "0": {
+              "name": "storage.type.var.c3"
+            }
+          },
+          "end": ";",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.terminator.c3"
+            }
+          },
+          "patterns": [
+            {
+              "match": "\\$(?:_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*)",
+              "name": "support.type.c3"
+            },
+            {
+              "include": "#declaration_after_type"
+            }
+          ]
+        },
+        {
           "begin": "(?=\\$(typeof|typefrom|vatype|evaltype)\\b)",
           "end": ";",
           "endCaptures": {
