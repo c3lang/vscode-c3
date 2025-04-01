@@ -1085,7 +1085,7 @@
           ]
         },
         {
-          "match": "@(param(\\s*\\[&?(in|out|inout)\\])?|return!?|require|fails|deprecated|ensure|pure)\\s",
+          "match": "@(param(\\s*\\[&?(in|out|inout)\\])?|return[?]?|require|fails|deprecated|ensure|pure)\\s",
           "name": "markup.bold"
         }
       ]
