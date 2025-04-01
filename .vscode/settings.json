@@ -1,0 +1,5 @@
+{
+  "files.readonlyInclude": {
+    "syntaxes/c3.tmLanguage.json": true
+  }
+}
