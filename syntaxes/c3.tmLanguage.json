@@ -108,7 +108,7 @@
           "include": "#function"
         },
         {
-          "begin": "\\b(?:def|distinct)\\b",
+          "begin": "\\b(?:alias|typedef)\\b",
           "beginCaptures": {
             "0": {
               "name": "keyword.declaration.type.c3"
@@ -801,7 +801,7 @@
           "name": "keyword.control.ct.c3"
         },
         {
-          "match": "\\b(?:assert|asm|catch|const|def|distinct|extern|tlocal|inline|import|module|interface|static|try|var)\\b",
+          "match": "\\b(?:alias|assert|asm|catch|const|extern|tlocal|inline|import|module|interface|static|try|typedef|var)\\b",
           "name": "keyword.other.c3"
         },
         {
