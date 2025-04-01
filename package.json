@@ -4,7 +4,7 @@
     "description": "C3 Language Support for VSCode - Syntax Highlighting and Code Snippets",
     "publisher": "c3",
     "repository": "https://github.com/c3lang/vscode-c3.git",
-    "version": "0.1.5",
+    "version": "0.1.6",
     "activationEvents": [
         "onLanguage:c3"
     ],

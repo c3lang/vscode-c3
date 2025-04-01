@@ -801,7 +801,7 @@
           "name": "keyword.control.ct.c3"
         },
         {
-          "match": "\\b(?:alias|assert|asm|catch|const|extern|tlocal|inline|import|module|interface|static|try|typedef|var)\\b",
+          "match": "\\b(?:assert|asm|catch|const|alias|typedef|extern|tlocal|inline|import|module|interface|static|try|var)\\b",
           "name": "keyword.other.c3"
         },
         {
