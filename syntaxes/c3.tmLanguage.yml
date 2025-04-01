@@ -62,7 +62,7 @@ repository:
       - include: "#function"
 
       # Define/Distinct
-      - begin: '\b(?:def|distinct)\b'
+      - begin: '\b(?:alias|typedef)\b'
         beginCaptures:
           0: { name: keyword.declaration.type.c3 }
         end: ;
@@ -553,7 +553,7 @@ repository:
         end: '\*/'
         patterns:
           - include: "#block_comment_body"
-      - match: '@(param(\s*\[&?(in|out|inout)\])?|return!?|require|fails|deprecated|ensure|pure)\s'
+      - match: '@(param(\s*\[&?(in|out|inout)\])?|return[?]?|require|fails|deprecated|ensure|pure)\s'
         name: markup.bold
   
   type_suffix:
