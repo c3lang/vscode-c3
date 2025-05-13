@@ -175,7 +175,20 @@ repository:
                 name: variable.other.enummember.c3
               - match: ','
                 name: punctuation.separator.c3
-
+      # Faultdef
+      - begin: '\b(faultdef)\b'
+        beginCaptures:
+          1: { name: keyword.declaration.faultdef.c3 }
+        end: ';'
+        endCaptures:
+          0: { name: punctuation.terminator.c3 }
+        contentName: meta.faultdef.c3
+        patterns:
+          - include: "#comments"
+          - match: '\b{{CONST}}\b'
+            name: variable.other.constant
+          - match: ','
+            name: punctuation.separator.c3
       # Interface
       - begin: '(?=\binterface\b)'
         end: (?<=\})

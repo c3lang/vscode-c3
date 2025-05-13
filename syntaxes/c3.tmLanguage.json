@@ -356,6 +356,34 @@
           ]
         },
         {
+          "begin": "\\b(faultdef)\\b",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.declaration.faultdef.c3"
+            }
+          },
+          "end": ";",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.terminator.c3"
+            }
+          },
+          "contentName": "meta.faultdef.c3",
+          "patterns": [
+            {
+              "include": "#comments"
+            },
+            {
+              "match": "\\b(?:_*[A-Z][_A-Z0-9]*)\\b",
+              "name": "variable.other.constant"
+            },
+            {
+              "match": ",",
+              "name": "punctuation.separator.c3"
+            }
+          ]
+        },
+        {
           "begin": "(?=\\binterface\\b)",
           "end": "(?<=\\})",
           "patterns": [
