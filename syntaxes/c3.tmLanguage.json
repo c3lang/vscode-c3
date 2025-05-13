@@ -233,11 +233,11 @@
           "include": "#structlike"
         },
         {
-          "begin": "(?=\\b(?:enum|fault)\\b)",
+          "begin": "(?=\\b(?:enum|faultdef)\\b)",
           "end": "(?<=\\})",
           "patterns": [
             {
-              "begin": "\\b(?:enum|fault)\\b",
+              "begin": "\\b(?:enum|faultdef)\\b",
               "beginCaptures": {
                 "0": {
                   "name": "meta.enum.c3 keyword.declaration.enum.c3"
