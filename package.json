@@ -87,6 +87,16 @@
                         "type": "integer",
                         "default": 2000,
                         "markdownDescription": "Delay calculation of code diagnostics after modifications in source. In milliseconds, default 2000 ms."
+                    },
+                    "c3.format.enable": {
+                        "type": "boolean",
+                        "default": false,
+                        "markdownDescription": "Enables formatting (via `clang-format`, see [clang.llvm.org](https://clang.llvm.org/docs/ClangFormat.html))"
+                    },
+                    "c3.format.path": {
+                        "type": "string",
+                        "default": null,
+                        "markdownDescription": "The path to `clang-format` binary (default: `clang-format` in `PATH`)"
                     }
                 }
             }
