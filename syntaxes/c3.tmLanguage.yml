@@ -58,49 +58,26 @@ repository:
           - include: "#path"
           - match: '{{IDENT}}'
             name: meta.path.c3
+          - match: ','
+            name: punctuation.separator.c3  
 
       - include: "#function"
 
-      # Define/Distinct
-      - begin: '\b(?:alias|typedef)\b'
+      # Alias
+      - begin: '\balias\b'
         beginCaptures:
-          0: { name: keyword.declaration.type.c3 }
+          0: { name: keyword.declaration.alias.c3 }
         end: ;
         endCaptures:
           0: { name: punctuation.terminator.c3 }
+        contentName: meta.alias.c3
         patterns:
           - include: "#comments"
-          # Custom Attribute
-          - begin: '@{{TYPE}}'
+          # Variable/function/macro/constant alias
+          - begin: '(@{{IDENT}})|(\b{{IDENT}}\b)|(\b{{CONST}}\b)'
             beginCaptures: 
-              0: { name: keyword.annotation.c3 }
-            end: (?=;)
-            patterns:
-              - include: "#comments"
-              - include: "#parens"
-              - begin: \=
-                beginCaptures:
-                  0: { name: keyword.operator.assignment.c3 }
-                end: (?=;)
-                patterns:
-                  - include: "#comments"
-                  - include: "#attribute"
-                  - begin: \{
-                    beginCaptures: 
-                      0: { name: meta.block.c3 punctuation.section.block.begin.c3 }
-                    end: \}
-                    endCaptures: 
-                      0: { name: meta.block.c3 punctuation.section.block.end.c3 }
-                    contentName: meta.block.c3
-                    patterns:
-                      - include: "#comments"
-                      - include: "#attribute"
-                      - include: "#punctuation"
-          # Type/variable/constant def
-          - begin: '\b(?:({{TYPE}})|({{IDENT}})|({{CONST}}))\b'
-            beginCaptures: 
-              1: { name: support.type.c3 }
-              2: { name: variable.global.c3 }
+              1: { name: entity.name.function.c3 }
+              2: { name: variable.global.c3 } # Ambiguous: Could also be a function
               3: { name: variable.other.constant.c3 }
             end: (?=;)
             patterns:
@@ -112,17 +89,38 @@ repository:
                 end: (?=;)
                 patterns:
                   - include: "#comments"
-                  - include: "#attribute"
-                  - include: "#expression"
+                  - include: "#path"
+                  - match: '(@{{IDENT}})|(\b{{IDENT}}\b)|(\b{{CONST}}\b)'
+                    captures: 
+                      1: { name: entity.name.function.c3 }
+                      2: { name: variable.global.c3 } # Ambiguous: Could also be a function
+                      3: { name: variable.other.constant.c3 }
+                  - include: "#generic_params"
+          # Type/function signature alias
+          - begin: '\b{{TYPE}}\b'
+            beginCaptures: 
+              0: { name: support.type.c3 }
+            end: (?=;)
+            patterns:
+              - include: "#comments"
+              - include: "#attribute"
+              - begin: \=
+                beginCaptures:
+                  0: { name: keyword.operator.assignment.c3 }
+                end: (?=;)
+                patterns:
+                  - include: "#comments"
+                  - include: "#type"
+                  - include: "#function" # Function signature
 
       # Struct/Bitstruct/Union (structlikes)
       - include: "#structlike"
 
-      # Enum/Fault
-      - begin: '(?=\b(?:enum|fault)\b)'
+      # Enum
+      - begin: '(?=\benum\b)'
         end: (?<=\})
         patterns:
-          - begin: '\b(?:enum|fault)\b'
+          - begin: '\b(?:enum)\b'
             beginCaptures: 
               0: { name: meta.enum.c3 keyword.declaration.enum.c3 }
             end: (?=\{)
@@ -176,9 +174,9 @@ repository:
               - match: ','
                 name: punctuation.separator.c3
       # Faultdef
-      - begin: '\b(faultdef)\b'
+      - begin: '\bfaultdef\b'
         beginCaptures:
-          1: { name: keyword.declaration.faultdef.c3 }
+          0: { name: keyword.declaration.faultdef.c3 }
         end: ';'
         endCaptures:
           0: { name: punctuation.terminator.c3 }
@@ -189,6 +187,69 @@ repository:
             name: variable.other.constant
           - match: ','
             name: punctuation.separator.c3
+      # Typedef
+      - begin: '\btypedef\b'
+        beginCaptures:
+          0: { name: keyword.declaration.typedef.c3 }
+        end: ';'
+        endCaptures:
+          0: { name: punctuation.terminator.c3 }
+        contentName: meta.typedef.c3
+        patterns:
+          - include: "#comments"
+          - begin: '\b{{TYPE}}\b'
+            beginCaptures: 
+              0: { name: support.type.c3 }
+            end: (?=;)
+            patterns:
+              - include: "#comments"
+              - include: "#attribute"
+              - begin: \=
+                beginCaptures:
+                  0: { name: keyword.operator.assignment.c3 }
+                end: (?=;)
+                patterns:
+                  - include: "#comments"
+                  - include: "#type"
+                  - match: '\binline\b'
+                    name: storage.modifier.c3 # TODO
+      # Attrdef
+      - begin: '\battrdef\b'
+        beginCaptures:
+          0: { name: keyword.declaration.attrdef.c3 }
+        end: ';'
+        endCaptures:
+          0: { name: punctuation.terminator.c3 }
+        contentName: meta.attrdef.c3
+        patterns:
+          - include: "#comments"
+          - begin: '@{{TYPE}}'
+            beginCaptures: 
+              0: { name: keyword.annotation.c3 }
+            end: (?=;)
+            patterns:
+              - include: "#comments"
+              - include: "#attribute"
+              # Parameters
+              - begin: \(
+                beginCaptures:
+                  0: { name: meta.attrdef.parameters.c3 meta.group.c3 punctuation.section.group.begin.c3 }
+                end: \)
+                endCaptures:
+                  0: { name: meta.attrdef.parameters.c3 meta.group.c3 punctuation.section.group.end.c3 }
+                contentName: meta.attrdef.parameters.c3 meta.group.c3
+                patterns:
+                  - include: "#parameters"
+              - begin: \=
+                beginCaptures:
+                  0: { name: keyword.operator.assignment.c3 }
+                end: (?=;)
+                patterns:
+                  - include: "#comments"
+                  - include: "#attribute"
+                  - match: ','
+                    name: punctuation.separator.c3
+
       # Interface
       - begin: '(?=\binterface\b)'
         end: (?<=\})
@@ -266,45 +327,7 @@ repository:
           0: { name: meta.function.parameters.c3 meta.group.c3 punctuation.section.group.end.c3 }
         contentName: meta.function.parameters.c3 meta.group.c3
         patterns:
-          - include: "#comments"
-          - include: "#type"
-          - include: "#punctuation"
-          - match: '&'
-            name: keyword.operator.c3
-          - match: '\.\.\.'
-            name: keyword.operator.variadic.c3
-          - match: ';'
-            name: punctuation.separator.c3
-          # Macro body parameter
-          - begin: '(@{{IDENT}})\s*(\()'
-            beginCaptures:
-              1 : { name: variable.parameter.c3 }
-              2 : { name: punctuation.section.group.begin.c3 }
-            end: \)
-            endCaptures:
-              0 : { name: punctuation.section.group.end.c3 }
-            contentName: meta.group.c3
-            patterns:
-              - include: "#comments"
-              - include: "#type"
-              - include: "#punctuation"
-          # Parameter
-          - begin: '([$#@]?{{IDENT}})'
-            beginCaptures:
-              0 : { name: variable.parameter.c3 }
-            end: '(?=[;,)])'
-            patterns:
-              - include: "#comments"
-              - include: "#attribute"
-              - match: '\.\.\.'
-                name: keyword.operator.variadic.c3
-              # Parameter with default value
-              - begin: '\='
-                beginCaptures:
-                  0 : { name: keyword.operator.assignment.c3 }
-                end: '(?=[;,)])'
-                patterns:
-                  - include: "#expression"
+          - include: "#parameters"
       # After parameters
       - begin: '(?<=\))'
         end: (?=[{=;])
@@ -824,11 +847,51 @@ repository:
         contentName: meta.brackets.c3
         patterns:
           - include: "#expression"
+
+  parameters:
+    patterns:
+      - include: "#comments"
+      - include: "#type"
+      - include: "#punctuation"
+      - match: '\.\.\.'
+        name: keyword.operator.variadic.c3
+      # Macro body parameter
+      - match: ';'
+        name: punctuation.separator.c3
+      - begin: '(@{{IDENT}})\s*(\()'
+        beginCaptures:
+          1 : { name: variable.parameter.c3 }
+          2 : { name: punctuation.section.group.begin.c3 }
+        end: \)
+        endCaptures:
+          0 : { name: punctuation.section.group.end.c3 }
+        contentName: meta.group.c3
+        patterns:
+          - include: "#comments"
+          - include: "#type"
+          - include: "#punctuation"
+      # Parameter
+      - begin: '([$#@&]?{{IDENT}})'
+        beginCaptures:
+          0 : { name: variable.parameter.c3 }
+        end: '(?=[;,)])'
+        patterns:
+          - include: "#comments"
+          - include: "#attribute"
+          - match: '\.\.\.'
+            name: keyword.operator.variadic.c3
+          # Parameter with default value
+          - begin: '\='
+            beginCaptures:
+              0 : { name: keyword.operator.assignment.c3 }
+            end: '(?=[;,)])'
+            patterns:
+              - include: "#expression"
   
   generic_params:
     patterns:
-      - begin: '\(<'
-        end: '>\)'
+      - begin: \{
+        end: \}
         beginCaptures:
           0: { name: meta.generic.c3 punctuation.definition.generic.begin.c3 }
         endCaptures:
@@ -836,18 +899,6 @@ repository:
         contentName: meta.generic.c3
         patterns:
           - include: "#expression"
-
-  expression_block:
-    patterns:
-      - begin: \{\|
-        beginCaptures:
-          0: { name: meta.block.c3 punctuation.section.block.begin.c3 }
-        end: \|\}
-        endCaptures:
-          0: { name: meta.block.c3 punctuation.section.block.end.c3 }
-        contentName: meta.block.c3
-        patterns:
-          - include: "#statements"
 
   initializer_list:
     patterns:
