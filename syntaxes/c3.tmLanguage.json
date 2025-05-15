@@ -821,7 +821,7 @@
     "keywords": {
       "patterns": [
         {
-          "match": "\\$(?:alignof|and|append|assert|assignable|concat|default|defined|echo|embed|eval|error|exec|extnameof|feature|include|is_const|nameof|offsetof|or|qnameof|sizeof|stringify|vacount|vaconst|varef|vaarg|vaexpr|vasplat)\\b",
+          "match": "\\$(?:alignof|assert|assignable|default|defined|echo|embed|eval|evaltype|error|exec|extnameof|feature|include|is_const|nameof|offsetof|qnameof|sizeof|stringify|typefrom|typeof|vacount|vatype|vaconst|vaarg|vaexpr|vasplat)\\b",
           "name": "keyword.other.ct.c3"
         },
         {
@@ -829,7 +829,7 @@
           "name": "keyword.control.ct.c3"
         },
         {
-          "match": "\\b(?:assert|asm|catch|const|alias|typedef|extern|tlocal|inline|import|module|interface|static|try|var)\\b",
+          "match": "\\b(?:alias|assert|asm|attrdef|catch|const|extern|faultdef|tlocal|inline|import|module|interface|static|try|typedef|var)\\b",
           "name": "keyword.other.c3"
         },
         {
@@ -1198,7 +1198,7 @@
     "attribute": {
       "patterns": [
         {
-          "begin": "(@(?:align|benchmark|bigendian|builtin|callconv|compact|const|deprecated|dynamic|export|extern|finalizer|if|inline|init|link|littleendian|local|maydiscard|naked|nodiscard|noinit|noinline|nopadding|noreturn|nosanitize|nostrip|obfuscate|operator|optional|overlap|packed|private|public|pure|reflect|safemacro|section|test|unused|used|wasm|weak|winmain|(?:_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*)))\\s*(\\()",
+          "begin": "(@(?:align|benchmark|bigendian|builtin|callconv|compact|const|deprecated|dynamic|export|extern|finalizer|format|if|inline|init|link|littleendian|local|maydiscard|naked|noalias|nodiscard|noinit|noinline|nopadding|norecurse|noreturn|nosanitize|nostrip|obfuscate|operator|operator_r|operator_s|optional|overlap|packed|private|public|pure|reflect|safemacro|section|tag|test|unused|used|wasm|weak|winmain|(?:_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*)))\\s*(\\()",
           "end": "\\)",
           "beginCaptures": {
             "1": {
@@ -1221,7 +1221,7 @@
           ]
         },
         {
-          "match": "@(?:align|benchmark|bigendian|builtin|callconv|compact|const|deprecated|dynamic|export|extern|finalizer|if|inline|init|link|littleendian|local|maydiscard|naked|nodiscard|noinit|noinline|nopadding|noreturn|nosanitize|nostrip|obfuscate|operator|optional|overlap|packed|private|public|pure|reflect|safemacro|section|test|unused|used|wasm|weak|winmain|(?:_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*))",
+          "match": "@(?:align|benchmark|bigendian|builtin|callconv|compact|const|deprecated|dynamic|export|extern|finalizer|format|if|inline|init|link|littleendian|local|maydiscard|naked|noalias|nodiscard|noinit|noinline|nopadding|norecurse|noreturn|nosanitize|nostrip|obfuscate|operator|operator_r|operator_s|optional|overlap|packed|private|public|pure|reflect|safemacro|section|tag|test|unused|used|wasm|weak|winmain|(?:_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*))",
           "name": "meta.annotation.c3 keyword.annotation.c3"
         }
       ]
