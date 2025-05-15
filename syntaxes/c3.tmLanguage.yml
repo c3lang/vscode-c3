@@ -332,11 +332,10 @@ repository:
         contentName: meta.function.c3 meta.block.c3
         patterns:
           - include: "#statements"
-      # Lambda function body TODO FIXME
       - begin: \=>
         beginCaptures:
           0: { name: meta.function.c3 keyword.declaration.function.arrow.c3 }
-        end: '(?=[;,)])'
+        end: '(?=[;,){])'
         contentName: meta.function.c3
         patterns:
           - include: "#expression"
@@ -753,7 +752,7 @@ repository:
               0: { name: keyword.operator.c3 }
             end: ':'
             endCaptures:
-              0: { name: punctuation.separator.c3 }
+              0: { name: punctuation.separator.c3 } # Override the : operator
             patterns:
               - include: "#expression"
       # for
@@ -827,8 +826,8 @@ repository:
 
       - include: "#parens"
       - include: "#brackets"
-      - include: "#initializer_list"
-
+      # Just assume anything in curly braces is a block of statements (even if it's an initializer list)
+      - include: "#block" 
       - include: "#punctuation"
 
   function_call:
@@ -964,17 +963,5 @@ repository:
         endCaptures:
           0: { name: meta.generic.c3 punctuation.definition.generic.end.c3 }
         contentName: meta.generic.c3
-        patterns:
-          - include: "#expression"
-
-  initializer_list:
-    patterns:
-      - begin: \{
-        beginCaptures:
-          0: { name: meta.block.c3 punctuation.section.block.begin.c3 }
-        end: \}
-        endCaptures:
-          0: { name: meta.block.c3 punctuation.section.block.end.c3 }
-        contentName: meta.block.c3 meta.initializer_list.c3
         patterns:
           - include: "#expression"

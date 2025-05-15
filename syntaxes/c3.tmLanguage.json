@@ -676,7 +676,7 @@
               "name": "meta.function.c3 keyword.declaration.function.arrow.c3"
             }
           },
-          "end": "(?=[;,)])",
+          "end": "(?=[;,){])",
           "contentName": "meta.function.c3",
           "patterns": [
             {
@@ -850,7 +850,7 @@
           "name": "keyword.control.ct.c3"
         },
         {
-          "match": "\\b(?:assert|asm|catch|extern|tlocal|inline|import|module|interface|static|try|var)\\b",
+          "match": "\\b(?:assert|asm|catch|inline|import|module|interface|try|var)\\b",
           "name": "keyword.other.c3"
         },
         {
@@ -1624,7 +1624,7 @@
           "include": "#brackets"
         },
         {
-          "include": "#initializer_list"
+          "include": "#block"
         },
         {
           "include": "#punctuation"
@@ -1902,30 +1902,6 @@
             }
           },
           "contentName": "meta.generic.c3",
-          "patterns": [
-            {
-              "include": "#expression"
-            }
-          ]
-        }
-      ]
-    },
-    "initializer_list": {
-      "patterns": [
-        {
-          "begin": "\\{",
-          "beginCaptures": {
-            "0": {
-              "name": "meta.block.c3 punctuation.section.block.begin.c3"
-            }
-          },
-          "end": "\\}",
-          "endCaptures": {
-            "0": {
-              "name": "meta.block.c3 punctuation.section.block.end.c3"
-            }
-          },
-          "contentName": "meta.block.c3 meta.initializer_list.c3",
           "patterns": [
             {
               "include": "#expression"
