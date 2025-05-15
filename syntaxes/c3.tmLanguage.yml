@@ -136,7 +136,9 @@ repository:
                 end: (?=\{)
                 patterns:
                   - include: "#comments"
-                  - include: "#type"
+                  - match: '\binline\b'
+                    name: storage.modifier.c3 # TODO
+                  - include: "#type_no_generics"
                   # Enum parameters
                   - begin: '\('
                     beginCaptures:
@@ -377,7 +379,7 @@ repository:
             end: (?=\{)
             patterns:
               - include: "#comments"
-              - include: "#type"
+              - include: "#type_no_generics"
               - include: "#attribute"
           # Interface implementation
           - begin: '\('
@@ -597,7 +599,7 @@ repository:
       - include: "#brackets"
       - match: '\*'
         name: keyword.operator.address.c3
-      - match: '\!'
+      - match: '\?'
         name: keyword.operator.c3
 
   type:
@@ -612,20 +614,18 @@ repository:
           #1: { name: storage.type.primitive.c3 }
           2: { name: support.type.c3 }
         #contentName: meta.type_suffix.c3
-        end: (?![*\[!\s]|\(\<)
+        end: (?![*\[?\s{])
         patterns:
           - include: "#generic_params"
           - include: "#type_suffix"
       
-      # "vatype": < 0.7.0, deprecated >= 0.6.2
-      - begin: '(\$(?:typeof|typefrom|evaltype|vatype))\b\s*\('
+      - begin: '(\$(?:typeof|typefrom|evaltype))\b\s*\('
         beginCaptures:
           1: { name: storage.type.c3 }
         end: \)
         patterns:
           - include: "#expression"
 
-      # >= 0.6.2
       - begin: '(\$(?:vatype))\b\s*\['
         beginCaptures:
           1: { name: storage.type.c3 }
@@ -634,9 +634,39 @@ repository:
           - include: "#expression"
 
       # Matching type suffix after typeof/typefrom etc. is too hard so just do generic matches here
-      - include: "#brackets"
-      - match: '[*!]'
-        name: keyword.operator.c3
+      - include: "#type_suffix"
+
+  type_no_generics:
+    patterns:
+      - include: "#path"
+
+      - begin: '\b({{base_type}})\b|(\$?\b{{TYPE}}\b)'
+        beginCaptures:
+          1: { name: storage.type.built-in.primitive.c3 }
+          # Alternatives
+          #1: { name: storage.type.built-in.c3 }
+          #1: { name: storage.type.primitive.c3 }
+          2: { name: support.type.c3 }
+        end: (?![*\[?\s])
+        patterns:
+          - include: "#type_suffix"
+
+      - begin: '(\$(?:typeof|typefrom|evaltype))\b\s*\('
+        beginCaptures:
+          1: { name: storage.type.c3 }
+        end: \)
+        patterns:
+          - include: "#expression"
+
+      - begin: '(\$(?:vatype))\b\s*\['
+        beginCaptures:
+          1: { name: storage.type.c3 }
+        end: \]
+        patterns:
+          - include: "#expression"
+
+      # Matching type suffix after typeof/typefrom etc. is too hard so just do generic matches here
+      - include: "#type_suffix"
 
   attribute:
     patterns:
@@ -790,7 +820,7 @@ repository:
       - include: "#operators"
       - include: "#keywords"
       - include: "#type"
-      - include: "#generic_params"
+      #- include: "#generic_params" # TODO
       - include: "#path"
       - include: "#function_call"
       - include: "#attribute"

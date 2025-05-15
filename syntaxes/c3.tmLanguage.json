@@ -265,7 +265,11 @@
                       "include": "#comments"
                     },
                     {
-                      "include": "#type"
+                      "match": "\\binline\\b",
+                      "name": "storage.modifier.c3"
+                    },
+                    {
+                      "include": "#type_no_generics"
                     },
                     {
                       "begin": "\\(",
@@ -759,7 +763,7 @@
                   "include": "#comments"
                 },
                 {
-                  "include": "#type"
+                  "include": "#type_no_generics"
                 },
                 {
                   "include": "#attribute"
@@ -1178,7 +1182,7 @@
           "name": "keyword.operator.address.c3"
         },
         {
-          "match": "\\!",
+          "match": "\\?",
           "name": "keyword.operator.c3"
         }
       ]
@@ -1198,7 +1202,7 @@
               "name": "support.type.c3"
             }
           },
-          "end": "(?![*\\[!\\s]|\\(\\<)",
+          "end": "(?![*\\[?\\s{])",
           "patterns": [
             {
               "include": "#generic_params"
@@ -1209,7 +1213,7 @@
           ]
         },
         {
-          "begin": "(\\$(?:typeof|typefrom|evaltype|vatype))\\b\\s*\\(",
+          "begin": "(\\$(?:typeof|typefrom|evaltype))\\b\\s*\\(",
           "beginCaptures": {
             "1": {
               "name": "storage.type.c3"
@@ -1237,11 +1241,62 @@
           ]
         },
         {
-          "include": "#brackets"
+          "include": "#type_suffix"
+        }
+      ]
+    },
+    "type_no_generics": {
+      "patterns": [
+        {
+          "include": "#path"
         },
         {
-          "match": "[*!]",
-          "name": "keyword.operator.c3"
+          "begin": "\\b(void|bool|char|double|float|float16|int128|ichar|int|iptr|isz|long|short|uint128|uint|ulong|uptr|ushort|usz|float128|any|anyfault|typeid)\\b|(\\$?\\b(?:_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*)\\b)",
+          "beginCaptures": {
+            "1": {
+              "name": "storage.type.built-in.primitive.c3"
+            },
+            "2": {
+              "name": "support.type.c3"
+            }
+          },
+          "end": "(?![*\\[?\\s])",
+          "patterns": [
+            {
+              "include": "#type_suffix"
+            }
+          ]
+        },
+        {
+          "begin": "(\\$(?:typeof|typefrom|evaltype))\\b\\s*\\(",
+          "beginCaptures": {
+            "1": {
+              "name": "storage.type.c3"
+            }
+          },
+          "end": "\\)",
+          "patterns": [
+            {
+              "include": "#expression"
+            }
+          ]
+        },
+        {
+          "begin": "(\\$(?:vatype))\\b\\s*\\[",
+          "beginCaptures": {
+            "1": {
+              "name": "storage.type.c3"
+            }
+          },
+          "end": "\\]",
+          "patterns": [
+            {
+              "include": "#expression"
+            }
+          ]
+        },
+        {
+          "include": "#type_suffix"
         }
       ]
     },
@@ -1560,9 +1615,6 @@
         },
         {
           "include": "#type"
-        },
-        {
-          "include": "#generic_params"
         },
         {
           "include": "#path"
