@@ -1405,11 +1405,11 @@
         },
         {
           "match": "(?<!#)\\$?\\b(?:_*[a-z][_a-zA-Z0-9]*)\\b",
-          "name": "variable.other.declaration.c3"
+          "name": "variable.other.c3"
         },
         {
           "match": "\\b(?:_*[A-Z][_A-Z0-9]*)\\b",
-          "name": "variable.other.constant.declaration.c3"
+          "name": "variable.other.constant.c3"
         },
         {
           "include": "#attribute"
@@ -1481,7 +1481,6 @@
                   "name": "punctuation.separator.c3"
                 }
               },
-              "contentName": "TODO",
               "patterns": [
                 {
                   "include": "#expression"

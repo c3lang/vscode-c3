@@ -347,7 +347,7 @@ repository:
         contentName: meta.function.c3 meta.block.c3
         patterns:
           - include: "#statements"
-      # Lambda function body
+      # Lambda function body TODO FIXME
       - begin: \=>
         beginCaptures:
           0: { name: meta.function.c3 keyword.declaration.function.arrow.c3 }
@@ -758,7 +758,6 @@ repository:
             end: ':'
             endCaptures:
               0: { name: punctuation.separator.c3 }
-            contentName: 'TODO'
             patterns:
               - include: "#expression"
       # for
