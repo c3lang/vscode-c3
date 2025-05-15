@@ -700,19 +700,35 @@ repository:
 
   control_statements:
     patterns:
+      # CT for
       - begin: \$for\b
         beginCaptures:
           0: { name: keyword.control.ct.c3 }
-        end: (?<=\))
+        end: ':'
+        endCaptures:
+          0: { name: punctuation.separator.c3 } # Override the : operator
         patterns:
-        - begin: \(
-          beginCaptures:
-            0: { name: punctuation.section.group.begin.c3 }
-          end: \)
-          endCaptures:
-            0: { name: punctuation.section.group.end.c3 }
-          patterns:
-            - include: "#statements"
+          - include: "#statements"
+      # CT foreach
+      - begin: \$foreach\b
+        beginCaptures:
+          0: { name: keyword.control.ct.c3 }
+        end: '(?<=:)'
+        patterns:
+          - match: '\${{IDENT}}'
+            name: variable.other.c3
+          - match: ','
+            name: punctuation.separator.c3
+          - begin: ':'
+            beginCaptures:
+              0: { name: keyword.operator.c3 }
+            end: ':'
+            endCaptures:
+              0: { name: punctuation.separator.c3 }
+            contentName: 'TODO'
+            patterns:
+              - include: "#expression"
+      # for
       - begin: \bfor\b
         beginCaptures:
           0: { name: keyword.control.c3 }
@@ -726,7 +742,8 @@ repository:
             0: { name: punctuation.section.group.end.c3 }
           patterns:
             - include: "#statements"
-      - begin: '\$(?:case|default|if)\b'
+      # CT switch/case/default/if
+      - begin: '\$(?:switch|case|default|if)\b'
         beginCaptures:
           0: { name: keyword.control.ct.c3 }
         end: ':'
@@ -734,6 +751,7 @@ repository:
           0: { name: punctuation.separator.c3 } # Override the : operator
         patterns:
           - include: "#expression"
+      # case/default
       - begin: '\b(?:case|default)\b'
         beginCaptures:
           0: { name: keyword.control.c3 }

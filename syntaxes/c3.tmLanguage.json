@@ -1384,24 +1384,52 @@
               "name": "keyword.control.ct.c3"
             }
           },
-          "end": "(?<=\\))",
+          "end": ":",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.separator.c3"
+            }
+          },
           "patterns": [
             {
-              "begin": "\\(",
+              "include": "#statements"
+            }
+          ]
+        },
+        {
+          "begin": "\\$foreach\\b",
+          "beginCaptures": {
+            "0": {
+              "name": "keyword.control.ct.c3"
+            }
+          },
+          "end": "(?<=:)",
+          "patterns": [
+            {
+              "match": "\\$(?:_*[a-z][_a-zA-Z0-9]*)",
+              "name": "variable.other.c3"
+            },
+            {
+              "match": ",",
+              "name": "punctuation.separator.c3"
+            },
+            {
+              "begin": ":",
               "beginCaptures": {
                 "0": {
-                  "name": "punctuation.section.group.begin.c3"
+                  "name": "keyword.operator.c3"
                 }
               },
-              "end": "\\)",
+              "end": ":",
               "endCaptures": {
                 "0": {
-                  "name": "punctuation.section.group.end.c3"
+                  "name": "punctuation.separator.c3"
                 }
               },
+              "contentName": "TODO",
               "patterns": [
                 {
-                  "include": "#statements"
+                  "include": "#expression"
                 }
               ]
             }
@@ -1438,7 +1466,7 @@
           ]
         },
         {
-          "begin": "\\$(?:case|default|if)\\b",
+          "begin": "\\$(?:switch|case|default|if)\\b",
           "beginCaptures": {
             "0": {
               "name": "keyword.control.ct.c3"
