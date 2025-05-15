@@ -1346,6 +1346,7 @@
               "name": "punctuation.terminator.c3"
             }
           },
+          "name": "meta.declaration.c3",
           "patterns": [
             {
               "match": "\\$(?:_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*)",
@@ -1362,7 +1363,8 @@
           "endCaptures": {
             "0": {
               "name": "punctuation.terminator.c3"
-            }
+            },
+            "name": "meta.declaration.c3"
           },
           "patterns": [
             {
@@ -1384,6 +1386,7 @@
               "name": "punctuation.terminator.c3"
             }
           },
+          "name": "meta.declaration.c3",
           "patterns": [
             {
               "include": "#type"
@@ -1401,15 +1404,12 @@
           "include": "#comments"
         },
         {
-          "include": "#generic_params"
-        },
-        {
           "match": "(?<!#)\\$?\\b(?:_*[a-z][_a-zA-Z0-9]*)\\b",
-          "name": "variable.other.c3"
+          "name": "variable.other.declaration.c3"
         },
         {
           "match": "\\b(?:_*[A-Z][_A-Z0-9]*)\\b",
-          "name": "variable.other.constant"
+          "name": "variable.other.constant.declaration.c3"
         },
         {
           "include": "#attribute"
@@ -1579,10 +1579,10 @@
           "include": "#declaration"
         },
         {
-          "include": "#expression"
+          "include": "#block"
         },
         {
-          "include": "#block"
+          "include": "#expression"
         }
       ]
     },
@@ -1635,9 +1635,6 @@
           "include": "#brackets"
         },
         {
-          "include": "#expression_block"
-        },
-        {
           "include": "#initializer_list"
         },
         {
@@ -1646,7 +1643,7 @@
       ]
     },
     "function_call": {
-      "begin": "([@#]?(?:_*[a-z][_a-zA-Z0-9]*))(?=\\s*\\((?!<))",
+      "begin": "([@#]?(?:_*[a-z][_a-zA-Z0-9]*)\\b)(?=\\s*(\\{.*\\})?\\s*\\()",
       "beginCaptures": {
         "1": {
           "name": "entity.name.function.c3"
@@ -1659,6 +1656,9 @@
         }
       },
       "patterns": [
+        {
+          "include": "#generic_params"
+        },
         {
           "begin": "\\(",
           "beginCaptures": {
@@ -1673,13 +1673,24 @@
               "include": "#comments"
             },
             {
-              "match": "(?<=[(\\s,])(\\.)([$#]?(?:_*[a-z][_a-zA-Z0-9]*))",
+              "match": "([$#]?(?:_*[a-z][_a-zA-Z0-9]*))\\s*(:(?!:))",
               "captures": {
                 "1": {
-                  "name": "punctuation.separator.c3"
+                  "name": "variable.parameter.c3"
                 },
                 "2": {
+                  "name": "punctuation.separator.c3"
+                }
+              }
+            },
+            {
+              "match": "(\\$(?:_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*))\\s*(:(?!:))",
+              "captures": {
+                "1": {
                   "name": "variable.parameter.c3"
+                },
+                "2": {
+                  "name": "punctuation.separator.c3"
                 }
               }
             },
@@ -1700,13 +1711,13 @@
     "block": {
       "patterns": [
         {
-          "begin": "\\{(?!\\|)",
+          "begin": "\\{",
           "beginCaptures": {
             "0": {
               "name": "meta.block.c3 punctuation.section.block.begin.c3"
             }
           },
-          "end": "(?<!\\|)\\}",
+          "end": "\\}",
           "endCaptures": {
             "0": {
               "name": "meta.block.c3 punctuation.section.block.end.c3"
@@ -1893,7 +1904,7 @@
               "name": "meta.block.c3 punctuation.section.block.end.c3"
             }
           },
-          "contentName": "meta.block.c3",
+          "contentName": "meta.block.c3 meta.initializer_list.c3",
           "patterns": [
             {
               "include": "#expression"

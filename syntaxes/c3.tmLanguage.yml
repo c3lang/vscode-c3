@@ -691,6 +691,7 @@ repository:
         end: ;
         endCaptures:
           0: { name: punctuation.terminator.c3 }
+        name: 'meta.declaration.c3'
         patterns:
           # CT type
           - match: '\${{TYPE}}'
@@ -700,6 +701,7 @@ repository:
         end: ;
         endCaptures:
           0: { name: punctuation.terminator.c3 }
+          name: 'meta.declaration.c3'
         patterns:
           - include: "#type"
           - include: "#declaration_after_type"
@@ -708,6 +710,7 @@ repository:
         end: ;
         endCaptures:
           0: { name: punctuation.terminator.c3 }
+        name: 'meta.declaration.c3'
         patterns:
           - include: "#type"
           - include: "#declaration_after_type"
@@ -715,11 +718,11 @@ repository:
   declaration_after_type:
     patterns:
       - include: "#comments"
-      - include: "#generic_params"
+      #- include: "#generic_params"
       - match: '(?<!#)\$?\b{{IDENT}}\b'
         name: variable.other.c3
       - match: '\b{{CONST}}\b'
-        name: variable.other.constant
+        name: variable.other.constant.c3
       - include: "#attribute"
       - begin: \=
         beginCaptures:
@@ -801,8 +804,8 @@ repository:
       - include: "#control_statements"
 
       - include: "#declaration"
-      - include: "#expression"
       - include: "#block"
+      - include: "#expression"
 
   variable:
     match: '(?<!#)\$?\b{{IDENT}}\b'
@@ -829,19 +832,19 @@ repository:
 
       - include: "#parens"
       - include: "#brackets"
-      - include: "#expression_block"
       - include: "#initializer_list"
 
       - include: "#punctuation"
 
   function_call:
-    begin: '([@#]?{{IDENT}})(?=\s*\((?!<))'
+    begin: '([@#]?{{IDENT}}\b)(?=\s*(\{.*\})?\s*\()'
     beginCaptures:
       1: { name: entity.name.function.c3 }
     end: '\)'
     endCaptures:
       0: { name: meta.group.c3 punctuation.section.group.end.c3 }
     patterns:
+      - include: "#generic_params"
       # Argument list
       - begin: \(
         beginCaptures:
@@ -851,10 +854,14 @@ repository:
         patterns:
           - include: "#comments"
           # Named argument
-          - match: '(?<=[(\s,])(\.)([$#]?{{IDENT}})'
+          - match: '([$#]?{{IDENT}})\s*(:(?!:))'
             captures:
-              1: { name: punctuation.separator.c3 }
-              2: { name: variable.parameter.c3 }
+              1: { name: variable.parameter.c3 }
+              2: { name: punctuation.separator.c3 }
+          - match: '(\${{TYPE}})\s*(:(?!:))' # TODO I forget if this is even valid
+            captures:
+              1: { name: variable.parameter.c3 }
+              2: { name: punctuation.separator.c3 }
           - include: "#expression"
           - include: "#punctuation"
           - match: ';'
@@ -862,10 +869,10 @@ repository:
 
   block:
     patterns:
-      - begin: \{(?!\|)
+      - begin: \{
         beginCaptures:
           0: { name: meta.block.c3 punctuation.section.block.begin.c3 }
-        end: (?<!\|)\}
+        end: \}
         endCaptures:
           0: { name: meta.block.c3 punctuation.section.block.end.c3 }
         contentName: meta.block.c3
@@ -956,6 +963,6 @@ repository:
         end: \}
         endCaptures:
           0: { name: meta.block.c3 punctuation.section.block.end.c3 }
-        contentName: meta.block.c3
+        contentName: meta.block.c3 meta.initializer_list.c3
         patterns:
           - include: "#expression"
