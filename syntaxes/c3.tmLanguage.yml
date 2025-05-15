@@ -470,7 +470,7 @@ repository:
         name: keyword.operator.variadic.c3
       - match: '\.\.'
         name: keyword.operator.range.c3
-      - match: '\+\+|--'
+      - match: '\+\+\+?|--'
         name: keyword.operator.arithmetic.c3
       - match: '<<|>>|&&&?|\|\|\|?'
         name: keyword.operator.arithmetic.c3
