@@ -405,7 +405,7 @@
               "begin": "\\b(?:_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*)\\b",
               "beginCaptures": {
                 "0": {
-                  "name": "support.type.c3"
+                  "name": "entity.name.type.c3"
                 }
               },
               "end": "(?=;)",
@@ -569,39 +569,6 @@
                 },
                 {
                   "include": "#function"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "begin": "\\b(?:_*[A-Z][_A-Z0-9]*)\\b",
-          "beginCaptures": {
-            "0": {
-              "name": "variable.other.constant"
-            }
-          },
-          "end": ";",
-          "endCaptures": {
-            "0": {
-              "name": "punctuation.terminator.c3"
-            }
-          },
-          "patterns": [
-            {
-              "include": "#comments"
-            },
-            {
-              "begin": "\\=",
-              "beginCaptures": {
-                "0": {
-                  "name": "keyword.operator.assignment.c3"
-                }
-              },
-              "end": "(?=;)",
-              "patterns": [
-                {
-                  "include": "#expression"
                 }
               ]
             }
@@ -883,7 +850,7 @@
           "name": "keyword.control.ct.c3"
         },
         {
-          "match": "\\b(?:assert|asm|catch|const|extern|tlocal|inline|import|module|interface|static|try|var)\\b",
+          "match": "\\b(?:assert|asm|catch|extern|tlocal|inline|import|module|interface|static|try|var)\\b",
           "name": "keyword.other.c3"
         },
         {
@@ -895,7 +862,7 @@
     "modifier_keywords": {
       "patterns": [
         {
-          "match": "\\b(?:const|extern|static|tlocal|inline)\\b",
+          "match": "\\b(?:extern|static|tlocal|inline)\\b",
           "name": "storage.modifier.c3"
         }
       ]
@@ -1358,6 +1325,29 @@
           ]
         },
         {
+          "begin": "\\bconst\\b",
+          "beginCaptures": {
+            "0": {
+              "name": "keyword.declaration.constant.c3"
+            }
+          },
+          "end": ";",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.terminator.c3"
+            }
+          },
+          "name": "meta.declaration.c3",
+          "patterns": [
+            {
+              "include": "#type"
+            },
+            {
+              "include": "#declaration_after_type"
+            }
+          ]
+        },
+        {
           "begin": "(?=\\$(typeof|typefrom|vatype|evaltype)\\b)",
           "end": ";",
           "endCaptures": {
@@ -1654,6 +1644,7 @@
           "name": "meta.group.c3 punctuation.section.group.end.c3"
         }
       },
+      "name": "meta.function_call.c3",
       "patterns": [
         {
           "include": "#generic_params"
@@ -1785,6 +1776,37 @@
           "include": "#comments"
         },
         {
+          "begin": "\\$(?:_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*)",
+          "beginCaptures": {
+            "0": {
+              "name": "support.type.c3"
+            }
+          },
+          "end": "(?=[;,)])",
+          "patterns": [
+            {
+              "include": "#comments"
+            },
+            {
+              "include": "#attribute"
+            },
+            {
+              "begin": "\\=",
+              "beginCaptures": {
+                "0": {
+                  "name": "keyword.operator.assignment.c3"
+                }
+              },
+              "end": "(?=[;,)])",
+              "patterns": [
+                {
+                  "include": "#expression"
+                }
+              ]
+            }
+          ]
+        },
+        {
           "include": "#type"
         },
         {
@@ -1828,7 +1850,7 @@
           ]
         },
         {
-          "begin": "([$#@&]?(?:_*[a-z][_a-zA-Z0-9]*))",
+          "begin": "[$#@&]?(?:_*[a-z][_a-zA-Z0-9]*)",
           "beginCaptures": {
             "0": {
               "name": "variable.parameter.c3"
