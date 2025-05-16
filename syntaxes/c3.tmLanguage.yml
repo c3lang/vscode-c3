@@ -609,11 +609,24 @@ repository:
           #1: { name: storage.type.built-in.c3 }
           #1: { name: storage.type.primitive.c3 }
           2: { name: support.type.c3 }
-        #end: (?![*\[?\s{])
-        end: (?=[^\s{])
+        end: (?=[^*\[?\s{])
         patterns:
           - include: "#generic_params"
-          #- include: "#type_suffix"
+          - include: "#type_suffix"
+
+      - begin: '(\$(?:typeof|typefrom|evaltype))\b\s*\(' # TODO using \s* doesn't match over multiple lines
+        beginCaptures:
+          1: { name: storage.type.c3 }
+        end: \)
+        patterns:
+          - include: "#expression"
+
+      - begin: '(\$(?:vatype))\b\s*\[' # TODO using \s* doesn't match over multiple lines
+        beginCaptures:
+          1: { name: storage.type.c3 }
+        end: \]
+        patterns:
+          - include: "#expression"
 
       # Matching type suffix after typeof/typefrom etc. is too hard so just do generic matches here
       - include: "#type_suffix"
@@ -629,9 +642,23 @@ repository:
           #1: { name: storage.type.built-in.c3 }
           #1: { name: storage.type.primitive.c3 }
           2: { name: support.type.c3 }
-        end: (?![*\[?\s])
+        end: (?=[^*\[?\s])
         patterns:
           - include: "#type_suffix"
+
+      - begin: '(\$(?:typeof|typefrom|evaltype))\b\s*\(' # TODO using \s* doesn't match over multiple lines
+        beginCaptures:
+          1: { name: storage.type.c3 }
+        end: \)
+        patterns:
+          - include: "#expression"
+
+      - begin: '(\$(?:vatype))\b\s*\[' # TODO using \s* doesn't match over multiple lines
+        beginCaptures:
+          1: { name: storage.type.c3 }
+        end: \]
+        patterns:
+          - include: "#expression"
 
       # Matching type suffix after typeof/typefrom etc. is too hard so just do generic matches here
       - include: "#type_suffix"

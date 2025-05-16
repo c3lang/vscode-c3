@@ -1199,10 +1199,41 @@
               "name": "support.type.c3"
             }
           },
-          "end": "(?=[^\\s{])",
+          "end": "(?=[^*\\[?\\s{])",
           "patterns": [
             {
               "include": "#generic_params"
+            },
+            {
+              "include": "#type_suffix"
+            }
+          ]
+        },
+        {
+          "begin": "(\\$(?:typeof|typefrom|evaltype))\\b\\s*\\(",
+          "beginCaptures": {
+            "1": {
+              "name": "storage.type.c3"
+            }
+          },
+          "end": "\\)",
+          "patterns": [
+            {
+              "include": "#expression"
+            }
+          ]
+        },
+        {
+          "begin": "(\\$(?:vatype))\\b\\s*\\[",
+          "beginCaptures": {
+            "1": {
+              "name": "storage.type.c3"
+            }
+          },
+          "end": "\\]",
+          "patterns": [
+            {
+              "include": "#expression"
             }
           ]
         },
@@ -1226,10 +1257,38 @@
               "name": "support.type.c3"
             }
           },
-          "end": "(?![*\\[?\\s])",
+          "end": "(?=[^*\\[?\\s])",
           "patterns": [
             {
               "include": "#type_suffix"
+            }
+          ]
+        },
+        {
+          "begin": "(\\$(?:typeof|typefrom|evaltype))\\b\\s*\\(",
+          "beginCaptures": {
+            "1": {
+              "name": "storage.type.c3"
+            }
+          },
+          "end": "\\)",
+          "patterns": [
+            {
+              "include": "#expression"
+            }
+          ]
+        },
+        {
+          "begin": "(\\$(?:vatype))\\b\\s*\\[",
+          "beginCaptures": {
+            "1": {
+              "name": "storage.type.c3"
+            }
+          },
+          "end": "\\]",
+          "patterns": [
+            {
+              "include": "#expression"
             }
           ]
         },
