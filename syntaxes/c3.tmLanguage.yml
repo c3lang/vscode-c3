@@ -506,15 +506,15 @@ repository:
 
   real_literal:
     patterns:
-      - match: '{{INT}}{{REALTYPE}}'
+      - match: '\b{{INT}}{{REALTYPE}}'
         name: constant.numeric.float.c3
-      - match: '(?:{{INT}}{{E}}|{{INT}}\.(?:{{INT}})?(?:{{E}})?){{REALTYPE}}?'
+      - match: '\b(?:{{INT}}{{E}}|{{INT}}\.(?:{{INT}})?(?:{{E}})?){{REALTYPE}}?'
         name: constant.numeric.float.c3
-      - match: '(?:0[xX]{{HINT}}{{P}}|0[xX]{{HINT}}\.(?:{{HINT}})?(?:{{P}})?)'
+      - match: '\b(?:0[xX]{{HINT}}{{P}}|0[xX]{{HINT}}\.(?:{{HINT}})?(?:{{P}})?)'
         name: constant.numeric.float.c3
 
   integer_literal:
-    match: '(?:{{INT}}|0[xX]{{HINT}}|0[oO]{{OINT}}|0[bB]{{BINT}}){{INTTYPE}}?'
+    match: '\b(?:{{INT}}|0[xX]{{HINT}}|0[oO]{{OINT}}|0[bB]{{BINT}}){{INTTYPE}}?'
     name: constant.numeric.integer.c3
 
   bytes_literal:
@@ -609,7 +609,6 @@ repository:
           #1: { name: storage.type.built-in.c3 }
           #1: { name: storage.type.primitive.c3 }
           2: { name: support.type.c3 }
-        #contentName: meta.type_suffix.c3
         #end: (?![*\[?\s{])
         end: (?=[^\s{])
         patterns:
