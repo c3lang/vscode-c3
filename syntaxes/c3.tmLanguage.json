@@ -71,7 +71,7 @@
             },
             {
               "match": "(?:_*[a-z][_a-zA-Z0-9]*)",
-              "name": "meta.path.c3"
+              "name": "meta.path.c3 entity.name.scope-resolution.c3"
             },
             {
               "include": "#generic_params"
@@ -103,7 +103,7 @@
             },
             {
               "match": "(?:_*[a-z][_a-zA-Z0-9]*)",
-              "name": "meta.path.c3"
+              "name": "meta.path.c3 entity.name.scope-resolution.c3"
             },
             {
               "match": ",",
@@ -865,8 +865,18 @@
           "name": "constant.language.c3"
         },
         {
-          "match": "\\b(?:_*[A-Z][_A-Z0-9]*)\\b",
-          "name": "variable.other.constant"
+          "begin": "\\b(?:_*[A-Z][_A-Z0-9]*)\\b",
+          "beginCaptures": {
+            "0": {
+              "name": "variable.other.constant.c3"
+            }
+          },
+          "end": "(?=[^{\\s])|(?<=\\})",
+          "patterns": [
+            {
+              "include": "#generic_params"
+            }
+          ]
         }
       ]
     },
@@ -918,7 +928,7 @@
       "match": "((?:_*[a-z][_a-zA-Z0-9]*))(::)",
       "captures": {
         "1": {
-          "name": "meta.path.c3"
+          "name": "meta.path.c3 entity.name.scope-resolution.c3"
         },
         "2": {
           "name": "meta.path.c3 punctuation.separator.scope-resolution.c3"
@@ -1027,7 +1037,7 @@
       ]
     },
     "integer_literal": {
-      "match": "\\b(?:[0-9](?:_?[0-9])*|0[xX][a-fA-F0-9](?:_?[a-fA-F0-9])*|0[oO][0-7](_?[0-7])*|0[bB][0-1](_?[0-1])*)(?:[ui](?:8|16|32|64|128)|[Uu][Ll]?|[Ll])?",
+      "match": "\\b(?:0[xX][a-fA-F0-9](?:_?[a-fA-F0-9])*|0[oO][0-7](_?[0-7])*|0[bB][0-1](_?[0-1])*|[0-9](?:_?[0-9])*)(?:[ui](?:8|16|32|64|128)|[Uu][Ll]?|[Ll])?",
       "name": "constant.numeric.integer.c3"
     },
     "bytes_literal": {
@@ -1481,8 +1491,18 @@
       ]
     },
     "variable": {
-      "match": "(?<!#)\\$?\\b(?:_*[a-z][_a-zA-Z0-9]*)\\b",
-      "name": "variable.other.c3"
+      "begin": "(?<!#)\\$?\\b(?:_*[a-z][_a-zA-Z0-9]*)\\b",
+      "beginCaptures": {
+        "0": {
+          "name": "variable.other.c3"
+        }
+      },
+      "end": "(?=[^{\\s])|(?<=\\})",
+      "patterns": [
+        {
+          "include": "#generic_params"
+        }
+      ]
     },
     "expression": {
       "patterns": [

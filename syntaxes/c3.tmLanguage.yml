@@ -43,7 +43,7 @@ repository:
           - include: "#attribute"
           - include: "#path"
           - match: '{{IDENT}}'
-            name: meta.path.c3
+            name: meta.path.c3 entity.name.scope-resolution.c3
           - include: "#generic_params"
 
       # Import
@@ -58,7 +58,7 @@ repository:
           - include: "#attribute"
           - include: "#path"
           - match: '{{IDENT}}'
-            name: meta.path.c3
+            name: meta.path.c3 entity.name.scope-resolution.c3
           - match: ','
             name: punctuation.separator.c3
 
@@ -427,8 +427,15 @@ repository:
     patterns:
       - match: '\b(true|false|null)\b'
         name: constant.language.c3
-      - match: '\b{{CONST}}\b'
-        name: variable.other.constant
+      # - match: '\b{{CONST}}\b'
+      #   name: variable.other.constant
+      - begin: '\b{{CONST}}\b'
+        beginCaptures: {
+          0: { name: variable.other.constant.c3 }
+        }
+        end: '(?=[^{\s])|(?<=\})'
+        patterns:
+          - include: "#generic_params"
 
   operators:
     patterns:
@@ -456,7 +463,7 @@ repository:
   path:
     match: '({{IDENT}})(::)'
     captures:
-      1: { name: meta.path.c3 }
+      1: { name: meta.path.c3 entity.name.scope-resolution.c3 }
       2: { name: meta.path.c3 punctuation.separator.scope-resolution.c3 }
 
   literals:
@@ -514,7 +521,7 @@ repository:
         name: constant.numeric.float.c3
 
   integer_literal:
-    match: '\b(?:{{INT}}|0[xX]{{HINT}}|0[oO]{{OINT}}|0[bB]{{BINT}}){{INTTYPE}}?'
+    match: '\b(?:0[xX]{{HINT}}|0[oO]{{OINT}}|0[bB]{{BINT}}|{{INT}}){{INTTYPE}}?'
     name: constant.numeric.integer.c3
 
   bytes_literal:
@@ -753,8 +760,14 @@ repository:
       - include: "#expression"
 
   variable:
-    match: '(?<!#)\$?\b{{IDENT}}\b'
-    name: variable.other.c3
+    # match: '(?<!#)\$?\b{{IDENT}}\b'
+    # name: variable.other.c3
+    begin: '(?<!#)\$?\b{{IDENT}}\b'
+    beginCaptures:
+      0: { name: variable.other.c3 }
+    end: '(?=[^{\s])|(?<=\})'
+    patterns:
+      - include: "#generic_params"
 
   expression:
     patterns:
