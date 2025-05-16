@@ -466,6 +466,7 @@ repository:
       - include: "#raw_string_literal"
       - include: "#real_literal"
       - include: "#integer_literal"
+      - include: "#bytes_literal"
 
   char_literal:
     begin: "'"
@@ -505,16 +506,41 @@ repository:
 
   real_literal:
     patterns:
-      - match: '\b{{INT}}{{REALTYPE}}\b'
+      - match: '{{INT}}{{REALTYPE}}'
         name: constant.numeric.float.c3
-      - match: '\b(?:{{INT}}{{E}}|{{INT}}\.{{INT}}({{E}})?)(?:{{REALTYPE}})?\b'
+      - match: '(?:{{INT}}{{E}}|{{INT}}\.(?:{{INT}})?(?:{{E}})?){{REALTYPE}}?'
         name: constant.numeric.float.c3
-      - match: '\b(?:0[xX]{{HINT}}{{P}}|0[xX]{{HINT}}\.{{HINT}}{{P}}){{REALTYPE}}?\b'
+      - match: '(?:0[xX]{{HINT}}{{P}}|0[xX]{{HINT}}\.(?:{{HINT}})?(?:{{P}})?)'
         name: constant.numeric.float.c3
 
   integer_literal:
-    match: '\b(?:{{INT}}|0[xX]{{HINT}}|0[oO]{{OINT}}|0[bB]{{BINT}}){{INTTYPE}}?\b'
+    match: '(?:{{INT}}|0[xX]{{HINT}}|0[oO]{{OINT}}|0[bB]{{BINT}}){{INTTYPE}}?'
     name: constant.numeric.integer.c3
+
+  bytes_literal:
+    patterns:
+      - begin: "(x)([\"'`])"
+        beginCaptures:
+          1: { name: keyword.other.c3 }
+          2: { name: string.quoted.other.c3 punctuation.definition.string.begin.c3 }
+        end: "\\2"
+        endCaptures:
+          0: { name: string.quoted.other.c3 punctuation.definition.string.end.c3 }
+        contentName: string.quoted.other.c3
+        patterns:
+          - match: '[\sfA-Fa-f0-9]+'
+            name: constant.numeric.integer.c3
+      - begin: "(b64)([\"'`])"
+        beginCaptures:
+          1: { name: keyword.other.c3 }
+          2: { name: string.quoted.other.c3 punctuation.definition.string.begin.c3 }
+        end: "\\2"
+        endCaptures:
+          0: { name: string.quoted.other.c3 punctuation.definition.string.end.c3 }
+        contentName: string.quoted.other.c3
+        patterns:
+          - match: '[\sA-Za-z0-9+/=]+'
+            name: constant.numeric.integer.c3
 
   comments:
     patterns:
@@ -747,11 +773,7 @@ repository:
         patterns:
           - include: "#comments"
           # Named argument
-          - match: '([$#]?{{IDENT}})\s*(:(?!:))'
-            captures:
-              1: { name: variable.parameter.c3 }
-              2: { name: punctuation.separator.c3 }
-          - match: '(\${{TYPE}})\s*(:(?!:))' # TODO I forget if this is even valid
+          - match: '([$#]?{{IDENT}}|\${{TYPE}})\s*(:(?!:))' # TODO using \s* doesn't match over multiple lines
             captures:
               1: { name: variable.parameter.c3 }
               2: { name: punctuation.separator.c3 }

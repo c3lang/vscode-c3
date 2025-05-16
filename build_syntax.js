@@ -4,12 +4,12 @@ const js_yaml = require("js-yaml");
 let text = readFileSync("syntaxes/c3.tmLanguage.yml").toString();
 
 const variables = {
-  "INT": '[0-9](_?[0-9])*',
-  "HINT": '[a-fA-F0-9](_?[a-fA-F0-9])*',
+  "INT": '[0-9](?:_?[0-9])*',
+  "HINT": '[a-fA-F0-9](?:_?[a-fA-F0-9])*',
   "OINT": '[0-7](_?[0-7])*',
   "BINT": '[0-1](_?[0-1])*',
-  "INTTYPE": '(?:[ui](8|16|32|64|128)|[Uu][Ll]?|[Ll])',
-  "REALTYPE": '(?:[f](8|16|32|64|128)?)',
+  "INTTYPE": '(?:[ui](?:8|16|32|64|128)|[Uu][Ll]?|[Ll])',
+  "REALTYPE": '(?:[f](?:8|16|32|64|128)?)',
   "E": '[Ee][+-]?[0-9]+',
   "P": '[Pp][+-]?[0-9]+',
   "CONST": '(?:_*[A-Z][_A-Z0-9]*)',
