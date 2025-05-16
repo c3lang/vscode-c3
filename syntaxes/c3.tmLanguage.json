@@ -199,7 +199,7 @@
               "begin": "\\b(?:_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*)\\b",
               "beginCaptures": {
                 "0": {
-                  "name": "support.type.c3"
+                  "name": "support.type.c3 entity.name.type.c3"
                 }
               },
               "end": "(?=;)",
@@ -256,7 +256,7 @@
                 },
                 {
                   "match": "\\b(?:_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*)\\b",
-                  "name": "entity.name.type.enum.c3"
+                  "name": "support.type.c3 entity.name.type.enum.c3"
                 },
                 {
                   "include": "#attribute"
@@ -414,7 +414,7 @@
               "begin": "\\b(?:_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*)\\b",
               "beginCaptures": {
                 "0": {
-                  "name": "entity.name.type.c3"
+                  "name": "support.type.c3 entity.name.type.c3"
                 }
               },
               "end": "(?=;)",
@@ -547,7 +547,7 @@
                 },
                 {
                   "match": "\\b(?:_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*)\\b",
-                  "name": "entity.name.type.interface.c3"
+                  "name": "support.type.c3 entity.name.type.interface.c3"
                 },
                 {
                   "include": "#attribute"
@@ -679,7 +679,7 @@
             },
             {
               "match": "(?:_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*)",
-              "name": "entity.name.type.struct.c3"
+              "name": "support.type.c3 entity.name.type.struct.c3"
             },
             {
               "match": "(?:_*[a-z][_a-zA-Z0-9]*)",
@@ -1206,7 +1206,7 @@
               "name": "storage.type.built-in.primitive.c3"
             },
             "2": {
-              "name": "support.type.c3"
+              "name": "support.type.c3 entity.name.type.c3"
             }
           },
           "end": "(?=[^*\\[?\\s{])",
@@ -1264,7 +1264,7 @@
               "name": "storage.type.built-in.primitive.c3"
             },
             "2": {
-              "name": "support.type.c3"
+              "name": "support.type.c3 entity.name.type.c3"
             }
           },
           "end": "(?=[^*\\[?\\s])",
@@ -1693,7 +1693,7 @@
           "begin": "\\$(?:_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*)",
           "beginCaptures": {
             "0": {
-              "name": "support.type.c3"
+              "name": "support.type.c3 entity.name.type.c3"
             }
           },
           "end": "(?=[;,)])",
