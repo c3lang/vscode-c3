@@ -270,6 +270,7 @@ repository:
               - include: "#comments"
               - match: '\b{{TYPE}}\b'
                 name: support.type.c3 entity.name.type.interface.c3
+              - include: "#punctuation"
               - include: "#attribute"
           # Interface body
           - begin: \{
@@ -594,7 +595,7 @@ repository:
         end: '\*/'
         patterns:
           - include: "#block_comment_body"
-      - match: '@(param(\s*\[&?(in|out|inout)\])?|return[?]?|require|fails|deprecated|ensure|pure)\s'
+      - match: '@(param(\s*\[&?(in|out|inout)\])?|return\??|require|deprecated|ensure|pure)\s'
         name: markup.bold
 
   type_suffix:

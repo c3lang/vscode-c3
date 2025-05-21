@@ -550,6 +550,9 @@
                   "name": "support.type.c3 entity.name.type.interface.c3"
                 },
                 {
+                  "include": "#punctuation"
+                },
+                {
                   "include": "#attribute"
                 }
               ]
@@ -1037,7 +1040,7 @@
       ]
     },
     "integer_literal": {
-      "match": "\\b(?:0[xX][a-fA-F0-9](?:_?[a-fA-F0-9])*|0[oO][0-7](_?[0-7])*|0[bB][0-1](_?[0-1])*|[0-9](?:_?[0-9])*)(?:[ui](?:8|16|32|64|128)|[Uu][Ll]?|[Ll])?",
+      "match": "\\b(?:0[xX][a-fA-F0-9](?:_?[a-fA-F0-9])*|0[oO][0-7](_?[0-7])*|0[bB][0-1](_?[0-1])*|[0-9](?:_?[0-9])*)(?:[ui](?:8|16|32|64|128)|[Uu][Ll]{0,2}|[Ll]{1,2})?",
       "name": "constant.numeric.integer.c3"
     },
     "bytes_literal": {
@@ -1174,7 +1177,7 @@
           ]
         },
         {
-          "match": "@(param(\\s*\\[&?(in|out|inout)\\])?|return[?]?|require|fails|deprecated|ensure|pure)\\s",
+          "match": "@(param(\\s*\\[&?(in|out|inout)\\])?|return\\??|require|fails|deprecated|ensure|pure)\\s",
           "name": "markup.bold"
         }
       ]
