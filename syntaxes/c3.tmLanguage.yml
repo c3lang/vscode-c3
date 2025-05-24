@@ -466,6 +466,10 @@ repository:
       - include: "#integer_literal"
       - include: "#bytes_literal"
 
+  escape_sequence:
+    match: '\\([0abefnrtv''"\\]|x[0-9a-fA-F]{2}|u[0-9a-fA-F]{4}|U[0-9a-fA-F]{8})'
+    name: constant.character.escape.c3
+
   char_literal:
     begin: "'"
     beginCaptures:
@@ -475,8 +479,7 @@ repository:
       0: { name: string.quoted.single.c3 punctuation.definition.string.end.c3 }
     contentName: string.quoted.single.c3
     patterns:
-      - match: '\\.'
-        name: constant.character.escape.c3
+      - include: "#escape_sequence"
 
   string_literal:
     begin: '"'
@@ -487,8 +490,7 @@ repository:
       0: { name: string.quoted.double.c3 punctuation.definition.string.end.c3 }
     contentName: string.quoted.double.c3
     patterns:
-      - match: '\\([0abefnrtv''"\\]|x[0-9a-fA-F]{2}|u[0-9a-fA-F]{4}|U[0-9a-fA-F]{8})'
-        name: constant.character.escape.c3
+      - include: "#escape_sequence"
 
   raw_string_literal:
     begin: '`'
