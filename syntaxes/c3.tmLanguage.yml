@@ -378,6 +378,7 @@ repository:
               0 : { name: punctuation.separator.c3 }
             end: (?=;)
             patterns:
+              - include: "#attribute"
               - include: "#expression"
 
   builtin:
@@ -642,10 +643,10 @@ repository:
 
   attribute:
     patterns:
-      - begin: '@(?:(?:{{attribute}})|{{TYPE}})'
+      - begin: '@(?:(?:{{attribute}})\b|{{TYPE}})'
         beginCaptures:
           0: { name: keyword.annotation.c3 }
-        end: '(?=[^\s\(])|(?<=\))'
+        end: '(?=[^\s(])|(?<=\))'
         name: meta.annotation.c3
         patterns:
           - include: "#parens"
@@ -722,18 +723,33 @@ repository:
         name: punctuation.terminator.c3
 
       - include: "#control_statements"
+      # Include attributes for declarations (we don't parse declarations)
+      # Have known attribute names take priority, even though it could be a valid macro call
+      - include: "#attribute" 
 
       - include: "#block"
       - include: "#expression"
 
   variable:
-    begin: '(?<!#)(?:(@{{IDENT}})|(\$?{{IDENT}}))'
+    begin: '(?<!#)(\$?{{IDENT}})'
     beginCaptures:
-      1: { name: entity.name.function.c3 }
-      2: { name: variable.other.c3 }
+      1: { name: variable.other.c3 }
     end: '(?=[^{\s])|(?<=\})'
     patterns:
       - include: "#generic_params"
+
+  leftover_at_ident:
+    patterns:
+      # Inline call attributes
+      - match: '@(?:pure|inline|noinline)'
+        name: meta.annotation.c3 keyword.annotation.c3
+      # Macro name
+      - begin: '@{{IDENT}}'
+        beginCaptures:
+          0: { name: entity.name.function.c3 }
+        end: '(?=[^{\s])|(?<=\})'
+        patterns:
+          - include: "#generic_params"
 
   expression:
     patterns:
@@ -746,7 +762,6 @@ repository:
       - include: "#keywords"
       - include: "#type"
       - include: "#path"
-      - include: "#attribute"
       - include: "#function_call"
       - include: "#variable"
       - include: "#parens"
@@ -754,6 +769,8 @@ repository:
       # Just assume anything in curly braces is a block of statements (even if it's an initializer list)
       - include: "#block"
       - include: "#punctuation"
+      # Pick up unmatched @ident, assume it's a function call attribute or a macro identifier
+      - include: "#leftover_at_ident"
 
   function_call:
     begin: '([@#]?{{IDENT}})(?=\s*(\{.*\})?\s*\()' # TODO using \s* doesn't match over multiple lines
