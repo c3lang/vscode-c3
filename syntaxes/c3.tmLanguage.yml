@@ -432,9 +432,9 @@ repository:
     patterns:
       - match: '=>'
         name: keyword.declaration.function.arrow.c3
-      - match: '\+=|-=|\*=|/=|%=|&=|\|=|\^=|>>=|<<='
+      - match: '(?:[-%&*+/^|]|>>|<<)='
         name: keyword.operator.assignment.augmented.c3
-      - match: '<=|>=|==|<|>|\!='
+      - match: '<=|>=|==|<|>|!='
         name: keyword.operator.comparison.c3
       - match: '\.\.\.'
         name: keyword.operator.variadic.c3
@@ -444,11 +444,11 @@ repository:
         name: keyword.operator.arithmetic.c3
       - match: '<<|>>|&&&?|\|\|\|?'
         name: keyword.operator.arithmetic.c3
-      - match: '\+|\-|/|%|\||\^|~'
+      - match: '[-%+/^|~]'
         name: keyword.operator.arithmetic.c3
       - match: '='
         name: keyword.operator.assignment.c3
-      - match: '!|\?[?:]?|\*|&|:'
+      - match: '!|\?[?:]?|[&*:]'
         name: keyword.operator.c3
 
   path:

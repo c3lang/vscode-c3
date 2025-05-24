@@ -753,6 +753,9 @@
               "end": "(?=;)",
               "patterns": [
                 {
+                  "include": "#attribute"
+                },
+                {
                   "include": "#expression"
                 }
               ]
@@ -853,11 +856,11 @@
           "name": "keyword.declaration.function.arrow.c3"
         },
         {
-          "match": "\\+=|-=|\\*=|/=|%=|&=|\\|=|\\^=|>>=|<<=",
+          "match": "(?:[-%&*+/^|]|>>|<<)=",
           "name": "keyword.operator.assignment.augmented.c3"
         },
         {
-          "match": "<=|>=|==|<|>|\\!=",
+          "match": "<=|>=|==|<|>|!=",
           "name": "keyword.operator.comparison.c3"
         },
         {
@@ -877,7 +880,7 @@
           "name": "keyword.operator.arithmetic.c3"
         },
         {
-          "match": "\\+|\\-|/|%|\\||\\^|~",
+          "match": "[-%+/^|~]",
           "name": "keyword.operator.arithmetic.c3"
         },
         {
@@ -885,7 +888,7 @@
           "name": "keyword.operator.assignment.c3"
         },
         {
-          "match": "!|\\?[?:]?|\\*|&|:",
+          "match": "!|\\?[?:]?|[&*:]",
           "name": "keyword.operator.c3"
         }
       ]
@@ -923,6 +926,10 @@
         }
       ]
     },
+    "escape_sequence": {
+      "match": "\\\\([0abefnrtv'\"\\\\]|x[0-9a-fA-F]{2}|u[0-9a-fA-F]{4}|U[0-9a-fA-F]{8})",
+      "name": "constant.character.escape.c3"
+    },
     "char_literal": {
       "begin": "'",
       "beginCaptures": {
@@ -939,8 +946,7 @@
       "contentName": "string.quoted.single.c3",
       "patterns": [
         {
-          "match": "\\\\.",
-          "name": "constant.character.escape.c3"
+          "include": "#escape_sequence"
         }
       ]
     },
@@ -960,8 +966,7 @@
       "contentName": "string.quoted.double.c3",
       "patterns": [
         {
-          "match": "\\\\([0abefnrtv'\"\\\\]|x[0-9a-fA-F]{2}|u[0-9a-fA-F]{4}|U[0-9a-fA-F]{8})",
-          "name": "constant.character.escape.c3"
+          "include": "#escape_sequence"
         }
       ]
     },
@@ -1258,13 +1263,13 @@
     "attribute": {
       "patterns": [
         {
-          "begin": "@(?:(?:align|benchmark|bigendian|builtin|callconv|compact|const|deprecated|dynamic|export|extern|finalizer|format|if|inline|init|link|littleendian|local|maydiscard|naked|noalias|nodiscard|noinit|noinline|nopadding|norecurse|noreturn|nosanitize|nostrip|obfuscate|operator|operator_r|operator_s|optional|overlap|packed|private|public|pure|reflect|safemacro|section|tag|test|unused|used|wasm|weak|winmain)|(?:\\b_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*\\b))",
+          "begin": "@(?:(?:align|benchmark|bigendian|builtin|callconv|compact|const|deprecated|dynamic|export|extern|finalizer|format|if|inline|init|link|littleendian|local|maydiscard|naked|noalias|nodiscard|noinit|noinline|nopadding|norecurse|noreturn|nosanitize|nostrip|obfuscate|operator|operator_r|operator_s|optional|overlap|packed|private|public|pure|reflect|safemacro|section|tag|test|unused|used|wasm|weak|winmain)\\b|(?:\\b_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*\\b))",
           "beginCaptures": {
             "0": {
               "name": "keyword.annotation.c3"
             }
           },
-          "end": "(?=[^\\s\\(])|(?<=\\))",
+          "end": "(?=[^\\s(])|(?<=\\))",
           "name": "meta.annotation.c3",
           "patterns": [
             {
@@ -1425,6 +1430,9 @@
           "include": "#control_statements"
         },
         {
+          "include": "#attribute"
+        },
+        {
           "include": "#block"
         },
         {
@@ -1433,12 +1441,9 @@
       ]
     },
     "variable": {
-      "begin": "(?<!#)(?:(@(?:\\b_*[a-z][_a-zA-Z0-9]*\\b))|(\\$?(?:\\b_*[a-z][_a-zA-Z0-9]*\\b)))",
+      "begin": "(?<!#)(\\$?(?:\\b_*[a-z][_a-zA-Z0-9]*\\b))",
       "beginCaptures": {
         "1": {
-          "name": "entity.name.function.c3"
-        },
-        "2": {
           "name": "variable.other.c3"
         }
       },
@@ -1446,6 +1451,28 @@
       "patterns": [
         {
           "include": "#generic_params"
+        }
+      ]
+    },
+    "leftover_at_ident": {
+      "patterns": [
+        {
+          "match": "@(?:pure|inline|noinline)",
+          "name": "meta.annotation.c3 keyword.annotation.c3"
+        },
+        {
+          "begin": "@(?:\\b_*[a-z][_a-zA-Z0-9]*\\b)",
+          "beginCaptures": {
+            "0": {
+              "name": "entity.name.function.c3"
+            }
+          },
+          "end": "(?=[^{\\s])|(?<=\\})",
+          "patterns": [
+            {
+              "include": "#generic_params"
+            }
+          ]
         }
       ]
     },
@@ -1479,9 +1506,6 @@
           "include": "#path"
         },
         {
-          "include": "#attribute"
-        },
-        {
           "include": "#function_call"
         },
         {
@@ -1498,6 +1522,9 @@
         },
         {
           "include": "#punctuation"
+        },
+        {
+          "include": "#leftover_at_ident"
         }
       ]
     },
