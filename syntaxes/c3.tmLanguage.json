@@ -399,6 +399,10 @@
                           "include": "#comments"
                         },
                         {
+                          "match": "\\binline\\b",
+                          "name": "storage.modifier.c3"
+                        },
+                        {
                           "include": "#parameters"
                         }
                       ]
@@ -1560,21 +1564,29 @@
               "include": "#comments"
             },
             {
-              "match": "([$#]?(?:\\b_*[a-z][_a-zA-Z0-9]*\\b)|\\$(?:\\b_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*\\b))\\s*(:)(?!:)",
-              "captures": {
+              "begin": "([$#]?(?:\\b_*[a-z][_a-zA-Z0-9]*\\b)|\\$(?:\\b_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*\\b))\\s*(:)(?!:)",
+              "beginCaptures": {
                 "1": {
                   "name": "variable.parameter.c3"
                 },
                 "2": {
                   "name": "punctuation.separator.c3"
                 }
-              }
+              },
+              "end": "(?=\\))|([;,])",
+              "endCaptures": {
+                "1": {
+                  "name": "punctuation.separator.c3"
+                }
+              },
+              "patterns": [
+                {
+                  "include": "#expression"
+                }
+              ]
             },
             {
               "include": "#expression"
-            },
-            {
-              "include": "#punctuation"
             },
             {
               "match": ";",

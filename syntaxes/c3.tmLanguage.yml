@@ -196,7 +196,7 @@ repository:
                 patterns:
                   - include: "#comments"
                   - match: '\binline\b'
-                    name: storage.modifier.c3 # TODO
+                    name: storage.modifier.c3
                   - include: "#type_no_generics"
                   # Enum parameters
                   - begin: '\('
@@ -208,6 +208,8 @@ repository:
                     contentName: meta.group.c3
                     patterns:
                       - include: "#comments"
+                      - match: '\binline\b'
+                        name: storage.modifier.c3
                       - include: "#parameters"
                   - include: "#attribute"
           # Enum body
@@ -793,12 +795,16 @@ repository:
         patterns:
           - include: "#comments"
           # Named argument
-          - match: '([$#]?{{IDENT}}|\${{TYPE}})\s*(:)(?!:)' # TODO using \s* doesn't match over multiple lines
-            captures:
+          - begin: '([$#]?{{IDENT}}|\${{TYPE}})\s*(:)(?!:)'
+            beginCaptures:
               1: { name: variable.parameter.c3 }
               2: { name: punctuation.separator.c3 }
+            end: '(?=\))|([;,])'
+            endCaptures:
+              1: { name: punctuation.separator.c3 }
+            patterns:
+              - include: "#expression"
           - include: "#expression"
-          - include: "#punctuation"
           - match: ';'
             name: punctuation.separator.c3
 
