@@ -822,11 +822,7 @@
           "name": "punctuation.separator.c3"
         },
         {
-          "match": ":(?!:)",
-          "name": "punctuation.separator.c3"
-        },
-        {
-          "match": "::|\\.(?!\\.\\.)",
+          "match": "\\.(?!\\.\\.)",
           "name": "punctuation.accessor.c3"
         }
       ]
@@ -1586,7 +1582,18 @@
               ]
             },
             {
-              "include": "#expression"
+              "begin": "(?=\\S)",
+              "end": "(?=\\))|([;,])",
+              "endCaptures": {
+                "1": {
+                  "name": "punctuation.separator.c3"
+                }
+              },
+              "patterns": [
+                {
+                  "include": "#expression"
+                }
+              ]
             },
             {
               "match": ";",

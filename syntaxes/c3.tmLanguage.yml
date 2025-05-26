@@ -413,9 +413,7 @@ repository:
         name: punctuation.separator.c3
       - match: ':'
         name: punctuation.separator.c3
-      - match: ':(?!:)'
-        name: punctuation.separator.c3
-      - match: '::|\.(?!\.\.)'
+      - match: '\.(?!\.\.)'
         name: punctuation.accessor.c3
 
   constants:
@@ -804,7 +802,13 @@ repository:
               1: { name: punctuation.separator.c3 }
             patterns:
               - include: "#expression"
-          - include: "#expression"
+          # Unnamed argument
+          - begin: (?=\S)
+            end: '(?=\))|([;,])'
+            endCaptures:
+              1: { name: punctuation.separator.c3 }
+            patterns:
+              - include: "#expression"
           - match: ';'
             name: punctuation.separator.c3
 
