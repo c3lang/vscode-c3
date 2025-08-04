@@ -1218,7 +1218,7 @@
           "include": "#path"
         },
         {
-          "begin": "\\b(void|bool|char|double|float|float16|int128|ichar|int|iptr|isz|long|short|uint128|uint|ulong|uptr|ushort|usz|float128|any|fault|typeid)\\b|(\\$?\\b(?:\\b_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*\\b)\\b)",
+          "begin": "\\b(void|bool|char|double|float|bfloat|int128|ichar|int|iptr|isz|long|short|uint128|uint|ulong|uptr|ushort|usz|float128|any|fault|typeid)\\b|(\\$?\\b(?:\\b_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*\\b)\\b)",
           "beginCaptures": {
             "1": {
               "name": "storage.type.built-in.primitive.c3"
@@ -1251,7 +1251,7 @@
           "include": "#path"
         },
         {
-          "begin": "\\b(void|bool|char|double|float|float16|int128|ichar|int|iptr|isz|long|short|uint128|uint|ulong|uptr|ushort|usz|float128|any|fault|typeid)\\b|(\\$?\\b(?:\\b_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*\\b)\\b)",
+          "begin": "\\b(void|bool|char|double|float|bfloat|int128|ichar|int|iptr|isz|long|short|uint128|uint|ulong|uptr|ushort|usz|float128|any|fault|typeid)\\b|(\\$?\\b(?:\\b_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*\\b)\\b)",
           "beginCaptures": {
             "1": {
               "name": "storage.type.built-in.primitive.c3"
