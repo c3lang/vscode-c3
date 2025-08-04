@@ -127,6 +127,55 @@
               "include": "#comments"
             },
             {
+              "begin": "(?=((?:\\b_*[a-z][_a-zA-Z0-9]*\\b))\\s*=\\s*module)",
+              "end": "(?=;)",
+              "patterns": [
+                {
+                  "begin": "((?:\\b_*[a-z][_a-zA-Z0-9]*\\b))",
+                  "end": "(?=;)",
+                  "patterns": [
+                    {
+                      "include": "#comments"
+                    },
+                    {
+                      "include": "#attribute"
+                    },
+                    {
+                      "begin": "=",
+                      "beginCaptures": {
+                        "0": {
+                          "name": "keyword.operator.assignment.c3"
+                        }
+                      },
+                      "end": "(?=;)",
+                      "patterns": [
+                        {
+                          "include": "#comments"
+                        },
+                        {
+                          "begin": "module",
+                          "beginCaptures": {
+                            "0": {
+                              "name": "keyword.declaration.module.c3"
+                            }
+                          },
+                          "end": "(?=;)",
+                          "patterns": [
+                            {
+                              "include": "#comments"
+                            },
+                            {
+                              "include": "#module_path"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
               "begin": "(@(?:\\b_*[a-z][_a-zA-Z0-9]*\\b))|((?:\\b_*[a-z][_a-zA-Z0-9]*\\b))|((?:\\b_*[A-Z][_A-Z0-9]*\\b))",
               "beginCaptures": {
                 "1": {
@@ -148,38 +197,7 @@
                   "include": "#attribute"
                 },
                 {
-                  "begin": "=",
-                  "beginCaptures": {
-                    "0": {
-                      "name": "keyword.operator.assignment.c3"
-                    }
-                  },
-                  "end": "(?=;)",
-                  "patterns": [
-                    {
-                      "include": "#comments"
-                    },
-                    {
-                      "begin": "module",
-                      "beginCaptures": {
-                        "0": {
-                          "name": "keyword.declaration.module.c3"
-                        }
-                      },
-                      "end": "(?=;)",
-                      "patterns": [
-                        {
-                          "include": "#comments"
-                        },
-                        {
-                          "include": "#module_path"
-                        }
-                      ]
-                    },
-                    {
-                      "include": "#expression"
-                    }
-                  ]
+                  "include": "#assign_right_expression"
                 }
               ]
             },
