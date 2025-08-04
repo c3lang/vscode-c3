@@ -195,7 +195,7 @@ repository:
                 end: (?=\{)
                 patterns:
                   - include: "#comments"
-                  - match: '\binline\b'
+                  - match: '\b(?:inline|const)\b'
                     name: storage.modifier.c3
                   - include: "#type_no_generics"
                   # Enum parameters
@@ -208,7 +208,7 @@ repository:
                     contentName: meta.group.c3
                     patterns:
                       - include: "#comments"
-                      - match: '\binline\b'
+                      - match: '\b(?:inline|const)\b'
                         name: storage.modifier.c3
                       - include: "#parameters"
                   - include: "#attribute"

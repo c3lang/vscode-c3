@@ -374,7 +374,7 @@
                       "include": "#comments"
                     },
                     {
-                      "match": "\\binline\\b",
+                      "match": "\\b(?:inline|const)\\b",
                       "name": "storage.modifier.c3"
                     },
                     {
@@ -399,7 +399,7 @@
                           "include": "#comments"
                         },
                         {
-                          "match": "\\binline\\b",
+                          "match": "\\b(?:inline|const)\\b",
                           "name": "storage.modifier.c3"
                         },
                         {
