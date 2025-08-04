@@ -42,9 +42,7 @@ repository:
         patterns:
           - include: "#comments"
           - include: "#attribute"
-          - include: "#path"
-          - match: '{{IDENT}}'
-            name: meta.path.c3 entity.name.scope-resolution.c3
+          - include: "#module_path"
           - include: "#generic_params"
 
       # Import
@@ -58,9 +56,7 @@ repository:
         patterns:
           - include: "#comments"
           - include: "#attribute"
-          - include: "#path"
-          - match: '{{IDENT}}'
-            name: meta.path.c3 entity.name.scope-resolution.c3
+          - include: "#module_path"
           - match: ','
             name: punctuation.separator.c3
 
@@ -80,13 +76,27 @@ repository:
           - begin: '(@{{IDENT}})|({{IDENT}})|({{CONST}})'
             beginCaptures:
               1: { name: entity.name.function.c3 }
-              2: { name: variable.global.c3 } # Ambiguous: Could also be a function
+              2: { name: variable.global.c3 } # Ambiguous: Could also be a function or a module
               3: { name: variable.other.constant.c3 }
             end: (?=;)
             patterns:
               - include: "#comments"
               - include: "#attribute"
-              - include: "#assign_right_expression"
+              - begin: '='
+                beginCaptures:
+                  0: { name: keyword.operator.assignment.c3 }
+                end: (?=;)
+                patterns:
+                  - include: "#comments"
+                  # Match module or expression
+                  - begin: 'module'
+                    beginCaptures:
+                      0: { name: keyword.declaration.module.c3 }
+                    end: (?=;)
+                    patterns:
+                      - include: "#comments"
+                      - include: "#module_path"
+                  - include: "#expression"
 
           # Type/function signature alias
           - begin: '{{TYPE}}'
@@ -456,6 +466,11 @@ repository:
     captures:
       1: { name: meta.path.c3 entity.name.scope-resolution.c3 }
       2: { name: meta.path.c3 punctuation.separator.scope-resolution.c3 }
+
+  module_path:
+    - include: "#path"
+    - match: '{{IDENT}}'
+      name: meta.path.c3 entity.name.scope-resolution.c3
 
   literals:
     patterns:

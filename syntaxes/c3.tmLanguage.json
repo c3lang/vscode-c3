@@ -68,11 +68,7 @@
               "include": "#attribute"
             },
             {
-              "include": "#path"
-            },
-            {
-              "match": "(?:\\b_*[a-z][_a-zA-Z0-9]*\\b)",
-              "name": "meta.path.c3 entity.name.scope-resolution.c3"
+              "include": "#module_path"
             },
             {
               "include": "#generic_params"
@@ -101,11 +97,7 @@
               "include": "#attribute"
             },
             {
-              "include": "#path"
-            },
-            {
-              "match": "(?:\\b_*[a-z][_a-zA-Z0-9]*\\b)",
-              "name": "meta.path.c3 entity.name.scope-resolution.c3"
+              "include": "#module_path"
             },
             {
               "match": ",",
@@ -156,7 +148,38 @@
                   "include": "#attribute"
                 },
                 {
-                  "include": "#assign_right_expression"
+                  "begin": "=",
+                  "beginCaptures": {
+                    "0": {
+                      "name": "keyword.operator.assignment.c3"
+                    }
+                  },
+                  "end": "(?=;)",
+                  "patterns": [
+                    {
+                      "include": "#comments"
+                    },
+                    {
+                      "begin": "module",
+                      "beginCaptures": {
+                        "0": {
+                          "name": "keyword.declaration.module.c3"
+                        }
+                      },
+                      "end": "(?=;)",
+                      "patterns": [
+                        {
+                          "include": "#comments"
+                        },
+                        {
+                          "include": "#module_path"
+                        }
+                      ]
+                    },
+                    {
+                      "include": "#expression"
+                    }
+                  ]
                 }
               ]
             },
@@ -904,6 +927,15 @@
         }
       }
     },
+    "module_path": [
+      {
+        "include": "#path"
+      },
+      {
+        "match": "(?:\\b_*[a-z][_a-zA-Z0-9]*\\b)",
+        "name": "meta.path.c3 entity.name.scope-resolution.c3"
+      }
+    ],
     "literals": {
       "patterns": [
         {
