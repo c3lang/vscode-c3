@@ -945,15 +945,17 @@
         }
       }
     },
-    "module_path": [
-      {
-        "include": "#path"
-      },
-      {
-        "match": "(?:\\b_*[a-z][_a-zA-Z0-9]*\\b)",
-        "name": "meta.path.c3 entity.name.scope-resolution.c3"
-      }
-    ],
+    "module_path": {
+      "patterns": [
+        {
+          "include": "#path"
+        },
+        {
+          "match": "(?:\\b_*[a-z][_a-zA-Z0-9]*\\b)",
+          "name": "meta.path.c3 entity.name.scope-resolution.c3"
+        }
+      ]
+    },
     "literals": {
       "patterns": [
         {
