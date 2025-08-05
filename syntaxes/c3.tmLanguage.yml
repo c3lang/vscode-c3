@@ -535,7 +535,7 @@ repository:
         name: constant.numeric.float.c3
       - match: '\b(?:{{INT}}{{E}}|{{INT}}\.(?!\.)(?:{{INT}})?(?:{{E}})?){{REALTYPE}}?'
         name: constant.numeric.float.c3
-      - match: '\b0[xX]{{HINT}}(?:\.(?!\.)(?:{{HINT}})?)?{{P}}{{REALTYPE}}?'
+      - match: '\b0[xX]{{HINT}}(?:\.(?:{{HINT}})?)?{{P}}{{REALTYPE}}?'
         name: constant.numeric.float.c3
 
   integer_literal:
