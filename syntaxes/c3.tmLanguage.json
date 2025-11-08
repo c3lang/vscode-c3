@@ -1315,7 +1315,7 @@
     "attribute": {
       "patterns": [
         {
-          "begin": "@(?:(?:align|allow_deprecated|benchmark|bigendian|builtin|callconv|compact|const|deprecated|dynamic|export|extern|finalizer|format|if|inline|init|jump|link|littleendian|local|maydiscard|naked|noalias|nodiscard|noinit|noinline|nopadding|norecurse|noreturn|nosanitize|nostrip|obfuscate|operator|operator_r|operator_s|optional|overlap|packed|private|public|pure|reflect|safemacro|section|structlike|tag|test|unused|used|wasm|weak|winmain)\\b|(?:\\b_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*\\b))",
+          "begin": "@(?:(?:align|allow_deprecated|benchmark|bigendian|builtin|callconv|compact|const|deprecated|dynamic|export|extern|cname|finalizer|format|if|inline|init|jump|link|littleendian|local|maydiscard|naked|noalias|nodiscard|noinit|noinline|nopadding|norecurse|noreturn|nosanitize|nostrip|obfuscate|operator|operator_r|operator_s|optional|overlap|packed|private|public|pure|reflect|safemacro|section|structlike|tag|test|unused|used|wasm|weak|winmain)\\b|(?:\\b_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*\\b))",
           "beginCaptures": {
             "0": {
               "name": "keyword.annotation.c3"
