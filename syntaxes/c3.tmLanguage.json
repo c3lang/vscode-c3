@@ -827,7 +827,7 @@
     "keywords": {
       "patterns": [
         {
-          "match": "\\$(?:alignof|assert|assignable|default|defined|echo|embed|eval|error|exec|extnameof|feature|include|is_const|nameof|offsetof|qnameof|sizeof|stringify|vacount|vaconst|vaarg|vaexpr|vasplat)\\b",
+          "match": "\\$(?:alignof|assert|assignable|default|defined|echo|embed|eval|error|exec|extnameof|feature|include|is_const|kindof|nameof|offsetof|qnameof|sizeof|stringify|vacount|vaconst|vaarg|vaexpr|vasplat)\\b",
           "name": "keyword.other.ct.c3"
         },
         {
@@ -897,7 +897,7 @@
           "name": "keyword.declaration.function.arrow.c3"
         },
         {
-          "match": "(?:[-%&*+/^|]|>>|<<)=",
+          "match": "(?:[-%&*+/^|]|>>|<<|\\+\\+\\+)=",
           "name": "keyword.operator.assignment.augmented.c3"
         },
         {
@@ -929,7 +929,7 @@
           "name": "keyword.operator.assignment.c3"
         },
         {
-          "match": "!|\\?[?:]?|[&*:]",
+          "match": "\\?\\?\\??|\\?:|[!?]|[&*:]",
           "name": "keyword.operator.c3"
         }
       ]
@@ -1315,7 +1315,7 @@
     "attribute": {
       "patterns": [
         {
-          "begin": "@(?:(?:align|allow_deprecated|benchmark|bigendian|builtin|callconv|compact|const|deprecated|dynamic|export|extern|cname|finalizer|format|if|inline|init|jump|link|littleendian|local|maydiscard|naked|noalias|nodiscard|noinit|noinline|nopadding|norecurse|noreturn|nosanitize|nostrip|obfuscate|operator|operator_r|operator_s|optional|overlap|packed|private|public|pure|reflect|safemacro|section|structlike|tag|test|unused|used|wasm|weak|winmain)\\b|(?:\\b_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*\\b))",
+          "begin": "@(?:(?:align|allow_deprecated|benchmark|bigendian|builtin|callconv|cname|compact|const|deprecated|dynamic|export|extern|finalizer|format|if|inline|init|jump|link|littleendian|local|maydiscard|naked|noalias|nodiscard|noinit|noinline|nopadding|norecurse|noreturn|nosanitize|nostrip|obfuscate|operator|operator_r|operator_s|optional|overlap|packed|private|public|pure|reflect|safeinfer|safemacro|simd|section|structlike|tag|test|unused|used|wasm|weak|winmain)\\b|(?:\\b_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*\\b))",
           "beginCaptures": {
             "0": {
               "name": "keyword.annotation.c3"

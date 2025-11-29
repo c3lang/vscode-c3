@@ -17,10 +17,10 @@ const variables = {
   "IDENT": '(?:\\b_*[a-z][_a-zA-Z0-9]*\\b)',
   "keyword": 'assert|asm|catch|inline|import|module|interface|try|var',
   "control_keyword": 'break|case|continue|default|defer|do|else|for|foreach|foreach_r|if|nextcase|return|switch|while',
-  "ct_keyword": 'alignof|assert|assignable|default|defined|echo|embed|eval|error|exec|extnameof|feature|include|is_const|nameof|offsetof|qnameof|sizeof|stringify|vacount|vaconst|vaarg|vaexpr|vasplat',
+  "ct_keyword": 'alignof|assert|assignable|default|defined|echo|embed|eval|error|exec|extnameof|feature|include|is_const|kindof|nameof|offsetof|qnameof|sizeof|stringify|vacount|vaconst|vaarg|vaexpr|vasplat',
   "ct_control_keyword": 'case|else|endfor|endforeach|endif|endswitch|for|foreach|if|switch',
   "base_type": 'void|bool|char|double|float|float16|bfloat|int128|ichar|int|iptr|isz|long|short|uint128|uint|ulong|uptr|ushort|usz|float128|any|fault|typeid',
-  "attribute": 'align|allow_deprecated|benchmark|bigendian|builtin|callconv|compact|const|deprecated|dynamic|export|extern|cname|finalizer|format|if|inline|init|jump|link|littleendian|local|maydiscard|naked|noalias|nodiscard|noinit|noinline|nopadding|norecurse|noreturn|nosanitize|nostrip|obfuscate|operator|operator_r|operator_s|optional|overlap|packed|private|public|pure|reflect|safemacro|section|structlike|tag|test|unused|used|wasm|weak|winmain',
+  "attribute": 'align|allow_deprecated|benchmark|bigendian|builtin|callconv|cname|compact|const|deprecated|dynamic|export|extern|finalizer|format|if|inline|init|jump|link|littleendian|local|maydiscard|naked|noalias|nodiscard|noinit|noinline|nopadding|norecurse|noreturn|nosanitize|nostrip|obfuscate|operator|operator_r|operator_s|optional|overlap|packed|private|public|pure|reflect|safeinfer|safemacro|simd|section|structlike|tag|test|unused|used|wasm|weak|winmain',
 };
 
 text = text.replaceAll(/\{\{([A-Za-z0-9_]+)\}\}/g, (_, x) => variables[x]);
