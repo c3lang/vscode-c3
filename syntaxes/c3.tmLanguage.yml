@@ -111,7 +111,7 @@ repository:
           # Type/function signature alias
           - begin: '{{TYPE}}'
             beginCaptures:
-              0: { name: support.type.c3 entity.name.type.c3 }
+              0: { name: <SCOPE_NAME_TYPE_DECL:> }
             end: (?=;)
             patterns:
               - include: "#comments"
@@ -130,7 +130,7 @@ repository:
           - include: "#comments"
           - begin: '{{TYPE}}'
             beginCaptures:
-              0: { name: support.type.c3 entity.name.type.c3 }
+              0: { name: <SCOPE_NAME_TYPE_DECL:> }
             end: (?=;)
             patterns:
               - include: "#comments"
@@ -207,7 +207,7 @@ repository:
             patterns:
               - include: "#comments"
               - match: '{{TYPE}}'
-                name: support.type.c3 entity.name.type.enum.c3
+                name: <SCOPE_NAME_TYPE_DECL:enum>
               - include: "#attribute"
               - begin: ':'
                 beginCaptures:
@@ -266,7 +266,7 @@ repository:
             patterns:
               - include: "#comments"
               - match: '{{TYPE}}'
-                name: support.type.c3 entity.name.type.interface.c3
+                name: <SCOPE_NAME_TYPE_DECL:interface>
               - include: "#attribute"
               - begin: ':'
                 beginCaptures:
@@ -351,7 +351,7 @@ repository:
         patterns:
           - include: "#comments"
           - match: '{{TYPE}}'
-            name: support.type.c3 entity.name.type.struct.c3
+            name: <SCOPE_NAME_TYPE_DECL:struct>
           - match: '{{IDENT}}'
             name: variable.other.member.c3
           - include: "#attribute"
@@ -634,7 +634,7 @@ repository:
           # Alternatives
           #1: { name: storage.type.built-in.c3 }
           #1: { name: storage.type.primitive.c3 }
-          2: { name: support.type.c3 entity.name.type.c3 }
+          2: { name: <SCOPE_NAME_TYPE_USE> }
         end: (?=[^\s*\[?{])
         patterns:
           - include: "#comments"
@@ -648,7 +648,7 @@ repository:
       - begin: '\b({{base_type}})\b|(\$?\b{{TYPE}}\b)'
         beginCaptures:
           1: { name: storage.type.built-in.primitive.c3 }
-          2: { name: support.type.c3 entity.name.type.c3 }
+          2: { name: <SCOPE_NAME_TYPE_USE> }
         end: (?=[^\s*\[?])
         patterns:
           - include: "#comments"
@@ -885,7 +885,7 @@ repository:
       # CT type parameter, before #type
       - begin: '\${{TYPE}}'
         beginCaptures:
-          0 : { name: support.type.c3 entity.name.type.c3 }
+          0 : { name: <SCOPE_NAME_TYPE_USE> }
         end: '(?=[;,)])'
         patterns:
           - include: "#comments"

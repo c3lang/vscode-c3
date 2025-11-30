@@ -6,7 +6,7 @@
     "c3i",
     "c3t"
   ],
-  "scopeName": "source.c3",
+  "scopeName": "source.vscode.c3",
   "patterns": [
     {
       "include": "#top_level"
@@ -205,7 +205,7 @@
               "begin": "(?:\\b_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*\\b)",
               "beginCaptures": {
                 "0": {
-                  "name": "entity.name.type.c3"
+                  "name": "support.type.c3 entity.name.type.c3"
                 }
               },
               "end": "(?=;)",
@@ -245,7 +245,7 @@
               "begin": "(?:\\b_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*\\b)",
               "beginCaptures": {
                 "0": {
-                  "name": "entity.name.type.c3"
+                  "name": "support.type.c3 entity.name.type.c3"
                 }
               },
               "end": "(?=;)",
@@ -397,7 +397,7 @@
                 },
                 {
                   "match": "(?:\\b_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*\\b)",
-                  "name": "entity.name.type.enum.c3"
+                  "name": "support.type.c3 entity.name.type.enum.c3"
                 },
                 {
                   "include": "#attribute"
@@ -521,7 +521,7 @@
                 },
                 {
                   "match": "(?:\\b_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*\\b)",
-                  "name": "entity.name.type.interface.c3"
+                  "name": "support.type.c3 entity.name.type.interface.c3"
                 },
                 {
                   "include": "#attribute"
@@ -690,7 +690,7 @@
             },
             {
               "match": "(?:\\b_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*\\b)",
-              "name": "entity.name.type.struct.c3"
+              "name": "support.type.c3 entity.name.type.struct.c3"
             },
             {
               "match": "(?:\\b_*[a-z][_a-zA-Z0-9]*\\b)",
@@ -1232,7 +1232,7 @@
               "name": "storage.type.built-in.primitive.c3"
             },
             "2": {
-              "name": "support.type.c3"
+              "name": "support.type.c3 entity.name.type.c3"
             }
           },
           "end": "(?=[^\\s*\\[?{])",
@@ -1265,7 +1265,7 @@
               "name": "storage.type.built-in.primitive.c3"
             },
             "2": {
-              "name": "support.type.c3"
+              "name": "support.type.c3 entity.name.type.c3"
             }
           },
           "end": "(?=[^\\s*\\[?])",
@@ -1747,7 +1747,7 @@
           "begin": "\\$(?:\\b_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*\\b)",
           "beginCaptures": {
             "0": {
-              "name": "support.type.c3"
+              "name": "support.type.c3 entity.name.type.c3"
             }
           },
           "end": "(?=[;,)])",
