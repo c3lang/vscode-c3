@@ -8,6 +8,9 @@ fileTypes:
   - c3t
 scopeName: source.c3
 
+# How grammar scopes look on Github:
+# https://github.com/Alhadis/language-etc/blob/master/samples/lists/scope-previews.nanorc
+
 patterns:
   - include: "#top_level"
   - include: "#statements"
@@ -179,7 +182,7 @@ repository:
                 end: \)
                 endCaptures:
                   0: { name: punctuation.section.group.end.c3 }
-                name: meta.attrdef.parameters.c3 meta.group.c3
+                name: meta.group.c3
                 patterns:
                   - include: "#parameters"
               - begin: '='
@@ -250,7 +253,7 @@ repository:
                   - include: "#expression"
               - include: "#attribute"
               - match: '{{CONST}}'
-                name: variable.other.enummember.c3
+                name: variable.other.constant.c3
               - match: ','
                 name: punctuation.separator.c3
 

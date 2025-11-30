@@ -343,7 +343,7 @@
                       "name": "punctuation.section.group.end.c3"
                     }
                   },
-                  "name": "meta.attrdef.parameters.c3 meta.group.c3",
+                  "name": "meta.group.c3",
                   "patterns": [
                     {
                       "include": "#parameters"
@@ -492,7 +492,7 @@
                 },
                 {
                   "match": "(?:\\b_*[A-Z][_A-Z0-9]*\\b)",
-                  "name": "variable.other.enummember.c3"
+                  "name": "variable.other.constant.c3"
                 },
                 {
                   "match": ",",
