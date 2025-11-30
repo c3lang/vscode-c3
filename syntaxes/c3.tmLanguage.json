@@ -334,16 +334,16 @@
                   "begin": "\\(",
                   "beginCaptures": {
                     "0": {
-                      "name": "meta.attrdef.parameters.c3 meta.group.c3 punctuation.section.group.begin.c3"
+                      "name": "punctuation.section.group.begin.c3"
                     }
                   },
                   "end": "\\)",
                   "endCaptures": {
                     "0": {
-                      "name": "meta.attrdef.parameters.c3 meta.group.c3 punctuation.section.group.end.c3"
+                      "name": "punctuation.section.group.end.c3"
                     }
                   },
-                  "contentName": "meta.attrdef.parameters.c3 meta.group.c3",
+                  "name": "meta.attrdef.parameters.c3 meta.group.c3",
                   "patterns": [
                     {
                       "include": "#parameters"
@@ -386,11 +386,11 @@
               "begin": "\\benum\\b",
               "beginCaptures": {
                 "0": {
-                  "name": "meta.enum.c3 keyword.declaration.enum.c3"
+                  "name": "keyword.declaration.enum.c3"
                 }
               },
               "end": "(?=\\{)",
-              "contentName": "meta.enum.c3",
+              "name": "meta.enum.c3",
               "patterns": [
                 {
                   "include": "#comments"
@@ -459,16 +459,16 @@
               "begin": "\\{",
               "beginCaptures": {
                 "0": {
-                  "name": "meta.enum.body.c3 meta.block.c3 punctuation.section.block.begin.c3"
+                  "name": "punctuation.section.block.begin.c3"
                 }
               },
               "end": "\\}",
               "endCaptures": {
                 "0": {
-                  "name": "meta.enum.body.c3 meta.block.c3 punctuation.section.block.end.c3"
+                  "name": "punctuation.section.block.end.c3"
                 }
               },
-              "contentName": "meta.enum.body.c3 meta.block.c3",
+              "name": "meta.enum.body.c3",
               "patterns": [
                 {
                   "include": "#comments"
@@ -510,11 +510,11 @@
               "begin": "\\binterface\\b",
               "beginCaptures": {
                 "0": {
-                  "name": "meta.interface.c3 keyword.declaration.interface.c3"
+                  "name": "keyword.declaration.interface.c3"
                 }
               },
               "end": "(?=\\{)",
-              "contentName": "meta.interface.c3",
+              "name": "meta.interface.c3",
               "patterns": [
                 {
                   "include": "#comments"
@@ -552,16 +552,16 @@
               "begin": "\\{",
               "beginCaptures": {
                 "0": {
-                  "name": "meta.interface.body.c3 meta.block.c3 punctuation.section.block.begin.c3"
+                  "name": "punctuation.section.block.begin.c3"
                 }
               },
               "end": "\\}",
               "endCaptures": {
                 "0": {
-                  "name": "meta.interface.body.c3 meta.block.c3 punctuation.section.block.end.c3"
+                  "name": "punctuation.section.block.end.c3"
                 }
               },
-              "contentName": "meta.interface.body.c3 meta.block.c3",
+              "name": "meta.interface.body.c3",
               "patterns": [
                 {
                   "include": "#comments"
@@ -619,11 +619,11 @@
           "begin": "\\b(fn|macro)\\b",
           "beginCaptures": {
             "1": {
-              "name": "meta.function.c3 keyword.declaration.function.c3"
+              "name": "keyword.declaration.function.c3"
             }
           },
           "end": "(?=\\()",
-          "contentName": "meta.function.c3",
+          "name": "meta.function.c3",
           "patterns": [
             {
               "include": "#comments"
@@ -637,16 +637,16 @@
           "begin": "\\(",
           "beginCaptures": {
             "0": {
-              "name": "meta.function.parameters.c3 meta.group.c3 punctuation.section.group.begin.c3"
+              "name": "punctuation.section.group.begin.c3"
             }
           },
           "end": "\\)",
           "endCaptures": {
             "0": {
-              "name": "meta.function.parameters.c3 meta.group.c3 punctuation.section.group.end.c3"
+              "name": "punctuation.section.group.end.c3"
             }
           },
-          "contentName": "meta.function.parameters.c3 meta.group.c3",
+          "name": "meta.function.parameters.c3",
           "patterns": [
             {
               "include": "#parameters"
@@ -676,14 +676,14 @@
           "begin": "\\b(?:(struct|bitstruct)|(union))\\b",
           "beginCaptures": {
             "1": {
-              "name": "meta.struct.c3 keyword.declaration.struct.c3"
+              "name": "keyword.declaration.struct.c3"
             },
             "2": {
-              "name": "meta.struct.c3 keyword.declaration.union.c3"
+              "name": "keyword.declaration.union.c3"
             }
           },
           "end": "(?=\\{)",
-          "contentName": "meta.struct.c3",
+          "name": "meta.struct.c3",
           "patterns": [
             {
               "include": "#comments"
@@ -723,16 +723,16 @@
               "begin": "\\(",
               "beginCaptures": {
                 "0": {
-                  "name": "meta.group.c3 punctuation.section.group.begin.c3"
+                  "name": "punctuation.section.group.begin.c3"
                 }
               },
               "end": "\\)",
               "endCaptures": {
                 "0": {
-                  "name": "meta.group.c3 punctuation.section.group.end.c3"
+                  "name": "punctuation.section.group.end.c3"
                 }
               },
-              "contentName": "meta.group.c3",
+              "name": "meta.group.c3",
               "patterns": [
                 {
                   "include": "#comments"
@@ -754,16 +754,16 @@
           "begin": "\\{",
           "beginCaptures": {
             "0": {
-              "name": "meta.struct.body.c3 meta.block.c3 punctuation.section.block.begin.c3"
+              "name": "punctuation.section.block.begin.c3"
             }
           },
           "end": "\\}",
           "endCaptures": {
             "0": {
-              "name": "meta.struct.body.c3 meta.block.c3 punctuation.section.block.end.c3"
+              "name": "punctuation.section.block.end.c3"
             }
           },
-          "contentName": "meta.struct.body.c3 meta.block.c3",
+          "name": "meta.struct.body.c3",
           "patterns": [
             {
               "include": "#comments"
@@ -938,12 +938,13 @@
       "match": "((?:\\b_*[a-z][_a-zA-Z0-9]*\\b))\\s*(::)",
       "captures": {
         "1": {
-          "name": "meta.path.c3 entity.name.scope-resolution.c3"
+          "name": "entity.name.scope-resolution.c3"
         },
         "2": {
-          "name": "meta.path.c3 punctuation.separator.scope-resolution.c3"
+          "name": "punctuation.separator.scope-resolution.c3"
         }
-      }
+      },
+      "name": "meta.path.c3"
     },
     "module_path": {
       "patterns": [
@@ -951,8 +952,13 @@
           "include": "#path"
         },
         {
-          "match": "(?:\\b_*[a-z][_a-zA-Z0-9]*\\b)",
-          "name": "meta.path.c3 entity.name.scope-resolution.c3"
+          "match": "((?:\\b_*[a-z][_a-zA-Z0-9]*\\b))",
+          "captures": {
+            "1": {
+              "name": "entity.name.scope-resolution.c3"
+            }
+          },
+          "name": "meta.path.c3"
         }
       ]
     },
@@ -986,16 +992,16 @@
       "begin": "'",
       "beginCaptures": {
         "0": {
-          "name": "string.quoted.single.c3 punctuation.definition.string.begin.c3"
+          "name": "punctuation.definition.string.begin.c3"
         }
       },
       "end": "'",
       "endCaptures": {
         "0": {
-          "name": "string.quoted.single.c3 punctuation.definition.string.end.c3"
+          "name": "punctuation.definition.string.end.c3"
         }
       },
-      "contentName": "string.quoted.single.c3",
+      "name": "string.quoted.single.c3",
       "patterns": [
         {
           "include": "#escape_sequence"
@@ -1006,16 +1012,16 @@
       "begin": "\"",
       "beginCaptures": {
         "0": {
-          "name": "string.quoted.double.c3 punctuation.definition.string.begin.c3"
+          "name": "punctuation.definition.string.begin.c3"
         }
       },
       "end": "\"",
       "endCaptures": {
         "0": {
-          "name": "string.quoted.double.c3 punctuation.definition.string.end.c3"
+          "name": "punctuation.definition.string.end.c3"
         }
       },
-      "contentName": "string.quoted.double.c3",
+      "name": "string.quoted.double.c3",
       "patterns": [
         {
           "include": "#escape_sequence"
@@ -1026,16 +1032,16 @@
       "begin": "`",
       "beginCaptures": {
         "0": {
-          "name": "string.quoted.other.c3 punctuation.definition.string.begin.c3"
+          "name": "punctuation.definition.string.begin.c3"
         }
       },
       "end": "`(?!`)",
       "endCaptures": {
         "0": {
-          "name": "string.quoted.other.c3 punctuation.definition.string.end.c3"
+          "name": "punctuation.definition.string.end.c3"
         }
       },
-      "contentName": "string.quoted.other.c3",
+      "name": "string.quoted.other.c3",
       "patterns": [
         {
           "match": "``",
@@ -1072,16 +1078,16 @@
               "name": "keyword.other.c3"
             },
             "2": {
-              "name": "string.quoted.other.c3 punctuation.definition.string.begin.c3"
+              "name": "punctuation.definition.string.begin.c3"
             }
           },
           "end": "\\2",
           "endCaptures": {
             "0": {
-              "name": "string.quoted.other.c3 punctuation.definition.string.end.c3"
+              "name": "punctuation.definition.string.end.c3"
             }
           },
-          "contentName": "string.quoted.other.c3",
+          "name": "string.quoted.other.c3",
           "patterns": [
             {
               "match": "[\\sfA-Fa-f0-9]+",
@@ -1096,16 +1102,16 @@
               "name": "keyword.other.c3"
             },
             "2": {
-              "name": "string.quoted.other.c3 punctuation.definition.string.begin.c3"
+              "name": "punctuation.definition.string.begin.c3"
             }
           },
           "end": "\\2",
           "endCaptures": {
             "0": {
-              "name": "string.quoted.other.c3 punctuation.definition.string.end.c3"
+              "name": "punctuation.definition.string.end.c3"
             }
           },
-          "contentName": "string.quoted.other.c3",
+          "name": "string.quoted.other.c3",
           "patterns": [
             {
               "match": "[\\sA-Za-z0-9+/=]+",
@@ -1136,16 +1142,16 @@
       "begin": "/\\*",
       "beginCaptures": {
         "0": {
-          "name": "comment.block.c3 punctuation.definition.comment.begin.c3"
+          "name": "punctuation.definition.comment.begin.c3"
         }
       },
       "end": "\\*/",
       "endCaptures": {
         "0": {
-          "name": "comment.block.c3 punctuation.definition.comment.end.c3"
+          "name": "punctuation.definition.comment.end.c3"
         }
       },
-      "contentName": "comment.block.c3",
+      "name": "comment.block.c3",
       "patterns": [
         {
           "include": "#block_comment_body"
@@ -1169,16 +1175,16 @@
       "begin": "<\\*",
       "beginCaptures": {
         "0": {
-          "name": "comment.block.documentation.c3 punctuation.definition.comment.begin.c3"
+          "name": "punctuation.definition.comment.begin.c3"
         }
       },
       "end": "\\*>",
       "endCaptures": {
         "0": {
-          "name": "comment.block.documentation.c3 punctuation.definition.comment.end.c3"
+          "name": "punctuation.definition.comment.end.c3"
         }
       },
-      "contentName": "comment.block.documentation.c3",
+      "name": "comment.block.documentation.c3",
       "patterns": [
         {
           "include": "#doc_comment_body"
@@ -1510,7 +1516,12 @@
       "patterns": [
         {
           "match": "@(?:pure|inline|noinline)",
-          "name": "meta.annotation.c3 keyword.annotation.c3"
+          "captures": {
+            "0": {
+              "name": "keyword.annotation.c3"
+            }
+          },
+          "name": "meta.annotation.c3"
         },
         {
           "begin": "@(?:\\b_*[a-z][_a-zA-Z0-9]*\\b)",
@@ -1587,12 +1598,7 @@
           "name": "entity.name.function.c3"
         }
       },
-      "end": "\\)",
-      "endCaptures": {
-        "0": {
-          "name": "meta.group.c3 punctuation.section.group.end.c3"
-        }
-      },
+      "end": "(?<=\\))",
       "name": "meta.function_call.c3",
       "patterns": [
         {
@@ -1602,11 +1608,16 @@
           "begin": "\\(",
           "beginCaptures": {
             "0": {
-              "name": "meta.group.c3 punctuation.section.group.begin.c3"
+              "name": "punctuation.section.group.begin.c3"
             }
           },
-          "end": "(?=\\))",
-          "contentName": "meta.group.c3",
+          "end": "\\)",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.group.end.c3"
+            }
+          },
+          "name": "meta.group.c3",
           "patterns": [
             {
               "include": "#comments"
@@ -1661,16 +1672,16 @@
           "begin": "\\{",
           "beginCaptures": {
             "0": {
-              "name": "meta.block.c3 punctuation.section.block.begin.c3"
+              "name": "punctuation.section.block.begin.c3"
             }
           },
           "end": "\\}",
           "endCaptures": {
             "0": {
-              "name": "meta.block.c3 punctuation.section.block.end.c3"
+              "name": "punctuation.section.block.end.c3"
             }
           },
-          "contentName": "meta.block.c3",
+          "name": "meta.block.c3",
           "patterns": [
             {
               "include": "#statements"
@@ -1685,16 +1696,16 @@
           "begin": "\\(",
           "beginCaptures": {
             "0": {
-              "name": "meta.group.c3 punctuation.section.group.begin.c3"
+              "name": "punctuation.section.group.begin.c3"
             }
           },
           "end": "\\)",
           "endCaptures": {
             "0": {
-              "name": "meta.group.c3 punctuation.section.group.end.c3"
+              "name": "punctuation.section.group.end.c3"
             }
           },
-          "contentName": "meta.group.c3",
+          "name": "meta.group.c3",
           "patterns": [
             {
               "include": "#expression"
@@ -1709,16 +1720,16 @@
           "begin": "\\[<?",
           "beginCaptures": {
             "0": {
-              "name": "meta.brackets.c3 punctuation.section.brackets.begin.c3"
+              "name": "punctuation.section.brackets.begin.c3"
             }
           },
           "end": ">?\\]",
           "endCaptures": {
             "0": {
-              "name": "meta.brackets.c3 punctuation.section.brackets.end.c3"
+              "name": "punctuation.section.brackets.end.c3"
             }
           },
-          "contentName": "meta.brackets.c3",
+          "name": "meta.brackets.c3",
           "patterns": [
             {
               "include": "#expression"
@@ -1842,15 +1853,15 @@
           "end": "\\}",
           "beginCaptures": {
             "0": {
-              "name": "meta.generic.c3 punctuation.definition.generic.begin.c3"
+              "name": "punctuation.definition.generic.begin.c3"
             }
           },
           "endCaptures": {
             "0": {
-              "name": "meta.generic.c3 punctuation.definition.generic.end.c3"
+              "name": "punctuation.definition.generic.end.c3"
             }
           },
-          "contentName": "meta.generic.c3",
+          "name": "meta.generic.c3",
           "patterns": [
             {
               "include": "#expression"
