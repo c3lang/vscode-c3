@@ -1172,12 +1172,7 @@
       ]
     },
     "doc_comment": {
-      "begin": "<\\*",
-      "beginCaptures": {
-        "0": {
-          "name": "punctuation.definition.comment.begin.c3"
-        }
-      },
+      "begin": "(?=<\\*)",
       "end": "\\*>",
       "endCaptures": {
         "0": {
@@ -1194,14 +1189,72 @@
     "doc_comment_body": {
       "patterns": [
         {
-          "include": "#line_comment"
+          "begin": "(<\\*)\\s*(?=@)",
+          "beginCaptures": {
+            "1": {
+              "name": "punctuation.definition.comment.begin.c3"
+            }
+          },
+          "end": "(?=\\*>)",
+          "patterns": [
+            {
+              "match": "@param(?:\\s*\\[&?(?:in|out|inout)\\])?\\s*(?:([$#]?(?:\\b_*[a-z][_a-zA-Z0-9]*\\b))|(\\$(?:\\b_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*\\b))|(\\.\\.\\.))",
+              "captures": {
+                "1": {
+                  "name": "variable.parameter.c3"
+                },
+                "2": {
+                  "name": "support.type.c3"
+                },
+                "3": {
+                  "name": "keyword.operator.variadic.c3"
+                }
+              }
+            },
+            {
+              "begin": "@(require|ensure|return\\?)\\b",
+              "end": "(?=:|\\*>|$)",
+              "patterns": [
+                {
+                  "include": "#expression"
+                }
+              ]
+            }
+          ]
         },
         {
-          "include": "#block_comment"
-        },
-        {
-          "match": "@(param(\\s*\\[&?(in|out|inout)\\])?|return\\??|require|deprecated|ensure|pure)\\s",
-          "name": "markup.bold"
+          "begin": "<\\*",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.comment.begin.c3"
+            }
+          },
+          "end": "(?=\\*>)",
+          "patterns": [
+            {
+              "match": "^\\s*@param(?:\\s*\\[&?(?:in|out|inout)\\])?\\s*(?:([$#]?(?:\\b_*[a-z][_a-zA-Z0-9]*\\b))|(\\$(?:\\b_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*\\b))|(\\.\\.\\.))",
+              "captures": {
+                "1": {
+                  "name": "variable.parameter.c3"
+                },
+                "2": {
+                  "name": "support.type.c3"
+                },
+                "3": {
+                  "name": "keyword.operator.variadic.c3"
+                }
+              }
+            },
+            {
+              "begin": "^\\s*@(require|ensure|return\\?)\\b",
+              "end": "(?=:|\\*>|$)",
+              "patterns": [
+                {
+                  "include": "#expression"
+                }
+              ]
+            }
+          ]
         }
       ]
     },
@@ -1235,7 +1288,7 @@
               "name": "support.type.c3"
             }
           },
-          "end": "(?=[^\\s*\\[?{])",
+          "end": "(?=\\*>|[^\\s*\\[?{])",
           "patterns": [
             {
               "include": "#comments"

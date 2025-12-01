@@ -603,9 +603,7 @@ repository:
           - include: "#block_comment_body"
 
   doc_comment:
-    begin: '<\*'
-    beginCaptures:
-      0: { name: punctuation.definition.comment.begin.c3 }
+    begin: '(?=<\*)'
     end: '\*>'
     endCaptures:
       0: { name: punctuation.definition.comment.end.c3 }
@@ -615,10 +613,38 @@ repository:
 
   doc_comment_body:
     patterns:
-      - include: "#line_comment"
-      - include: "#block_comment"
-      - match: '@(param(\s*\[&?(in|out|inout)\])?|return\??|require|deprecated|ensure|pure)\s'
-        name: markup.bold
+      # Match doc comment start with first contract on same line
+      - begin: '(<\*)\s*(?=@)'
+        beginCaptures:
+          1: { name: punctuation.definition.comment.begin.c3 }
+        end: '(?=\*>)'
+        patterns:
+          # Highlight parameter names
+          - match: '@param(?:\s*\[&?(?:in|out|inout)\])?\s*(?:([$#]?{{IDENT}})|(\${{TYPE}})|(\.\.\.))'
+            captures:
+              1: { name: variable.parameter.c3 }
+              2: { name: <SCOPE_NAME_TYPE_USE> }
+              3: { name: keyword.operator.variadic.c3 }
+          - begin: '@(require|ensure|return\?)\b'
+            end: '(?=:|\*>|$)'
+            patterns:
+              - include: "#expression"
+      # Match contracts
+      - begin: '<\*'
+        beginCaptures:
+          0: { name: punctuation.definition.comment.begin.c3 }
+        end: '(?=\*>)'
+        patterns:
+          # Highlight parameter names
+          - match: '^\s*@param(?:\s*\[&?(?:in|out|inout)\])?\s*(?:([$#]?{{IDENT}})|(\${{TYPE}})|(\.\.\.))'
+            captures:
+              1: { name: variable.parameter.c3 }
+              2: { name: <SCOPE_NAME_TYPE_USE> }
+              3: { name: keyword.operator.variadic.c3 }
+          - begin: '^\s*@(require|ensure|return\?)\b'
+            end: '(?=:|\*>|$)'
+            patterns:
+              - include: "#expression"
 
   type_suffix:
     patterns:
@@ -634,11 +660,8 @@ repository:
       - begin: '\b({{base_type}})\b|(\$?\b{{TYPE}}\b)'
         beginCaptures:
           1: { name: storage.type.built-in.primitive.c3 }
-          # Alternatives
-          #1: { name: storage.type.built-in.c3 }
-          #1: { name: storage.type.primitive.c3 }
           2: { name: <SCOPE_NAME_TYPE_USE> }
-        end: (?=[^\s*\[?{])
+        end: (?=\*>|[^\s*\[?{]) # Prevent matching end of doc comment
         patterns:
           - include: "#comments"
           - include: "#generic_params"
