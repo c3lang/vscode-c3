@@ -625,7 +625,7 @@ repository:
               1: { name: variable.parameter.c3 }
               2: { name: <SCOPE_NAME_TYPE_USE> }
               3: { name: keyword.operator.variadic.c3 }
-          - begin: '@(require|ensure|return\?)\b'
+          - begin: '@(require\b|ensure\b|return\?)'
             end: '(?=:|\*>|$)'
             patterns:
               - include: "#expression"
@@ -641,7 +641,7 @@ repository:
               1: { name: variable.parameter.c3 }
               2: { name: <SCOPE_NAME_TYPE_USE> }
               3: { name: keyword.operator.variadic.c3 }
-          - begin: '^\s*@(require|ensure|return\?)\b'
+          - begin: '^\s*@(require\b|ensure\b|return\?)'
             end: '(?=:|\*>|$)'
             patterns:
               - include: "#expression"
