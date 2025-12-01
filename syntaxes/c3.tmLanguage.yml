@@ -307,7 +307,7 @@ repository:
       - include: "#type"
       - match: '\.'
         name: punctuation.accessor.c3
-      - match: '\@?{{IDENT}}'
+      - match: '@?{{IDENT}}'
         name: entity.name.function.c3
 
   function:
@@ -447,7 +447,7 @@ repository:
         beginCaptures: {
           0: { name: variable.other.constant.c3 }
         }
-        end: '(?=[^{\s])|(?<=\})'
+        end: '(?=[^{ \t])|(?<=\})' # ' \t' instead of '\s' because doc comments are newline sensitive
         patterns:
           - include: "#generic_params"
 
@@ -604,10 +604,10 @@ repository:
 
   doc_comment:
     begin: '(?=<\*)'
-    end: '\*>'
+    end: '(\*>)'
     endCaptures:
-      0: { name: punctuation.definition.comment.end.c3 }
-    name: comment.block.documentation.c3
+      0: { name: comment.block.documentation.c3 }
+      1: { name: punctuation.definition.comment.end.c3 }
     patterns:
       - include: "#doc_comment_body"
 
@@ -616,35 +616,60 @@ repository:
       # Match doc comment start with first contract on same line
       - begin: '(<\*)\s*(?=@)'
         beginCaptures:
+          0: { name: comment.block.documentation.c3 }
           1: { name: punctuation.definition.comment.begin.c3 }
         end: '(?=\*>)'
         patterns:
           # Highlight parameter names
           - match: '@param(?:\s*\[&?(?:in|out|inout)\])?\s*(?:([$#]?{{IDENT}})|(\${{TYPE}})|(\.\.\.))'
             captures:
+              0: { name: comment.block.documentation.c3 }
               1: { name: variable.parameter.c3 }
               2: { name: <SCOPE_NAME_TYPE_USE> }
               3: { name: keyword.operator.variadic.c3 }
-          - begin: '@(require\b|ensure\b|return\?)'
+          - begin: '@(?:require\b|ensure\b|return\?)'
+            beginCaptures:
+              0: { name: comment.block.documentation.c3 }
             end: '(?=:|\*>|$)'
             patterns:
               - include: "#expression"
-      # Match contracts
-      - begin: '<\*'
+          - match: '@{{IDENT}}'
+            name: comment.block.documentation.c3
+          - match: ':'
+            name: comment.block.documentation.c3
+          - begin: '(["`])'
+            end: '\\1'
+            name: comment.block.documentation.c3
+      - begin: '(<\*)'
         beginCaptures:
-          0: { name: punctuation.definition.comment.begin.c3 }
+          0: { name: comment.block.documentation.c3 }
+          1: { name: punctuation.definition.comment.begin.c3 }
+        end: '(?=^\s*@|\*>)'
+        name: comment.block.documentation.c3
+      # Match contracts
+      - begin: ''
         end: '(?=\*>)'
         patterns:
           # Highlight parameter names
           - match: '^\s*@param(?:\s*\[&?(?:in|out|inout)\])?\s*(?:([$#]?{{IDENT}})|(\${{TYPE}})|(\.\.\.))'
             captures:
+              0: { name: comment.block.documentation.c3 }
               1: { name: variable.parameter.c3 }
               2: { name: <SCOPE_NAME_TYPE_USE> }
               3: { name: keyword.operator.variadic.c3 }
-          - begin: '^\s*@(require\b|ensure\b|return\?)'
+          - begin: '^\s*@(?:require\b|ensure\b|return\?)'
+            beginCaptures:
+              0: { name: comment.block.documentation.c3 }
             end: '(?=:|\*>|$)'
             patterns:
               - include: "#expression"
+          - match: '^\s*@{{IDENT}}'
+            name: comment.block.documentation.c3
+          - match: ':'
+            name: comment.block.documentation.c3
+          - begin: '(["`])'
+            end: '\\1'
+            name: comment.block.documentation.c3
 
   type_suffix:
     patterns:
@@ -661,7 +686,7 @@ repository:
         beginCaptures:
           1: { name: storage.type.built-in.primitive.c3 }
           2: { name: <SCOPE_NAME_TYPE_USE> }
-        end: (?=\*>|[^\s*\[?{]) # Prevent matching end of doc comment
+        end: (?=\*>|[^ \t*\[?{]) # ' \t' instead of '\s' because doc comments are newline sensitive
         patterns:
           - include: "#comments"
           - include: "#generic_params"
@@ -675,7 +700,7 @@ repository:
         beginCaptures:
           1: { name: storage.type.built-in.primitive.c3 }
           2: { name: <SCOPE_NAME_TYPE_USE> }
-        end: (?=[^\s*\[?])
+        end: (?=[^ \t*\[?@]) # ' \t' instead of '\s' because doc comments are newline sensitive
         patterns:
           - include: "#comments"
           - include: "#type_suffix"
@@ -703,7 +728,7 @@ repository:
       - begin: '@(?:(?:{{attribute}})\b|{{TYPE}})'
         beginCaptures:
           0: { name: keyword.annotation.c3 }
-        end: '(?=[^\s(])|(?<=\))'
+        end: '(?=[^ \t(])|(?<=\))' # ' \t' instead of '\s' because doc comments are newline sensitive
         name: meta.annotation.c3
         patterns:
           - include: "#parens"
@@ -788,10 +813,10 @@ repository:
       - include: "#expression"
 
   variable:
-    begin: '(?<!#)(\$?{{IDENT}})'
+    begin: '(?<!#)\$?{{IDENT}}'
     beginCaptures:
-      1: { name: variable.other.c3 }
-    end: '(?=[^{\s])|(?<=\})'
+      0: { name: variable.other.c3 }
+    end: '(?=[^{ \t])|(?<=\})' # ' \t' instead of '\s' because doc comments are newline sensitive
     patterns:
       - include: "#generic_params"
 
@@ -806,7 +831,7 @@ repository:
       - begin: '@{{IDENT}}'
         beginCaptures:
           0: { name: entity.name.function.c3 }
-        end: '(?=[^{\s])|(?<=\})'
+        end: '(?=[^{ \t])|(?<=\})' # ' \t' instead of '\s' because doc comments are newline sensitive
         patterns:
           - include: "#generic_params"
 
