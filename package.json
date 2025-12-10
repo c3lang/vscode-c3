@@ -46,7 +46,7 @@
         "configuration": [
             {
                 "type": "object",
-                "title": "Extension settings",
+                "title": "C3 Language Support",
                 "properties": {
                     "c3.stdlib-path": {
                         "type": "string",
