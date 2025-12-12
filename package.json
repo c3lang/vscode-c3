@@ -1,123 +1,140 @@
 {
-    "name": "vscode-c3",
-    "displayName": "C3 Language Support for VSCode",
-    "description": "C3 Language Support for VSCode - Syntax Highlighting and Code Snippets",
-    "publisher": "c3",
-    "repository": "https://github.com/c3lang/vscode-c3.git",
-    "version": "0.1.9",
-    "engines": {
-        "vscode": "^1.75.0"
-    },
-    "categories": [
-        "Programming Languages",
-        "Snippets"
+  "name": "vscode-c3",
+  "displayName": "C3 Language Support for VSCode",
+  "description": "C3 Language Support for VSCode - Syntax Highlighting and Code Snippets",
+  "publisher": "c3",
+  "repository": "https://github.com/c3lang/vscode-c3.git",
+  "version": "0.1.9",
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Snippets"
+  ],
+  "icon": "images/icon.png",
+  "license": "MIT",
+  "contributes": {
+    "languages": [
+      {
+        "id": "c3",
+        "aliases": [
+          "C3",
+          "c3"
+        ],
+        "extensions": [
+          ".c3",
+          ".c3i",
+          ".c3t"
+        ],
+        "configuration": "./language-configuration.json"
+      }
     ],
-    "icon": "images/icon.png",
-    "license": "MIT",
-    "contributes": {
-        "languages": [
-            {
-                "id": "c3",
-                "aliases": [
-                    "C3",
-                    "c3"
-                ],
-                "extensions": [
-                    "c3",
-                    "c3i",
-                    "c3t"
-                ],
-                "configuration": "./language-configuration.json"
-            }
-        ],
-        "grammars": [
-            {
-                "language": "c3",
-                "scopeName": "source.vscode.c3",
-                "path": "./syntaxes/c3.vscode.tmLanguage.json"
-            }
-        ],
-        "snippets": [
-            {
-                "language": "c3",
-                "path": "./snippets/snippets.json"
-            }
-        ],
-        "configuration": [
-            {
-                "type": "object",
-                "title": "C3 Language Support",
-                "properties": {
-                    "c3.stdlib-path": {
-                        "type": "string",
-                        "default": null,
-                        "markdownDescription": "Path to c3c stdlib"
-                    },
-                    "c3.lsp.enable": {
-                        "type": "boolean",
-                        "default": true,
-                        "description": "Enables the language server"
-                    },
-                    "c3.lsp.path": {
-                        "type": "string",
-                        "default": null,
-                        "markdownDescription": "The path to **c3-lsp** binary"
-                    },
-                    "c3.lsp.checkForUpdate": {
-                        "type": "boolean",
-                        "description": "Whether to automatically check for new versions",
-                        "default": true
-                    },
-                    "c3.lsp.sendCrashReports": {
-                        "type": "boolean",
-                        "default": false,
-                        "markdownDescription": "Sends crash reports to server to help fixing bugs."
-                    },
-                    "c3.lsp.debug": {
-                        "type": "boolean",
-                        "default": false,
-                        "markdownDescription": "Enables debug information logging"
-                    },
-                    "c3.lsp.log.path": {
-                        "type": "string",
-                        "default": "",
-                        "description": "Saves log to specified file"
-                    },
-                    "c3.lsp.diagnosticsDelay": {
-                        "type": "integer",
-                        "default": 2000,
-                        "markdownDescription": "Delay calculation of code diagnostics after modifications in source. In milliseconds, default 2000 ms."
-                    },
-                    "c3.format.enable": {
-                        "type": "boolean",
-                        "default": false,
-                        "markdownDescription": "Enables formatting (via `clang-format`, see [clang.llvm.org](https://clang.llvm.org/docs/ClangFormat.html))"
-                    },
-                    "c3.format.path": {
-                        "type": "string",
-                        "default": null,
-                        "markdownDescription": "The path to `clang-format` binary (default: `clang-format` in `PATH`)"
-                    }
-                }
-            }
-        ]
-    },
-    "main": "./dist/extension.js",
-    "dependencies": {
-        "axios": "^1.7.7",
-        "decompress": "^4.2.1",
-        "semver": "^7.6.3",
-        "vscode-jsonrpc": "^8.2.1",
-        "vscode-languageclient": "^9.0.1"
-    },
-    "devDependencies": {
-        "@vscode/vsce": "^3.2.1",
-        "esbuild": "^0.25.10",
-        "js-yaml": "^4.1.0"
-    },
-    "scripts": {
-        "build": "node ./build_syntax.js && npm run esbuild-base -- --minify && vsce package",
-        "esbuild-base": "esbuild ./src/extension.js --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node",
-        "esbuild": "npm run esbuild-base -- --sourcemap"
+    "grammars": [
+      {
+        "language": "c3",
+        "scopeName": "source.vscode.c3",
+        "path": "./syntaxes/c3.vscode.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "c3",
+        "path": "./snippets/snippets.json"
+      }
+    ],
+    "configuration": [
+      {
+        "type": "object",
+        "title": "C3 Language Support",
+        "properties": {
+          "c3.stdlib-path": {
+            "type": "string",
+            "default": null,
+            "markdownDescription": "Path to c3c stdlib"
+          },
+          "c3.lsp.enable": {
+            "type": "boolean",
+            "default": true,
+            "description": "Enables the language server"
+          },
+          "c3.lsp.path": {
+            "type": "string",
+            "default": null,
+            "markdownDescription": "The path to **c3-lsp** binary"
+          },
+          "c3.lsp.checkForUpdate": {
+            "type": "boolean",
+            "description": "Whether to automatically check for new versions",
+            "default": true
+          },
+          "c3.lsp.sendCrashReports": {
+            "type": "boolean",
+            "default": false,
+            "markdownDescription": "Sends crash reports to server to help fixing bugs."
+          },
+          "c3.lsp.debug": {
+            "type": "boolean",
+            "default": false,
+            "markdownDescription": "Enables debug information logging"
+          },
+          "c3.lsp.log.path": {
+            "type": "string",
+            "default": "",
+            "description": "Saves log to specified file"
+          },
+          "c3.lsp.diagnosticsDelay": {
+            "type": "integer",
+            "default": 2000,
+            "markdownDescription": "**[NOT YET IMPLEMENTED]** Delay calculation of code diagnostics after modifications in source. In milliseconds, default 2000 ms."
+          },
+          "c3.format.enable": {
+            "type": "boolean",
+            "default": false,
+            "markdownDescription": "**EXPERIMENTAL - USE WITH CAUTION**\\n\\n Enables formatting via `clang-format`. **WARNING:** clang-format does NOT support C3 syntax and WILL break your code structure (e.g., removing newlines, breaking C3-specific syntax). Only enable if you have a custom `.clang-format` configuration tested with C3. See [clang.llvm.org](https://clang.llvm.org/docs/ClangFormat.html)"
+          },
+          "c3.format.path": {
+            "type": "string",
+            "default": null,
+            "markdownDescription": "The path to `clang-format` binary (default: `clang-format` in `PATH`)"
+          },
+          "c3.format.style": {
+            "type": "string",
+            "default": null,
+            "markdownDescription": "The formatting style to use (e.g., `LLVM`, `Google`, `Chromium`, `Mozilla`, `WebKit`, or a custom style in JSON/YAML format). See [clang-format style options](https://clang.llvm.org/docs/ClangFormatStyleOptions.html)"
+          },
+          "c3.format.fallbackStyle": {
+            "type": "string",
+            "default": "LLVM",
+            "markdownDescription": "The fallback style to use when no `.clang-format` file is found (default: `LLVM`)"
+          }
+        }
+      }
+    ],
+    "configurationDefaults": {
+      "[c3]": {
+        "editor.tabSize": 4,
+        "editor.insertSpaces": true,
+        "editor.detectIndentation": false
+      }
     }
+  },
+  "main": "./dist/extension.js",
+  "dependencies": {
+    "axios": "^1.7.7",
+    "decompress": "^4.2.1",
+    "semver": "^7.6.3",
+    "vscode-jsonrpc": "^8.2.1",
+    "vscode-languageclient": "^9.0.1"
+  },
+  "devDependencies": {
+    "@vscode/vsce": "^3.2.1",
+    "esbuild": "^0.25.10",
+    "js-yaml": "^4.1.0"
+  },
+  "scripts": {
+    "build": "node ./build_syntax.js && npm run esbuild-base -- --minify && vsce package",
+    "esbuild-base": "esbuild ./src/extension.js --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node",
+    "esbuild": "npm run esbuild-base -- --sourcemap"
+  }
 }
