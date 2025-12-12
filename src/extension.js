@@ -9,5 +9,5 @@ export async function activate(context) {
 }
 
 export async function deactivate() {
-    deactivateLS(context);
+    deactivateLS();
 }
