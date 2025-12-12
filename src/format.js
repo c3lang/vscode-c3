@@ -1,12 +1,20 @@
 import vscode from "vscode";
 import { spawn } from "child_process";
 
-function runClangFormat(text, fileName, formatterPath = "clang-format") {
+function runClangFormat(text, fileName, formatterPath = "clang-format", style = null, fallbackStyle = null) {
     return new Promise((resolve, reject) => {
         const args = [];
 
         if (fileName) {
             args.push("-assume-filename", fileName);
+        }
+
+        if (style) {
+            args.push(`--style=${style}`);
+        }
+
+        if (fallbackStyle) {
+            args.push(`--fallback-style=${fallbackStyle}`);
         }
 
         const proc = spawn(formatterPath, args);
@@ -34,6 +42,8 @@ function runClangFormat(text, fileName, formatterPath = "clang-format") {
 export async function setupFormat(context) {
     const fmtConfig = vscode.workspace.getConfiguration("c3.format");
     const fmtPath = fmtConfig.get("path") || "clang-format";
+    const fmtStyle = fmtConfig.get("style") || null;
+    const fmtFallbackStyle = fmtConfig.get("fallbackStyle") || "LLVM";
 
     context.subscriptions.push(
         // Format full document
@@ -45,7 +55,7 @@ export async function setupFormat(context) {
                 async provideDocumentFormattingEdits(document) {
                     try {
                         const input = document.getText();
-                        const result = await runClangFormat(input, document.fileName, fmtPath);
+                        const result = await runClangFormat(input, document.fileName, fmtPath, fmtStyle, fmtFallbackStyle);
 
                         const fullRange = new vscode.Range(
                             document.positionAt(0),
