@@ -119,6 +119,9 @@
       }
     }
   },
+  "activationEvents": [
+    "onLanguage:c3"
+  ],
   "main": "./dist/extension.js",
   "dependencies": {
     "axios": "^1.7.7",
