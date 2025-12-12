@@ -31,9 +31,7 @@
         ]
 
     },
-    "identifiers":{
 
-    },
     "variable declaration": {
         "prefix": ["var"],
         "body": [
@@ -69,8 +67,8 @@
         "body": [
             "switch (${1:expr})", 
             "{",
-                "case ${1:value}:",
-                    "\t${0}",
+                "case ${2:value}:",
+                    "\t${3}",
                 "default:",
                     "\t${0}",
 
