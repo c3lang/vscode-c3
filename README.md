@@ -10,6 +10,12 @@ npm install
 npm build
 ```
 
+Building with bunx
+
+```bash
+bunx vsce package --no-dependencies
+```
+
 In vscode head over to the extensions section and click on the 3 dots. From there select "Install from VSIX ..." and select the newly created file
 
 ![](https://i.imgur.com/yv9C4AI.png)
