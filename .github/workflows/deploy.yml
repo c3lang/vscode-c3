@@ -27,5 +27,12 @@ jobs:
           
       - uses: actions/upload-artifact@v4
         with:
-          name: vscode-c3-vsix
+          name: vscode-c3
           path: "*.vsix"
+
+      - name: Upload Release Asset
+        uses: softprops/action-gh-release@v1
+        with:
+          files: vscode-c3.vsix
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
