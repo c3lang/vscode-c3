@@ -7,7 +7,10 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vscode-c3-vsix
+          path: "*.vsix"
       - name: Build project
         run: |
           curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash &&
@@ -22,4 +25,3 @@ jobs:
           npm install
           npm install --only-dev
           npm run build
-          

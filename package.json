@@ -4,7 +4,7 @@
   "description": "C3 Language Support for VSCode - Syntax Highlighting and Code Snippets",
   "publisher": "c3",
   "repository": "https://github.com/c3lang/vscode-c3.git",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "engines": {
     "vscode": "^1.75.0"
   },
@@ -86,7 +86,7 @@
           "c3.lsp.diagnosticsDelay": {
             "type": "integer",
             "default": 2000,
-            "markdownDescription": "**[NOT YET IMPLEMENTED]** Delay calculation of code diagnostics after modifications in source. In milliseconds, default 2000 ms."
+            "markdownDescription": "Delay calculation of code diagnostics after modifications in source. In milliseconds, default 2000 ms."
           },
           "c3.format.enable": {
             "type": "boolean",
@@ -136,7 +136,7 @@
     "js-yaml": "^4.1.0"
   },
   "scripts": {
-    "build": "node ./build_syntax.js && npm run esbuild-base -- --minify && vsce package",
+    "build": "node ./build_syntax.js && npm run esbuild-base -- --minify && vsce package -o vscode-c3.vsix",
     "esbuild-base": "esbuild ./src/extension.js --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node",
     "esbuild": "npm run esbuild-base -- --sourcemap"
   }
