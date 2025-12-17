@@ -30,7 +30,9 @@ jobs:
           name: vscode-c3
           path: "*.vsix"
 
-      - name: 'Create Release'
-        run: hub release create vscode-c3 -m new release -a vscode-c3.vsix
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Upload Release Asset
+      #   uses: softprops/action-gh-release@v1
+      #   with:
+      #     files: "*.vsix"
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

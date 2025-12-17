@@ -27,13 +27,19 @@ export async function activate(context) {
     if (lsConfig.get("sendCrashReports")) {
         args.push("--send-crash-reports");
     }
+
     if (lsConfig.get("log.path") != "") {
         args.push(`--log-path=${lsConfig.get("log.path")}`);
     }
+
+    if (lsConfig.get('diagnosticsDelay')) {
+		args.push(`--diagnostics-delay=${Number(lsConfig.get('diagnosticsDelay'))}`);
+	}
+
     if (config.get('stdlib-path')) {
 		args.push(`--stdlib-path=${config.get('stdlib-path')}`);
 	}
-    
+
     const serverOptions = {
         run: {
             command: executablePath,
