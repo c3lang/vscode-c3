@@ -116,6 +116,9 @@
         "editor.tabSize": 4,
         "editor.insertSpaces": true,
         "editor.detectIndentation": false
+      },
+      "files.associations": {
+        "project.json": "jsonc"
       }
     }
   },
