@@ -239,6 +239,7 @@ repository:
                       - match: '\b(?:inline|const)\b'
                         name: storage.modifier.c3
                       - include: "#parameters"
+                  - include: "#generic_params"
                   - include: "#attribute"
           # Enum body
           - begin: \{
@@ -373,6 +374,7 @@ repository:
             patterns:
               - include: "#comments"
               - include: "#type_no_generics"
+              - include: "#generic_params"
               - include: "#attribute"
           # Interface implementation
           - begin: '\('

@@ -464,6 +464,9 @@
                       ]
                     },
                     {
+                      "include": "#generic_params"
+                    },
+                    {
                       "include": "#attribute"
                     }
                   ]
@@ -737,6 +740,9 @@
                 },
                 {
                   "include": "#type_no_generics"
+                },
+                {
+                  "include": "#generic_params"
                 },
                 {
                   "include": "#attribute"
