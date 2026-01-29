@@ -71,6 +71,9 @@
               "include": "#module_path"
             },
             {
+              "include": "#generic_args"
+            },
+            {
               "include": "#generic_params"
             }
           ]
@@ -194,6 +197,9 @@
                   "include": "#comments"
                 },
                 {
+                  "include": "#generic_params"
+                },
+                {
                   "include": "#attribute"
                 },
                 {
@@ -212,6 +218,9 @@
               "patterns": [
                 {
                   "include": "#comments"
+                },
+                {
+                  "include": "#generic_params"
                 },
                 {
                   "include": "#attribute"
@@ -255,6 +264,9 @@
                 },
                 {
                   "include": "#parens"
+                },
+                {
+                  "include": "#generic_params"
                 },
                 {
                   "include": "#attribute"
@@ -400,6 +412,9 @@
                   "name": "entity.name.type.enum.c3"
                 },
                 {
+                  "include": "#generic_params"
+                },
+                {
                   "include": "#attribute"
                 },
                 {
@@ -522,6 +537,9 @@
                 {
                   "match": "(?:\\b_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*\\b)",
                   "name": "entity.name.type.interface.c3"
+                },
+                {
+                  "include": "#generic_params"
                 },
                 {
                   "include": "#attribute"
@@ -662,6 +680,9 @@
               "include": "#comments"
             },
             {
+              "include": "#generic_params"
+            },
+            {
               "include": "#attribute"
             }
           ]
@@ -695,6 +716,9 @@
             {
               "match": "(?:\\b_*[a-z][_a-zA-Z0-9]*\\b)",
               "name": "variable.other.member.c3"
+            },
+            {
+              "include": "#generic_params"
             },
             {
               "include": "#attribute"
@@ -884,7 +908,7 @@
           "end": "(?=[^{ \\t])|(?<=\\})",
           "patterns": [
             {
-              "include": "#generic_params"
+              "include": "#generic_args"
             }
           ]
         }
@@ -1349,7 +1373,7 @@
               "include": "#comments"
             },
             {
-              "include": "#generic_params"
+              "include": "#generic_args"
             },
             {
               "include": "#type_suffix"
@@ -1616,7 +1640,7 @@
       "end": "(?=[^{ \\t])|(?<=\\})",
       "patterns": [
         {
-          "include": "#generic_params"
+          "include": "#generic_args"
         }
       ]
     },
@@ -1641,7 +1665,7 @@
           "end": "(?=[^{ \\t])|(?<=\\})",
           "patterns": [
             {
-              "include": "#generic_params"
+              "include": "#generic_args"
             }
           ]
         }
@@ -1710,7 +1734,7 @@
       "name": "meta.function_call.c3",
       "patterns": [
         {
-          "include": "#generic_params"
+          "include": "#generic_args"
         },
         {
           "begin": "\\(",
@@ -1954,7 +1978,7 @@
         }
       ]
     },
-    "generic_params": {
+    "generic_args": {
       "patterns": [
         {
           "begin": "\\{",
@@ -1973,6 +1997,42 @@
           "patterns": [
             {
               "include": "#expression"
+            }
+          ]
+        }
+      ]
+    },
+    "generic_params": {
+      "patterns": [
+        {
+          "begin": "<",
+          "end": ">",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.generic.begin.c3"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.generic.end.c3"
+            }
+          },
+          "name": "meta.generic.c3",
+          "patterns": [
+            {
+              "include": "#comments"
+            },
+            {
+              "match": "(?:\\b_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*\\b)",
+              "name": "support.type.c3"
+            },
+            {
+              "match": "(?:\\b_*[A-Z][_A-Z0-9]*\\b)",
+              "name": "variable.other.constant.c3"
+            },
+            {
+              "match": ",",
+              "name": "punctuation.separator.c3"
             }
           ]
         }

@@ -46,6 +46,7 @@ repository:
           - include: "#comments"
           - include: "#attribute"
           - include: "#module_path"
+          - include: "#generic_args" # Deprecated
           - include: "#generic_params"
 
       # Import
@@ -108,6 +109,7 @@ repository:
             end: (?=;)
             patterns:
               - include: "#comments"
+              - include: "#generic_params"
               - include: "#attribute"
               - include: "#assign_right_expression"
 
@@ -118,6 +120,7 @@ repository:
             end: (?=;)
             patterns:
               - include: "#comments"
+              - include: "#generic_params"
               - include: "#attribute"
               - include: "#assign_right_expression"
 
@@ -139,6 +142,7 @@ repository:
               - include: "#comments"
               # Interface implementation
               - include: "#parens"
+              - include: "#generic_params"
               - include: "#attribute"
               - include: "#assign_right_expression"
 
@@ -211,6 +215,7 @@ repository:
               - include: "#comments"
               - match: '{{TYPE}}'
                 name: <SCOPE_NAME_TYPE_DECL:enum>
+              - include: "#generic_params"
               - include: "#attribute"
               - begin: ':'
                 beginCaptures:
@@ -270,6 +275,7 @@ repository:
               - include: "#comments"
               - match: '{{TYPE}}'
                 name: <SCOPE_NAME_TYPE_DECL:interface>
+              - include: "#generic_params"
               - include: "#attribute"
               - begin: ':'
                 beginCaptures:
@@ -339,6 +345,7 @@ repository:
         contentName: meta.function.c3
         patterns:
           - include: "#comments"
+          - include: "#generic_params"
           - include: "#attribute"
 
   structlike:
@@ -357,6 +364,7 @@ repository:
             name: <SCOPE_NAME_TYPE_DECL:struct>
           - match: '{{IDENT}}'
             name: variable.other.member.c3
+          - include: "#generic_params"
           - include: "#attribute"
           - begin: ':'
             beginCaptures:
@@ -449,7 +457,7 @@ repository:
         }
         end: '(?=[^{ \t])|(?<=\})' # ' \t' instead of '\s' because doc comments are newline sensitive
         patterns:
-          - include: "#generic_params"
+          - include: "#generic_args"
 
   operators:
     patterns:
@@ -689,7 +697,7 @@ repository:
         end: (?=\*>|[^ \t*\[?{]) # ' \t' instead of '\s' because doc comments are newline sensitive
         patterns:
           - include: "#comments"
-          - include: "#generic_params"
+          - include: "#generic_args"
           - include: "#type_suffix"
       - include: "#type_expr"
 
@@ -818,7 +826,7 @@ repository:
       0: { name: variable.other.c3 }
     end: '(?=[^{ \t])|(?<=\})' # ' \t' instead of '\s' because doc comments are newline sensitive
     patterns:
-      - include: "#generic_params"
+      - include: "#generic_args"
 
   leftover_at_ident:
     patterns:
@@ -833,7 +841,7 @@ repository:
           0: { name: entity.name.function.c3 }
         end: '(?=[^{ \t])|(?<=\})' # ' \t' instead of '\s' because doc comments are newline sensitive
         patterns:
-          - include: "#generic_params"
+          - include: "#generic_args"
 
   expression:
     patterns:
@@ -863,7 +871,7 @@ repository:
     end: '(?<=\))'
     name: meta.function_call.c3
     patterns:
-      - include: "#generic_params"
+      - include: "#generic_args"
       # Argument list
       - begin: \(
         beginCaptures:
@@ -983,7 +991,7 @@ repository:
             patterns:
               - include: "#expression"
 
-  generic_params:
+  generic_args:
     patterns:
       - begin: \{
         end: \}
@@ -994,3 +1002,21 @@ repository:
         name: meta.generic.c3
         patterns:
           - include: "#expression"
+
+  generic_params:
+    patterns:
+      - begin: '<'
+        end: '>'
+        beginCaptures:
+          0: { name: punctuation.definition.generic.begin.c3 }
+        endCaptures:
+          0: { name: punctuation.definition.generic.end.c3 }
+        name: meta.generic.c3
+        patterns:
+          - include: "#comments"
+          - match: '{{TYPE}}'
+            name: <SCOPE_NAME_TYPE_USE>
+          - match: '{{CONST}}'
+            name: variable.other.constant.c3
+          - match: ','
+            name: punctuation.separator.c3
