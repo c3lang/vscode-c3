@@ -4,13 +4,14 @@
   "description": "C3 Language Support for VSCode - Syntax Highlighting and Code Snippets",
   "publisher": "c3",
   "repository": "https://github.com/c3lang/vscode-c3.git",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "engines": {
     "vscode": "^1.75.0"
   },
   "categories": [
     "Programming Languages",
-    "Snippets"
+    "Snippets",
+    "Debuggers"
   ],
   "icon": "images/icon.png",
   "license": "MIT",
@@ -88,6 +89,11 @@
             "default": 2000,
             "markdownDescription": "Delay calculation of code diagnostics after modifications in source. In milliseconds, default 2000 ms."
           },
+          "c3.debug.gdbPath": {
+            "type": "string",
+            "default": "gdb",
+            "markdownDescription": "Path to the GDB executable. Requires GDB 14+ with DAP support (`--interpreter=dap`)."
+          },
           "c3.format.enable": {
             "type": "boolean",
             "default": false,
@@ -111,6 +117,80 @@
         }
       }
     ],
+    "breakpoints": [
+      { "language": "c3" }
+    ],
+    "debuggers": [
+      {
+        "type": "c3",
+        "label": "C3 Debug (GDB)",
+        "languages": ["c3"],
+        "configurationAttributes": {
+          "launch": {
+            "required": ["program"],
+            "properties": {
+              "program": {
+                "type": "string",
+                "description": "Absolute path to the compiled C3 executable to debug.",
+                "default": "${workspaceFolder}/build/${workspaceFolderBasename}"
+              },
+              "args": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "Command-line arguments passed to the program.",
+                "default": []
+              },
+              "cwd": {
+                "type": "string",
+                "description": "Working directory for the program being debugged.",
+                "default": "${workspaceFolder}"
+              },
+              "env": {
+                "type": "object",
+                "additionalProperties": { "type": "string" },
+                "description": "Environment variables to set for the program.",
+                "default": {}
+              },
+              "stopOnEntry": {
+                "type": "boolean",
+                "description": "Automatically stop the program at the entry point.",
+                "default": false
+              },
+              "gdbPath": {
+                "type": "string",
+                "description": "Path to GDB executable (overrides c3.debug.gdbPath setting)."
+              }
+            }
+          }
+        },
+        "initialConfigurations": [
+          {
+            "type": "c3",
+            "request": "launch",
+            "name": "Debug C3 Program",
+            "program": "${workspaceFolder}/build/${workspaceFolderBasename}",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "stopOnEntry": false
+          }
+        ],
+        "configurationSnippets": [
+          {
+            "label": "C3: Launch Program",
+            "description": "Launch and debug a compiled C3 program using GDB",
+            "body": {
+              "type": "c3",
+              "request": "launch",
+              "name": "${2:Debug C3 Program}",
+              "program": "^\"\\${workspaceFolder}/build/${1:program_name}\"",
+              "args": [],
+              "cwd": "^\"\\${workspaceFolder}\"",
+              "stopOnEntry": false
+            }
+          }
+        ]
+      }
+    ],
     "configurationDefaults": {
       "[c3]": {
         "editor.tabSize": 4,
@@ -123,7 +203,8 @@
     }
   },
   "activationEvents": [
-    "onLanguage:c3"
+    "onLanguage:c3",
+    "onDebugResolve:c3"
   ],
   "main": "./dist/extension.js",
   "dependencies": {
