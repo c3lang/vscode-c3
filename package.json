@@ -90,23 +90,18 @@
           },
           "c3.format.enable": {
             "type": "boolean",
-            "default": false,
-            "markdownDescription": "**EXPERIMENTAL - USE WITH CAUTION**\\n\\n Enables formatting via `clang-format`. **WARNING:** clang-format does NOT support C3 syntax and WILL break your code structure (e.g., removing newlines, breaking C3-specific syntax). Only enable if you have a custom `.clang-format` configuration tested with C3. See [clang.llvm.org](https://clang.llvm.org/docs/ClangFormat.html)"
+            "default": true,
+            "markdownDescription": "Enables formatting via [c3fmt](https://github.com/lmichaudel/c3fmt)"
           },
           "c3.format.path": {
             "type": "string",
             "default": null,
-            "markdownDescription": "The path to `clang-format` binary (default: `clang-format` in `PATH`)"
+            "markdownDescription": "The path to `c3fmt` binary"
           },
-          "c3.format.style": {
-            "type": "string",
-            "default": null,
-            "markdownDescription": "The formatting style to use (e.g., `LLVM`, `Google`, `Chromium`, `Mozilla`, `WebKit`, or a custom style in JSON/YAML format). See [clang-format style options](https://clang.llvm.org/docs/ClangFormatStyleOptions.html)"
-          },
-          "c3.format.fallbackStyle": {
-            "type": "string",
-            "default": "LLVM",
-            "markdownDescription": "The fallback style to use when no `.clang-format` file is found (default: `LLVM`)"
+          "c3.format.checkForUpdate": {
+            "type": "boolean",
+            "default": true,
+            "description": "Whether to automatically check for new versions of c3fmt"
           }
         }
       }
@@ -115,7 +110,8 @@
       "[c3]": {
         "editor.tabSize": 4,
         "editor.insertSpaces": false,
-        "editor.detectIndentation": false
+        "editor.detectIndentation": false,
+        "editor.formatOnSave": false
       },
       "files.associations": {
         "project.json": "jsonc"
