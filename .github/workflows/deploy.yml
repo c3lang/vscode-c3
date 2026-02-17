@@ -3,8 +3,6 @@ on:
   push:
     branches: [main]
 
-
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -30,9 +28,10 @@ jobs:
           name: vscode-c3
           path: "*.vsix"
 
-      # - name: Upload Release Asset
-      #   uses: softprops/action-gh-release@v1
-      #   with:
-      #     files: "*.vsix"
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: latest
+          files: vscode-c3.vsix
+          generate_release_notes: false
