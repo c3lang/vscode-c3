@@ -89,7 +89,8 @@ async function fetchVersion() {
             'https://pherrymason.github.io/c3-lsp/releases.json'
         )).data;
     } catch (err) {
-        console.log("Error: ", err)
+        console.log("Error: ", err);
+        return null;
     }
 
     // Get latest version
