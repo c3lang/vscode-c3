@@ -3,7 +3,10 @@ import { spawn } from "child_process";
 
 function runC3Fmt(text, formatterPath) {
 	return new Promise((resolve, reject) => {
-		const proc = spawn(formatterPath, ["--stdin", "--stdout"]);
+		const folder = vscode.workspace.workspaceFolders?.[0];
+		const proc = spawn(formatterPath, ["--stdin", "--stdout"], {
+			cwd: folder?.uri.fsPath,
+		});
 
 		let stdout = "";
 		let stderr = "";

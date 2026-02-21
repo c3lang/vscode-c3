@@ -36,24 +36,27 @@ function getAssetUrl(tag) {
 
 function getVersion(filePath) {
 	try {
-		const buffer = childProcess.execFileSync(filePath, ["--version"]);
-		return semver.parse(buffer.toString("utf8").trim());
+		const output = childProcess.execFileSync(filePath, ["--version"]).toString("utf8");
+		const match = output.match(/(\d+\.\d+\.\d+)/);
+		return match ? semver.parse(match[1]) : null;
 	} catch {
 		return null;
 	}
 }
 
-export async function installC3Fmt(context) {
+export async function installC3Fmt(context, release) {
 	const asset = PLATFORM_ASSET[platform()];
 	if (!asset) {
 		vscode.window.showErrorMessage(`No c3fmt binary available for your platform: ${platform()}`);
 		return;
 	}
 
-	const release = await fetchLatestRelease();
 	if (!release) {
-		vscode.window.showErrorMessage("Failed to fetch c3fmt release information");
-		return;
+		release = await fetchLatestRelease();
+		if (!release) {
+			vscode.window.showErrorMessage("Failed to fetch c3fmt release information");
+			return;
+		}
 	}
 
 	const url = getAssetUrl(release.tag);
@@ -68,19 +71,20 @@ export async function installC3Fmt(context) {
 
 	const configuration = vscode.workspace.getConfiguration("c3.format");
 	await configuration.update("path", fmtPath ?? undefined, true);
+	await context.globalState.update("c3fmt.installedVersion", release.tag);
 }
 
 export async function checkC3FmtUpdate(context) {
-	const configuration = vscode.workspace.getConfiguration("c3.format");
-	const fmtPath = configuration.get("path");
-
-	const currentVersion = getVersion(fmtPath);
-	if (!currentVersion) return;
-
 	const release = await fetchLatestRelease();
 	if (!release) return;
 
-	if (semver.gte(currentVersion, release.version)) return;
+	const installedTag = context.globalState.get("c3fmt.installedVersion");
+	if (installedTag === release.tag) return;
+
+	const configuration = vscode.workspace.getConfiguration("c3.format");
+	const fmtPath = configuration.get("path");
+	const currentVersion = getVersion(fmtPath);
+	if (currentVersion && semver.gte(currentVersion, release.version)) return;
 
 	const response = await vscode.window.showInformationMessage(
 		"New version of c3fmt available: " + release.version,
@@ -89,7 +93,7 @@ export async function checkC3FmtUpdate(context) {
 	);
 
 	if (response === "Install") {
-		await installC3Fmt(context);
+		await installC3Fmt(context, release);
 	}
 }
 
