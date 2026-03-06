@@ -8,8 +8,8 @@ export async function activate(context) {
     await setupC3(context);
     await setupC3Fmt(context);
     await setupFormat(context);
-    setupDebug(context);
-    activateLS(context);
+    await setupDebug(context);
+    await activateLS(context);
 }
 
 export async function deactivate() {

@@ -5,6 +5,9 @@ export async function setupC3(context) {
     const lsConfig = vscode.workspace.getConfiguration("c3.lsp");
 
     if (!lsConfig.get("path")) {
+        if (context.extensionMode === vscode.ExtensionMode.Test) {
+            return true;
+        }
         const response = await vscode.window.showInformationMessage(
             "You can enable C3LSP (the C3 Language Server) for a better editing experience. Would you like to install it?",
             { modal: true },
