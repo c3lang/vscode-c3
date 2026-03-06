@@ -1,37 +1,56 @@
-name: Build & Deploy
+name: Build, Test & Deploy
+
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
 
 jobs:
-  deploy:
+  build-and-test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
       - name: Build project
-        run: |
-          curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash &&
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-          [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-          
-          nvm use system
-          
-          nvm install 22 
-          nvm use 22
-          npm install
-          npm install --only-dev
-          npm run build
-          
-      - uses: actions/upload-artifact@v4
+        run: npm run build
+
+      - name: Run tests
+        run: xvfb-run -a npm test
+
+      - name: Upload Artifact
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v4
         with:
           name: vscode-c3
           path: "*.vsix"
+
+  release:
+    needs: build-and-test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: vscode-c3
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: latest
-          name: latest
+          name: Latest Release
           files: vscode-c3.vsix
-          generate_release_notes: false
+          generate_release_notes: true

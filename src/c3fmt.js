@@ -103,6 +103,9 @@ export async function setupC3Fmt(context) {
 	if (!fmtConfig.get("enable")) return;
 
 	if (!fmtConfig.get("path")) {
+		if (context.extensionMode === vscode.ExtensionMode.Test) {
+			return;
+		}
 		const response = await vscode.window.showInformationMessage(
 			"c3fmt (the C3 formatter) can be installed for code formatting support. Would you like to install it?",
 			"Download c3fmt",
