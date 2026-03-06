@@ -26,14 +26,14 @@ export async function downloadAndExtractArtifact(
 			location: vscode.ProgressLocation.Notification,
 		},
 		async (progress) => {
-			progress.report({ message: `downloading ${title} zip...` });
+			progress.report({ message: `downloading ${title}...` });
 			const response = await axios.get(artifactUrl, {
 				responseType: "arraybuffer",
 				onDownloadProgress: (progressEvent) => {
 					if (progressEvent.total) {
 						const increment = (progressEvent.bytes / progressEvent.total) * 100;
 						progress.report({
-							message: progressEvent.progress ? `downloading zip ${(progressEvent.progress * 100).toFixed()}%` : "downloading zip...",
+							message: progressEvent.progress ? `downloading ${(progressEvent.progress * 100).toFixed()}%` : "downloading...",
 							increment: increment,
 						});
 					}
@@ -47,18 +47,24 @@ export async function downloadAndExtractArtifact(
 			await vscode.workspace.fs.createDirectory(installDir);
 			await vscode.workspace.fs.writeFile(zipUri, response.data);
 
-			progress.report({ message: "Extracting..." });
 			const zip_path = isWindows ? zipUri.path.slice(1) : zipUri.path;
 			const install_path = isWindows ? installDir.path.slice(1) : installDir.path;
 
-			// Filter out documentation/license files that contain underscores (e.g., LICENSE_MIT)
-			const files = (await decompress(zip_path, install_path))
-				.filter((file) => !file.path.includes("_"));
+			const isZip = artifactUrl.endsWith(".zip") || artifactUrl.endsWith(".tar.gz");
+			if (isZip) {
+				progress.report({ message: "Extracting..." });
+				// Filter out documentation/license files that contain underscores (e.g., LICENSE_MIT)
+				const files = (await decompress(zip_path, install_path))
+					.filter((file) => !file.path.includes("_"));
 
-			const exePath = vscode.Uri.joinPath(installDir, files[0].path).fsPath;
-			await chmod(exePath, 0o755);
-
-			return exePath;
+				const exePath = vscode.Uri.joinPath(installDir, files[0].path).fsPath;
+				await chmod(exePath, 0o755);
+				return exePath;
+			} else {
+				// Raw binary, no extraction needed
+				await chmod(zip_path, 0o755);
+				return zip_path;
+			}
 		},
 	);
 }

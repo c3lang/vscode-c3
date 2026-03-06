@@ -9,9 +9,9 @@ const GITHUB_API_URL = "https://api.github.com/repos/lmichaudel/c3fmt/releases/l
 const GITHUB_RELEASE_URL = "https://github.com/lmichaudel/c3fmt/releases/download";
 
 const PLATFORM_ASSET = {
-	linux: "c3fmt-linux.zip",
-	darwin: "c3fmt-macos.zip",
-	win32: "c3fmt-windows.zip",
+	linux: "c3fmt-linux",
+	darwin: "c3fmt-macos",
+	win32: "c3fmt-windows.exe",
 };
 
 async function fetchLatestRelease() {
