@@ -1272,8 +1272,7 @@
               "name": "comment.block.documentation.c3"
             },
             {
-              "begin": "([\"`])",
-              "end": "\\1",
+              "match": "`[^`]*`|\"[^\"]*\"",
               "name": "comment.block.documentation.c3"
             }
           ]
@@ -1335,8 +1334,7 @@
               "name": "comment.block.documentation.c3"
             },
             {
-              "begin": "([\"`])",
-              "end": "\\1",
+              "match": "`[^`]*`|\"[^\"]*\"",
               "name": "comment.block.documentation.c3"
             }
           ]

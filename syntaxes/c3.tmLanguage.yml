@@ -647,8 +647,7 @@ repository:
             name: comment.block.documentation.c3
           - match: ':'
             name: comment.block.documentation.c3
-          - begin: '(["`])'
-            end: '\1'
+          - match: '`[^`]*`|"[^"]*"'
             name: comment.block.documentation.c3
       - begin: '(<\*)'
         beginCaptures:
@@ -677,8 +676,7 @@ repository:
             name: comment.block.documentation.c3
           - match: ':'
             name: comment.block.documentation.c3
-          - begin: '(["`])'
-            end: '\1'
+          - match: '`[^`]*`|"[^"]*"'
             name: comment.block.documentation.c3
 
   type_suffix:

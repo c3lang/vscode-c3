@@ -4,3 +4,4 @@ Makefile
 *.vsix
 dist/
 .vscode/
+.claude
