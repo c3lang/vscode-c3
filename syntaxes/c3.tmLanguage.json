@@ -865,7 +865,7 @@
           "name": "keyword.control.ct.c3"
         },
         {
-          "match": "\\b(?:assert|asm|catch|inline|import|module|interface|try|var)\\b",
+          "match": "\\b(?:assert|asm|catch|inline|import|module|interface|try|var|constdef)\\b",
           "name": "keyword.other.c3"
         },
         {

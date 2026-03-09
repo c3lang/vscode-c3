@@ -6,3 +6,7 @@ dist/
 .vscode/.vscode-test
 .claude
 .vscode/
+
+# Generated from c3.tmLanguage.yml by build_syntax.js
+# c3.tmLanguage.json must stay committed for GitHub Linguist syntax highlighting
+syntaxes/c3.vscode.tmLanguage.json

@@ -1,3 +1,20 @@
+# ==========================================================================
+# C3 TextMate Grammar (source of truth)
+#
+# Uses double-brace placeholders for two purposes:
+#   1. Regex variables (defined in the 'variables' section below)
+#      e.g. {{IDENT}}, {{TYPE}}, {{keyword}}
+#   2. Target-specific scopes (resolved differently per output)
+#      e.g. {{scope:type_use}}, {{scope:type_decl:enum}}
+#
+# Run `node build_syntax.js` to generate:
+#   - c3.tmLanguage.json        (TextMate/GitHub Linguist - single scopes)
+#   - c3.vscode.tmLanguage.json (VS Code - dual scopes for theme compat)
+#
+# Do NOT edit the generated JSON files directly.
+# ==========================================================================
+# How grammar scopes look on Github:
+# https://github.com/Alhadis/language-etc/blob/master/samples/lists/scope-previews.nanorc
 %YAML 1.2
 ---
 $schema: "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json"
@@ -8,8 +25,24 @@ fileTypes:
   - c3t
 scopeName: source.c3
 
-# How grammar scopes look on Github:
-# https://github.com/Alhadis/language-etc/blob/master/samples/lists/scope-previews.nanorc
+variables:
+  INT: '[0-9](?:_?[0-9])*'
+  HINT: '[a-fA-F0-9](?:_?[a-fA-F0-9])*'
+  OINT: '[0-7](_?[0-7])*'
+  BINT: '[0-1](_?[0-1])*'
+  INTTYPE: '(?:[UuIi](?:8|16|32|64|128)|[Uu][Ll]{0,2}|[Ll]{1,2})'
+  REALTYPE: '(?:[Ff](?:16|32|64|128)?|[Dd])'
+  E: '[Ee][+-]?[0-9]+'
+  P: '[Pp][+-]?[0-9]+'
+  CONST: '(?:\b_*[A-Z][_A-Z0-9]*\b)'
+  TYPE: '(?:\b_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*\b)'
+  IDENT: '(?:\b_*[a-z][_a-zA-Z0-9]*\b)'
+  keyword: 'assert|asm|catch|inline|import|module|interface|try|var|constdef'
+  control_keyword: 'break|case|continue|default|defer|do|else|for|foreach|foreach_r|if|nextcase|return|switch|while'
+  ct_keyword: 'alignof|assert|assignable|default|defined|echo|embed|eval|error|exec|extnameof|feature|include|is_const|kindof|nameof|offsetof|qnameof|sizeof|stringify|vacount|vaconst|vaarg|vaexpr|vasplat'
+  ct_control_keyword: 'case|else|endfor|endforeach|endif|endswitch|for|foreach|if|switch'
+  base_type: 'void|bool|char|double|float|float16|bfloat|int128|ichar|int|iptr|isz|long|short|uint128|uint|ulong|uptr|ushort|usz|float128|any|fault|typeid'
+  attribute: 'align|allow_deprecated|benchmark|bigendian|builtin|callconv|cname|compact|const|deprecated|dynamic|export|extern|finalizer|format|if|inline|init|jump|link|littleendian|local|maydiscard|naked|noalias|nodiscard|noinit|noinline|nopadding|norecurse|noreturn|nosanitize|nostrip|obfuscate|operator|operator_r|operator_s|optional|overlap|packed|private|public|pure|reflect|safeinfer|safemacro|simd|section|structlike|tag|test|unused|used|wasm|weak|winmain'
 
 patterns:
   - include: "#top_level"
@@ -116,7 +149,7 @@ repository:
           # Type/function signature alias
           - begin: '{{TYPE}}'
             beginCaptures:
-              0: { name: <SCOPE_NAME_TYPE_DECL:> }
+              0: { name: '{{scope:type_decl}}' }
             end: (?=;)
             patterns:
               - include: "#comments"
@@ -136,7 +169,7 @@ repository:
           - include: "#comments"
           - begin: '{{TYPE}}'
             beginCaptures:
-              0: { name: <SCOPE_NAME_TYPE_DECL:> }
+              0: { name: '{{scope:type_decl}}' }
             end: (?=;)
             patterns:
               - include: "#comments"
@@ -214,7 +247,7 @@ repository:
             patterns:
               - include: "#comments"
               - match: '{{TYPE}}'
-                name: <SCOPE_NAME_TYPE_DECL:enum>
+                name: '{{scope:type_decl:enum}}'
               - include: "#generic_params"
               - include: "#attribute"
               - begin: ':'
@@ -275,7 +308,7 @@ repository:
             patterns:
               - include: "#comments"
               - match: '{{TYPE}}'
-                name: <SCOPE_NAME_TYPE_DECL:interface>
+                name: '{{scope:type_decl:interface}}'
               - include: "#generic_params"
               - include: "#attribute"
               - begin: ':'
@@ -362,7 +395,7 @@ repository:
         patterns:
           - include: "#comments"
           - match: '{{TYPE}}'
-            name: <SCOPE_NAME_TYPE_DECL:struct>
+            name: '{{scope:type_decl:struct}}'
           - match: '{{IDENT}}'
             name: variable.other.member.c3
           - include: "#generic_params"
@@ -635,7 +668,7 @@ repository:
             captures:
               0: { name: comment.block.documentation.c3 }
               1: { name: variable.parameter.c3 }
-              2: { name: <SCOPE_NAME_TYPE_USE> }
+              2: { name: '{{scope:type_use}}' }
               3: { name: keyword.operator.variadic.c3 }
           - begin: '@(?:require\b|ensure\b|return\?)'
             beginCaptures:
@@ -664,7 +697,7 @@ repository:
             captures:
               0: { name: comment.block.documentation.c3 }
               1: { name: variable.parameter.c3 }
-              2: { name: <SCOPE_NAME_TYPE_USE> }
+              2: { name: '{{scope:type_use}}' }
               3: { name: keyword.operator.variadic.c3 }
           - begin: '^\s*@(?:require\b|ensure\b|return\?)'
             beginCaptures:
@@ -693,7 +726,7 @@ repository:
       - begin: '\b({{base_type}})\b|(\$?\b{{TYPE}}\b)'
         beginCaptures:
           1: { name: storage.type.built-in.primitive.c3 }
-          2: { name: <SCOPE_NAME_TYPE_USE> }
+          2: { name: '{{scope:type_use}}' }
         end: (?=\*>|[^ \t*\[?{]) # ' \t' instead of '\s' because doc comments are newline sensitive
         patterns:
           - include: "#comments"
@@ -707,7 +740,7 @@ repository:
       - begin: '\b({{base_type}})\b|(\$?\b{{TYPE}}\b)'
         beginCaptures:
           1: { name: storage.type.built-in.primitive.c3 }
-          2: { name: <SCOPE_NAME_TYPE_USE> }
+          2: { name: '{{scope:type_use}}' }
         end: (?=[^ \t*\[?@]) # ' \t' instead of '\s' because doc comments are newline sensitive
         patterns:
           - include: "#comments"
@@ -944,7 +977,7 @@ repository:
       # CT type parameter, before #type
       - begin: '\${{TYPE}}'
         beginCaptures:
-          0 : { name: <SCOPE_NAME_TYPE_USE> }
+          0 : { name: '{{scope:type_use}}' }
         end: '(?=[;,)])'
         patterns:
           - include: "#comments"
@@ -1015,7 +1048,7 @@ repository:
         patterns:
           - include: "#comments"
           - match: '{{TYPE}}'
-            name: <SCOPE_NAME_TYPE_USE>
+            name: '{{scope:type_use}}'
           - match: '{{CONST}}'
             name: variable.other.constant.c3
           - match: ','
