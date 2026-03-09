@@ -53,4 +53,4 @@ jobs:
           tag_name: latest
           name: Latest Release
           files: vscode-c3.vsix
-          generate_release_notes: true
+          generate_release_notes: false
