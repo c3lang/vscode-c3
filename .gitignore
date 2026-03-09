@@ -3,5 +3,6 @@ Makefile
 .DS_Store
 *.vsix
 dist/
-.vscode/
+.vscode/.vscode-test
 .claude
+.vscode/

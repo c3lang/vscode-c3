@@ -1,0 +1,8 @@
+{
+    "c3.lsp.enable": true,
+    "c3.format.enable": true,
+    "c3.lsp.path": "dummy_lsp",
+    "c3.format.path": "dummy_fmt",
+    "c3.lsp.checkForUpdate": false,
+    "c3.format.checkForUpdate": false
+}
