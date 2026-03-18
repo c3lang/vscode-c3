@@ -50,7 +50,12 @@ export async function downloadAndExtractArtifact(
 			const zip_path = isWindows ? zipUri.path.slice(1) : zipUri.path;
 			const install_path = isWindows ? installDir.path.slice(1) : installDir.path;
 
-			const isZip = artifactUrl.endsWith(".zip") || artifactUrl.endsWith(".tar.gz");
+			const data = Buffer.from(response.data);
+			// Detect archive by magic bytes: ZIP (PK\x03\x04) or gzip (\x1f\x8b)
+			const isZip =
+				artifactUrl.endsWith(".zip") || artifactUrl.endsWith(".tar.gz") ||
+				(data.length >= 4 && data[0] === 0x50 && data[1] === 0x4B && data[2] === 0x03 && data[3] === 0x04) ||
+				(data.length >= 2 && data[0] === 0x1F && data[1] === 0x8B);
 			if (isZip) {
 				progress.report({ message: "Extracting..." });
 				// Filter out documentation/license files that contain underscores (e.g., LICENSE_MIT)

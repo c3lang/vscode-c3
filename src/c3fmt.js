@@ -21,6 +21,7 @@ async function fetchLatestRelease() {
 		return {
 			version: semver.parse(release.tag_name),
 			tag: release.tag_name,
+			assets: release.assets || [],
 		};
 	} catch (err) {
 		console.log("Error fetching c3fmt release:", err);
@@ -28,10 +29,18 @@ async function fetchLatestRelease() {
 	}
 }
 
-function getAssetUrl(tag) {
-	const asset = PLATFORM_ASSET[platform()];
-	if (!asset) return null;
-	return `${GITHUB_RELEASE_URL}/${tag}/${asset}`;
+function getAssetUrl(release) {
+	const assetPrefix = PLATFORM_ASSET[platform()];
+	if (!assetPrefix) return null;
+
+	// Find the actual asset from the release (may be raw binary or zipped)
+	const asset = release.assets.find((a) => a.name.startsWith(assetPrefix));
+	if (asset) {
+		return asset.browser_download_url;
+	}
+
+	// Fallback to constructed URL if assets aren't available
+	return `${GITHUB_RELEASE_URL}/${release.tag}/${assetPrefix}`;
 }
 
 function getVersion(filePath) {
@@ -59,7 +68,7 @@ export async function installC3Fmt(context, release) {
 		}
 	}
 
-	const url = getAssetUrl(release.tag);
+	const url = getAssetUrl(release);
 
 	const fmtPath = await downloadAndExtractArtifact(
 		"c3fmt",
