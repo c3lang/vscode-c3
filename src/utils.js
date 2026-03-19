@@ -41,14 +41,13 @@ export async function downloadAndExtractArtifact(
 			});
 
 			const zipUri = vscode.Uri.joinPath(installDir, path.basename(artifactUrl));
-			const isWindows = process.platform === "win32";
 			// Delete old lsp folder
 			await vscode.workspace.fs.delete(installDir, { recursive: true, useTrash: false }).catch((err) => {});
 			await vscode.workspace.fs.createDirectory(installDir);
 			await vscode.workspace.fs.writeFile(zipUri, response.data);
 
-			const zip_path = isWindows ? zipUri.path.slice(1) : zipUri.path;
-			const install_path = isWindows ? installDir.path.slice(1) : installDir.path;
+			const zip_path = zipUri.fsPath;
+			const install_path = installDir.fsPath;
 
 			const data = Buffer.from(response.data);
 			// Detect archive by magic bytes: ZIP (PK\x03\x04) or gzip (\x1f\x8b)
