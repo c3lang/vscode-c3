@@ -7,6 +7,21 @@ import { downloadAndExtractArtifact } from "./utils";
 import { LanguageClient } from 'vscode-languageclient/node';
 import { Trace } from 'vscode-jsonrpc';
 
+const GITHUB_API_URL = "https://api.github.com/repos/tonis2/lsp/releases/latest";
+
+const PLATFORM_MAP = {
+	linux: "linux",
+	darwin: "macos",
+	win32: "windows",
+};
+
+const ARCH_MAP = {
+	x64: "x86_64",
+	x86_64: "x86_64",
+	arm64: "aarch64",
+	aarch64: "aarch64",
+};
+
 let client = null;
 export async function activate(context) {
     const config = vscode.workspace.getConfiguration("c3");
@@ -39,6 +54,34 @@ export async function activate(context) {
     if (config.get('stdlib-path')) {
 		args.push(`--stdlib-path=${config.get('stdlib-path')}`);
 	}
+
+    let compilerPath = lsConfig.get('compilerPath') || 'c3c';
+    if (compilerPath === 'c3c') {
+        // Resolve absolute path since VSCode may not inherit the user's full PATH
+        try {
+            let resolved;
+            if (platform() === 'win32') {
+                resolved = childProcess.execSync('where c3c', {
+                    encoding: 'utf8', timeout: 5000, stdio: ['pipe', 'pipe', 'ignore'],
+                }).trim().split('\n')[0];
+            } else {
+                // Try common login shells to pick up .bashrc/.zshrc/.profile PATH entries
+                const shells = [process.env.SHELL, '/bin/bash', '/bin/zsh', '/bin/sh'].filter(Boolean);
+                for (const shell of shells) {
+                    try {
+                        resolved = childProcess.execSync(`${shell} -lc "command -v c3c"`, {
+                            encoding: 'utf8', timeout: 5000, stdio: ['pipe', 'pipe', 'ignore'],
+                        }).trim();
+                        if (resolved) break;
+                    } catch { /* try next shell */ }
+                }
+            }
+            if (resolved) compilerPath = resolved;
+        } catch {
+            // c3c not found, keep default and let LSP report the error
+        }
+    }
+    args.push(`--compiler-path=${compilerPath}`);
 
     const serverOptions = {
         run: {
@@ -82,24 +125,33 @@ export async function deactivate() {
     client = null;
 }
 
-async function fetchVersion() {
-    let response;
+async function fetchLatestRelease() {
     try {
-        response = (await axios.get(
-            'https://pherrymason.github.io/c3-lsp/releases.json'
-        )).data;
+        const response = await axios.get(GITHUB_API_URL);
+        const release = response.data;
+        return {
+            version: semver.parse(release.tag_name),
+            tag: release.tag_name,
+            assets: release.assets || [],
+        };
     } catch (err) {
-        console.log("Error: ", err);
+        console.log("Error fetching C3LSP release:", err);
         return null;
     }
+}
 
-    // Get latest version
-    let version_data = response["releases"].sort((current, next) => current.version > next.version)[0];
+function getAssetUrl(release) {
+    const plat = PLATFORM_MAP[platform()];
+    const arch = ARCH_MAP[machine()];
+    if (!plat || !arch) return null;
 
-    return {
-        version: new semver.SemVer(version_data.version),
-        artifacts: version_data.artifacts
-    };
+    const prefix = `c3-lsp-${plat}-${arch}`;
+    const asset = release.assets.find((a) => a.name.startsWith(prefix));
+    if (asset) {
+        return asset.browser_download_url;
+    }
+
+    return null;
 }
 
 async function checkUpdate(context) {
@@ -109,15 +161,15 @@ async function checkUpdate(context) {
     const currentVersion = getVersion(c3lspPath, "--version");
     if (!currentVersion) return;
 
-    const result = await fetchVersion();
-    if (!result) return;
+    const release = await fetchLatestRelease();
+    if (!release) return;
 
-    if (semver.gte(currentVersion, result.version)) return;
+    if (semver.gte(currentVersion, release.version)) return;
 
-    const response = await vscode.window.showInformationMessage("New version of C3LSP available: " + result.version, "Install", "Ignore");
+    const response = await vscode.window.showInformationMessage("New version of C3LSP available: " + release.version, "Install", "Ignore");
     switch (response) {
         case "Install":
-            await installLSPVersion(context, result.artifacts);
+            await installLSP(context, release);
             break;
         case "Ignore":
         case undefined:
@@ -136,29 +188,30 @@ export function getVersion(filePath, arg) {
     }
 }
 
-export async function installLSPVersion(context, artifact) {
-    const key = machine() + '-' + platform();
-    // example x86_64-win32
-    if (!artifact[key]) {
-        vscode.window.showErrorMessage(`No pre-build version available for your architecture/OS ${key}`);
-        return
+export async function installLSP(context, release) {
+    if (!release) {
+        release = await fetchLatestRelease();
+        if (!release) {
+            vscode.window.showErrorMessage("Failed to fetch C3LSP release information");
+            return;
+        }
     }
-    
+
+    const url = getAssetUrl(release);
+    if (!url) {
+        vscode.window.showErrorMessage(`No C3LSP binary available for your platform: ${platform()} ${machine()}`);
+        return;
+    }
+
     const lsPath = await downloadAndExtractArtifact(
         "C3LSP",
         "c3lsp",
         vscode.Uri.joinPath(context.globalStorageUri, "c3lsp_install"),
-        artifact[key].url,
+        url,
         [],
     );
 
     const configuration = vscode.workspace.getConfiguration("c3.lsp", null);
     await configuration.update("path", lsPath ?? undefined, true);
-}
-
-
-export async function installLSP(context) {
-    const result = await fetchVersion();
-    if (!result) return;
-    await installLSPVersion(context, result.artifacts);
+    await context.globalState.update("c3lsp.installedVersion", release.tag);
 }
