@@ -89,6 +89,11 @@
             "default": 2000,
             "markdownDescription": "Delay calculation of code diagnostics after modifications in source. In milliseconds, default 2000 ms."
           },
+          "c3.lsp.compilerPath": {
+            "type": "string",
+            "default": "c3c",
+            "markdownDescription": "Path to the `c3c` compiler binary, used for diagnostics. Defaults to `c3c` (found via PATH)."
+          },
           "c3.debug.gdbPath": {
             "type": "string",
             "default": "gdb",
