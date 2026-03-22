@@ -162,7 +162,7 @@ async function checkUpdate(context) {
     if (!currentVersion) return;
 
     const release = await fetchLatestRelease();
-    if (!release) return;
+    if (!release || !release.version) return;
 
     if (semver.gte(currentVersion, release.version)) return;
 

@@ -85,7 +85,7 @@ export async function installC3Fmt(context, release) {
 
 export async function checkC3FmtUpdate(context) {
 	const release = await fetchLatestRelease();
-	if (!release) return;
+	if (!release || !release.version) return;
 
 	const installedTag = context.globalState.get("c3fmt.installedVersion");
 	if (installedTag === release.tag) return;
