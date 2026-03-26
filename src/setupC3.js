@@ -9,26 +9,29 @@ export async function setupC3(context) {
             return true;
         }
         const response = await vscode.window.showInformationMessage(
-            "You can enable C3LSP (the C3 Language Server) for a better editing experience. Would you like to install it?",
-            { modal: true },
-            "Download LSP binary",
-            "Specify LSP binary path",
+            "C3LSP (the C3 Language Server) can be installed for a better editing experience. Would you like to install it?",
+            "Download C3LSP",
+            "Specify C3LSP path",
+            "Disable LSP",
         );
 
         switch (response) {
-            case "Download LSP binary":
-                await installLSP(context)
+            case "Download C3LSP":
+                await installLSP(context);
                 break;
-            case "Specify LSP binary path":
+            case "Specify C3LSP path":
                 const uris = await vscode.window.showOpenDialog({
                     canSelectFiles: true,
                     canSelectFolders: false,
                     canSelectMany: false,
-                    title: "Select C3 Language Server (C3LSP) executable",
+                    title: "Select C3LSP executable",
                 });
-                if (!uris) return true;
-
-                await lsConfig.update("path", uris[0].fsPath, true);
+                if (uris) {
+                    await lsConfig.update("path", uris[0].fsPath, true);
+                }
+                break;
+            case "Disable LSP":
+                await lsConfig.update("enable", false, true);
                 break;
             case undefined:
                 break;

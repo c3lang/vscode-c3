@@ -106,7 +106,7 @@ export async function activate(context) {
 	};
 
     if (lsConfig.get("checkForUpdate")) {
-        await checkUpdate(context);
+        checkUpdate(context).catch((err) => console.log("C3LSP update check failed:", err));
     }
 
     client = new LanguageClient("C3LSP", serverOptions, clientOptions);

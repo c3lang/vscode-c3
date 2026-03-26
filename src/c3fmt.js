@@ -144,6 +144,6 @@ export async function setupC3Fmt(context) {
 				break;
 		}
 	} else if (fmtConfig.get("checkForUpdate")) {
-		await checkC3FmtUpdate(context);
+		checkC3FmtUpdate(context).catch((err) => console.log("c3fmt update check failed:", err));
 	}
 }
