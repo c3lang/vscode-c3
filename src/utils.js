@@ -57,9 +57,8 @@ export async function downloadAndExtractArtifact(
 				(data.length >= 2 && data[0] === 0x1F && data[1] === 0x8B);
 			if (isZip) {
 				progress.report({ message: "Extracting..." });
-				// Filter out documentation/license files that contain underscores (e.g., LICENSE_MIT)
 				const files = (await decompress(zip_path, install_path))
-					.filter((file) => !file.path.includes("_"));
+					.filter((file) => file.type === "file" && !file.path.startsWith("LICENSE") && !file.path.startsWith("README"));
 
 				const exePath = vscode.Uri.joinPath(installDir, files[0].path).fsPath;
 				await chmod(exePath, 0o755);

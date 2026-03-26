@@ -62,6 +62,7 @@
           "c3.lsp.path": {
             "type": "string",
             "default": null,
+            "scope": "machine",
             "markdownDescription": "The path to **c3-lsp** binary"
           },
           "c3.lsp.checkForUpdate": {
@@ -107,6 +108,7 @@
           "c3.format.path": {
             "type": "string",
             "default": null,
+            "scope": "machine",
             "markdownDescription": "The path to `c3fmt` binary"
           },
           "c3.format.checkForUpdate": {
@@ -228,13 +230,16 @@
   "devDependencies": {
     "@vscode/test-cli": "^0.0.12",
     "@vscode/test-electron": "^2.5.2",
-    "@vscode/vsce": "^3.2.1",
     "esbuild": "^0.25.10",
     "js-yaml": "^4.1.0",
     "mocha": "^11.7.5"
   },
+  "overrides": {
+    "diff": "^8.0.3",
+    "serialize-javascript": "^7.0.3"
+  },
   "scripts": {
-    "build": "node ./build_syntax.js && npm run esbuild-base -- --minify && vsce package -o vscode-c3.vsix",
+    "build": "node ./build_syntax.js && npm run esbuild-base -- --minify && npx @vscode/vsce package -o vscode-c3.vsix",
     "esbuild-base": "esbuild ./src/extension.js --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node",
     "esbuild": "npm run esbuild-base -- --sourcemap",
     "test": "node ./src/test/runTest.js"

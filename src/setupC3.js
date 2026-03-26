@@ -28,7 +28,7 @@ export async function setupC3(context) {
                 });
                 if (!uris) return true;
 
-                await lsConfig.update("path", uris[0].path, true);
+                await lsConfig.update("path", uris[0].fsPath, true);
                 break;
             case undefined:
                 break;
