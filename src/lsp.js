@@ -81,7 +81,7 @@ export async function activate(context) {
             // c3c not found, keep default and let LSP report the error
         }
     }
-    args.push(`--compiler-path=${compilerPath}`);
+    args.push(`--c3c-path=${compilerPath}`);
 
     const serverOptions = {
         run: {
