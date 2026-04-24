@@ -30,7 +30,9 @@ variables:
   HINT: '[a-fA-F0-9](?:_?[a-fA-F0-9])*'
   OINT: '[0-7](_?[0-7])*'
   BINT: '[0-1](_?[0-1])*'
+  # @deprecated contains integer suffix for 0.7 compatibility
   INTTYPE: '(?:[UuIi](?:8|16|32|64|128)|[Uu][Ll]{0,2}|[Ll]{1,2})'
+  # @deprecated contains float suffix for 0.7 compatibility
   REALTYPE: '(?:[Ff](?:16|32|64|128)?|[Dd])'
   E: '[Ee][+-]?[0-9]+'
   P: '[Pp][+-]?[0-9]+'
@@ -39,10 +41,13 @@ variables:
   IDENT: '(?:\b_*[a-z][_a-zA-Z0-9]*\b)'
   keyword: 'assert|asm|catch|inline|import|module|interface|try|var'
   control_keyword: 'break|case|continue|default|defer|do|else|for|foreach|foreach_r|if|nextcase|return|switch|while'
-  ct_keyword: 'alignof|assert|assignable|default|defined|echo|embed|eval|error|exec|extnameof|feature|include|is_const|kindof|nameof|offsetof|qnameof|sizeof|stringify|vacount|vaconst|vaarg|vaexpr|vasplat'
+  # @deprecated contains keywords for 0.7 compatibility
+  ct_keyword: 'alignof|assert|assignable|default|defined|echo|embed|eval|error|exec|expand|extnameof|feature|include|reflect|is_const|kindof|nameof|offsetof|qnameof|sizeof|stringify|vacount|vaconst|vaarg|vaexpr|vasplat'
   ct_control_keyword: 'case|else|endfor|endforeach|endif|endswitch|for|foreach|if|switch'
-  base_type: 'void|bool|char|double|float|float16|bfloat|int128|ichar|int|iptr|isz|long|short|uint128|uint|ulong|uptr|ushort|usz|float128|any|fault|typeid'
-  attribute: 'align|allow_deprecated|benchmark|bigendian|builtin|callconv|cname|compact|const|deprecated|dynamic|export|extern|finalizer|format|if|inline|init|jump|link|littleendian|local|maydiscard|naked|noalias|nodiscard|noinit|noinline|nopadding|norecurse|noreturn|nosanitize|nostrip|obfuscate|operator|operator_r|operator_s|optional|overlap|packed|private|public|pure|reflect|safeinfer|safemacro|simd|section|structlike|tag|test|unused|used|wasm|weak|winmain'
+  # @deprecated contains "isz" for 0.7 compatibility
+  base_type: 'void|bool|char|double|float|float16|bfloat|int128|ichar|int|iptr|isz|sz|long|short|uint128|uint|ulong|uptr|ushort|usz|float128|any|fault|typeid|untypedlist'
+  # @deprecated contains attributes for 0.7 compatibility
+  attribute: 'align|allow_deprecated|benchmark|bigendian|builtin|callconv|cname|compact|const|constinit|deprecated|dynamic|export|extern|finalizer|format|if|inline|init|jump|link|littleendian|local|maydiscard|mustinit|naked|noalias|nodiscard|noinit|noinline|nopadding|norecurse|noreturn|nosanitize|nostrip|obfuscate|operator|operator_r|operator_s|optional|overlap|packed|private|public|pure|reflect|safeinfer|safemacro|simd|section|structlike|tag|test|unused|used|wasm|weak|weaklink|winmain'
 
 patterns:
   - include: "#top_level"
@@ -257,7 +262,7 @@ repository:
                 end: (?=\{)
                 patterns:
                   - include: "#comments"
-                  # "const" is @deprecated
+                  # @deprecated contains "const" for 0.7 compatibility
                   - match: '\b(?:inline|const)\b'
                     name: storage.modifier.c3
                   - include: "#type_no_generics"
