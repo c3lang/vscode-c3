@@ -1417,11 +1417,19 @@
         }
       ]
     },
+    "type_access": {
+      "match": "(::)\\s*((?:\\b_*[a-z][_a-zA-Z0-9]*\\b))",
+      "captures": {
+        "1": {
+          "name": "punctuation.accessor.c3"
+        },
+        "2": {
+          "name": "variable.other.constant.c3"
+        }
+      }
+    },
     "type": {
       "patterns": [
-        {
-          "include": "#path"
-        },
         {
           "begin": "\\b(void|bool|char|double|float|float16|bfloat|int128|ichar|int|iptr|isz|sz|long|short|uint128|uint|ulong|uptr|ushort|usz|float128|any|fault|typeid|untypedlist)\\b|(\\$?\\b(?:\\b_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*\\b)\\b)",
           "beginCaptures": {
@@ -1432,7 +1440,7 @@
               "name": "support.type.c3"
             }
           },
-          "end": "(?=\\*>|[^ \\t*\\[?{])",
+          "end": "(?=\\*>|[^ \\t*\\[?{:]|:(?!:))",
           "patterns": [
             {
               "include": "#comments"
@@ -1442,11 +1450,17 @@
             },
             {
               "include": "#type_suffix"
+            },
+            {
+              "include": "#type_access"
             }
           ]
         },
         {
           "include": "#type_expr"
+        },
+        {
+          "include": "#path"
         }
       ]
     },
@@ -1483,35 +1497,24 @@
     "type_expr": {
       "patterns": [
         {
-          "begin": "\\$(?:typeof|typefrom|evaltype)\\b",
+          "begin": "\\$(?:typeof|typefrom|evaltype|vatype)\\b",
           "beginCaptures": {
             "0": {
-              "name": "storage.type.c3"
+              "name": "support.type.c3"
             }
           },
-          "end": "(?<=\\))",
+          "end": "(?=[^ \\t*\\[?(:]|:(?!:))",
           "patterns": [
             {
               "include": "#parens"
-            }
-          ]
-        },
-        {
-          "begin": "\\$vatype\\b",
-          "beginCaptures": {
-            "0": {
-              "name": "storage.type.c3"
-            }
-          },
-          "end": "(?<=\\])",
-          "patterns": [
+            },
             {
-              "include": "#brackets"
+              "include": "#type_suffix"
+            },
+            {
+              "include": "#type_access"
             }
           ]
-        },
-        {
-          "include": "#type_suffix"
         }
       ]
     },

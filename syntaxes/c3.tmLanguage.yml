@@ -752,20 +752,27 @@ repository:
         name: keyword.operator.address.c3
       - match: '\?'
         name: keyword.operator.c3
+  
+  type_access:
+    match: '(::)\s*({{IDENT}})'
+    captures:
+      1: { name: punctuation.accessor.c3 }
+      2: { name: variable.other.constant.c3 }
 
   type:
     patterns:
-      - include: "#path"
       - begin: '\b({{base_type}})\b|(\$?\b{{TYPE}}\b)'
         beginCaptures:
           1: { name: storage.type.built-in.primitive.c3 }
           2: { name: '{{scope:type_use}}' }
-        end: (?=\*>|[^ \t*\[?{]) # ' \t' instead of '\s' because doc comments are newline sensitive
+        end: (?=\*>|[^ \t*\[?{:]|:(?!:)) # ' \t' instead of '\s' because doc comments are newline sensitive
         patterns:
           - include: "#comments"
           - include: "#generic_args"
           - include: "#type_suffix"
+          - include: "#type_access"
       - include: "#type_expr"
+      - include: "#path"
 
   type_no_generics:
     patterns:
@@ -782,20 +789,15 @@ repository:
   
   type_expr:
     patterns:
-      - begin: '\$(?:typeof|typefrom|evaltype)\b'
+      # @deprecated contains $evaltype and $vatype for 0.7 compatibility
+      - begin: '\$(?:typeof|typefrom|evaltype|vatype)\b'
         beginCaptures:
-          0: { name: storage.type.c3 }
-        end: (?<=\))
+          0: { name: '{{scope:type_use}}' }
+        end: (?=[^ \t*\[?(:]|:(?!:)) # ' \t' instead of '\s' because doc comments are newline sensitive
         patterns:
           - include: "#parens"
-      - begin: '\$vatype\b' 
-        beginCaptures:
-          0: { name: storage.type.c3 }
-        end: (?<=\])
-        patterns:
-          - include: "#brackets"
-      # Matching type suffix after typeof/typefrom etc. is too hard so just do generic matches here
-      - include: "#type_suffix"
+          - include: "#type_suffix"
+          - include: "#type_access"
 
   attribute:
     patterns:
