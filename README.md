@@ -7,7 +7,7 @@ git clone https://github.com/c3lang/vscode-c3.git
 cd vscode-c3
 
 npm install
-npm build
+npm run build
 ```
 
 Building with bunx
