@@ -256,6 +256,7 @@ repository:
                 end: (?=\{)
                 patterns:
                   - include: "#comments"
+                  # @deprecated compat < 0.8
                   - match: '\b(?:inline|const)\b'
                     name: storage.modifier.c3
                   - include: "#type_no_generics"
@@ -284,12 +285,14 @@ repository:
             name: meta.enum.body.c3
             patterns:
               - include: "#comments"
+              # @deprecated compat < 0.8
               - begin: '='
                 beginCaptures:
                   0: { name: keyword.operator.assignment.c3 }
                 end: (?=,)
                 patterns:
                   - include: "#expression"
+              - include: "#block"
               - include: "#attribute"
               - match: '{{CONST}}'
                 name: variable.other.constant.c3
@@ -310,6 +313,17 @@ repository:
               - match: '{{TYPE}}'
                 name: '{{scope:type_decl:enum}}'
               - include: "#attribute"
+              - begin: ':'
+                beginCaptures:
+                  0 : { name: punctuation.separator.c3 }
+                end: (?=\{)
+                patterns:
+                  - include: "#comments"
+                  - match: '\binline\b'
+                    name: storage.modifier.c3
+                  - include: "#type_no_generics"
+                  - include: "#generic_params"
+                  - include: "#attribute"
           # Constdef body
           - begin: \{
             beginCaptures:
@@ -800,7 +814,7 @@ repository:
         beginCaptures:
           1: { name: storage.type.built-in.primitive.c3 }
           2: { name: '{{scope:type_use}}' }
-        end: (?=[^ \t*\[?@]) # ' \t' instead of '\s' because doc comments are newline sensitive
+        end: (?=[^ \t*\[?]) # ' \t' instead of '\s' because doc comments are newline sensitive
         patterns:
           - include: "#comments"
           - include: "#type_suffix"

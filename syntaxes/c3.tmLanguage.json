@@ -506,6 +506,9 @@
                   ]
                 },
                 {
+                  "include": "#block"
+                },
+                {
                   "include": "#attribute"
                 },
                 {
@@ -543,6 +546,33 @@
                 },
                 {
                   "include": "#attribute"
+                },
+                {
+                  "begin": ":",
+                  "beginCaptures": {
+                    "0": {
+                      "name": "punctuation.separator.c3"
+                    }
+                  },
+                  "end": "(?=\\{)",
+                  "patterns": [
+                    {
+                      "include": "#comments"
+                    },
+                    {
+                      "match": "\\binline\\b",
+                      "name": "storage.modifier.c3"
+                    },
+                    {
+                      "include": "#type_no_generics"
+                    },
+                    {
+                      "include": "#generic_params"
+                    },
+                    {
+                      "include": "#attribute"
+                    }
+                  ]
                 }
               ]
             },
@@ -1532,7 +1562,7 @@
               "name": "support.type.c3"
             }
           },
-          "end": "(?=[^ \\t*\\[?@])",
+          "end": "(?=[^ \\t*\\[?])",
           "patterns": [
             {
               "include": "#comments"
