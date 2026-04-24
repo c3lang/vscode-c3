@@ -79,7 +79,7 @@ repository:
           - include: "#comments"
           - include: "#attribute"
           - include: "#module_path"
-          - include: "#generic_args" # Deprecated
+          - include: "#generic_args" # @deprecated
           - include: "#generic_params"
 
       # Import
@@ -235,13 +235,14 @@ repository:
       # Struct/Bitstruct/Union (structlikes)
       - include: "#structlike"
 
-      # Enum
-      - begin: '(?=\benum\b)'
+      # Enum/Constdef (enumlikes)
+      - begin: '(?=\b(?:enum|constdef)\b)'
         end: (?<=\})
         patterns:
-          - begin: '\benum\b'
+          - begin: '\b(enum)|(constdef)\b'
             beginCaptures:
-              0: { name: keyword.declaration.enum.c3 }
+              1: { name: keyword.declaration.enum.c3 }
+              2: { name: keyword.declaration.constdef.c3 }
             end: (?=\{)
             name: meta.enum.c3
             patterns:
@@ -256,7 +257,7 @@ repository:
                 end: (?=\{)
                 patterns:
                   - include: "#comments"
-                  # @deprecated compat < 0.8
+                  # "const" is @deprecated
                   - match: '\b(?:inline|const)\b'
                     name: storage.modifier.c3
                   - include: "#type_no_generics"
@@ -270,7 +271,7 @@ repository:
                     contentName: meta.group.c3
                     patterns:
                       - include: "#comments"
-                      - match: '\b(?:inline|const)\b'
+                      - match: '\binline\b'
                         name: storage.modifier.c3
                       - include: "#parameters"
                   - include: "#generic_params"
@@ -285,61 +286,15 @@ repository:
             name: meta.enum.body.c3
             patterns:
               - include: "#comments"
-              # @deprecated compat < 0.8
+              # Constdef value
               - begin: '='
                 beginCaptures:
                   0: { name: keyword.operator.assignment.c3 }
                 end: (?=,)
                 patterns:
                   - include: "#expression"
+              # Enum args
               - include: "#block"
-              - include: "#attribute"
-              - match: '{{CONST}}'
-                name: variable.other.constant.c3
-              - match: ','
-                name: punctuation.separator.c3
-
-      # Constdef
-      - begin: '(?=\bconstdef\b)'
-        end: (?<=\})
-        patterns:
-          - begin: '\bconstdef\b'
-            beginCaptures:
-              0: { name: keyword.declaration.constdef.c3 }
-            end: (?=\{)
-            name: meta.constdef.c3
-            patterns:
-              - include: "#comments"
-              - match: '{{TYPE}}'
-                name: '{{scope:type_decl:enum}}'
-              - include: "#attribute"
-              - begin: ':'
-                beginCaptures:
-                  0 : { name: punctuation.separator.c3 }
-                end: (?=\{)
-                patterns:
-                  - include: "#comments"
-                  - match: '\binline\b'
-                    name: storage.modifier.c3
-                  - include: "#type_no_generics"
-                  - include: "#generic_params"
-                  - include: "#attribute"
-          # Constdef body
-          - begin: \{
-            beginCaptures:
-              0: { name: punctuation.section.block.begin.c3 }
-            end: \}
-            endCaptures:
-              0: { name: punctuation.section.block.end.c3 }
-            name: meta.constdef.body.c3
-            patterns:
-              - include: "#comments"
-              - begin: '='
-                beginCaptures:
-                  0: { name: keyword.operator.assignment.c3 }
-                end: (?=,|\})
-                patterns:
-                  - include: "#expression"
               - include: "#attribute"
               - match: '{{CONST}}'
                 name: variable.other.constant.c3
