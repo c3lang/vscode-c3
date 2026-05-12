@@ -47,7 +47,7 @@ variables:
   # @deprecated contains "isz" for 0.7 compatibility
   base_type: 'void|bool|char|double|float|float16|bfloat|int128|ichar|int|iptr|isz|sz|long|short|uint128|uint|ulong|uptr|ushort|usz|float128|any|fault|typeid|untypedlist'
   # @deprecated contains attributes for 0.7 compatibility
-  attribute: 'align|allow_deprecated|benchmark|bigendian|builtin|callconv|cname|compact|const|constinit|deprecated|dynamic|export|extern|finalizer|format|if|inline|init|jump|link|littleendian|local|maydiscard|mustinit|naked|noalias|nodiscard|noinit|noinline|nopadding|norecurse|noreturn|nosanitize|nostrip|obfuscate|operator|operator_r|operator_s|optional|overlap|packed|private|public|pure|reflect|safeinfer|safemacro|simd|section|structlike|tag|test|unused|used|wasm|weak|weaklink|winmain'
+  attribute: 'align|allow_deprecated|benchmark|bigendian|builtin|callconv|cname|compact|const|constinit|deprecated|dynamic|extern|finalizer|format|if|inline|init|jump|link|littleendian|local|maydiscard|mustinit|naked|noalias|nodiscard|noinit|noinline|nopadding|norecurse|noreturn|nosanitize|nostrip|obfuscate|operator|operator_r|operator_s|optional|overlap|packed|private|public|pure|reflect|safeinfer|safemacro|simd|section|structlike|tag|test|unused|used|wasm|weak|weaklink|winmain'
 
 patterns:
   - include: "#top_level"
