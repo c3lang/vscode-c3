@@ -7,19 +7,19 @@ import { downloadAndExtractArtifact } from "./utils";
 import { LanguageClient } from 'vscode-languageclient/node';
 import { Trace } from 'vscode-jsonrpc';
 
-const GITHUB_API_URL = "https://api.github.com/repos/tonis2/lsp/releases/latest";
+const GITHUB_API_URL = "https://api.github.com/repos/pherrymason/c3-lsp/releases/latest";
 
 const PLATFORM_MAP = {
 	linux: "linux",
-	darwin: "macos",
+	darwin: "darwin",
 	win32: "windows",
 };
 
 const ARCH_MAP = {
-	x64: "x86_64",
-	x86_64: "x86_64",
-	arm64: "aarch64",
-	aarch64: "aarch64",
+	x64: "amd64",
+	x86_64: "amd64",
+	arm64: "arm64",
+	aarch64: "arm64",
 };
 
 let client = null;
@@ -81,7 +81,7 @@ export async function activate(context) {
             // c3c not found, keep default and let LSP report the error
         }
     }
-    args.push(`--compiler-path=${compilerPath}`);
+    args.push(`--c3c-path=${compilerPath}`);
 
     const serverOptions = {
         run: {
@@ -145,7 +145,7 @@ function getAssetUrl(release) {
     const arch = ARCH_MAP[machine()];
     if (!plat || !arch) return null;
 
-    const prefix = `c3-lsp-${plat}-${arch}`;
+    const prefix = `c3lsp-${plat}-${arch}`;
     const asset = release.assets.find((a) => a.name.startsWith(prefix));
     if (asset) {
         return asset.browser_download_url;
