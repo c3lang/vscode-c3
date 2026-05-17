@@ -501,7 +501,7 @@
                       "name": "keyword.operator.assignment.c3"
                     }
                   },
-                  "end": "(?=,)",
+                  "end": "(?=[,}])",
                   "patterns": [
                     {
                       "include": "#expression"

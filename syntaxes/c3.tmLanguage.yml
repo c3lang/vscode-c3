@@ -294,7 +294,7 @@ repository:
               - begin: '='
                 beginCaptures:
                   0: { name: keyword.operator.assignment.c3 }
-                end: (?=,)
+                end: (?=[,}])
                 patterns:
                   - include: "#expression"
               # Enum args
