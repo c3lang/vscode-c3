@@ -1497,7 +1497,7 @@
     "type_expr": {
       "patterns": [
         {
-          "begin": "\\$(?:typeof|typefrom|evaltype|vatype)\\b",
+          "begin": "\\$(?:Typeof|Typefrom|typeof|typefrom|evaltype|vatype)\\b",
           "beginCaptures": {
             "0": {
               "name": "support.type.c3"
@@ -1521,7 +1521,7 @@
     "attribute": {
       "patterns": [
         {
-          "begin": "@(?:(?:align|allow_deprecated|benchmark|bigendian|builtin|callconv|cname|compact|const|constinit|deprecated|dynamic|export|extern|finalizer|format|if|inline|init|jump|link|littleendian|local|maydiscard|mustinit|naked|noalias|nodiscard|noinit|noinline|nopadding|norecurse|noreturn|nosanitize|nostrip|obfuscate|operator|operator_r|operator_s|optional|overlap|packed|private|public|pure|reflect|safeinfer|safemacro|simd|section|structlike|tag|test|unused|used|wasm|weak|weaklink|winmain)\\b|(?:\\b_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*\\b))",
+          "begin": "@(?:(?:align|allow_deprecated|benchmark|bigendian|builtin|callconv|cname|compact|const|constinit|deprecated|dynamic|export|finalizer|format|if|inline|init|jump|link|littleendian|local|maydiscard|mustinit|naked|noalias|nodiscard|noinit|noinline|nopadding|norecurse|noreturn|nosanitize|nostrip|obfuscate|operator|operator_r|operator_s|optional|overlap|packed|private|public|pure|reflect|safeinfer|safemacro|simd|section|tag|test|unused|used|wasm|weak|weaklink|winmain)\\b|(?:\\b_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*\\b))",
           "beginCaptures": {
             "0": {
               "name": "keyword.annotation.c3"
