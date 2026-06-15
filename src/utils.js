@@ -1,4 +1,4 @@
-import axios from "axios";
+import { getBuffer } from "./http";
 import decompress from "decompress";
 import path from "path";
 import fs from "fs";
@@ -27,13 +27,12 @@ export async function downloadAndExtractArtifact(
 		},
 		async (progress) => {
 			progress.report({ message: `downloading ${title}...` });
-			const response = await axios.get(artifactUrl, {
-				responseType: "arraybuffer",
-				onDownloadProgress: (progressEvent) => {
-					if (progressEvent.total) {
-						const increment = (progressEvent.bytes / progressEvent.total) * 100;
+			const data = await getBuffer(artifactUrl, {
+				onProgress: ({ received, total, chunk }) => {
+					if (total) {
+						const increment = (chunk / total) * 100;
 						progress.report({
-							message: progressEvent.progress ? `downloading ${(progressEvent.progress * 100).toFixed()}%` : "downloading...",
+							message: `downloading ${((received / total) * 100).toFixed()}%`,
 							increment: increment,
 						});
 					}
@@ -44,12 +43,10 @@ export async function downloadAndExtractArtifact(
 			// Delete old lsp folder
 			await vscode.workspace.fs.delete(installDir, { recursive: true, useTrash: false }).catch((err) => {});
 			await vscode.workspace.fs.createDirectory(installDir);
-			await vscode.workspace.fs.writeFile(zipUri, response.data);
+			await vscode.workspace.fs.writeFile(zipUri, data);
 
 			const zip_path = zipUri.fsPath;
 			const install_path = installDir.fsPath;
-
-			const data = Buffer.from(response.data);
 			// Detect archive by magic bytes: ZIP (PK\x03\x04) or gzip (\x1f\x8b)
 			const isZip =
 				artifactUrl.endsWith(".zip") || artifactUrl.endsWith(".tar.gz") ||

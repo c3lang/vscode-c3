@@ -6,7 +6,7 @@
   "repository": "https://github.com/c3lang/vscode-c3.git",
   "version": "0.3.2",
   "engines": {
-    "vscode": "^1.75.0"
+    "vscode": "^1.86.0"
   },
   "categories": [
     "Programming Languages",
@@ -221,7 +221,6 @@
   ],
   "main": "./dist/extension.js",
   "dependencies": {
-    "axios": "^1.7.7",
     "decompress": "^4.2.1",
     "semver": "^7.6.3",
     "vscode-jsonrpc": "^8.2.1",
@@ -230,7 +229,7 @@
   "devDependencies": {
     "@vscode/test-cli": "^0.0.12",
     "@vscode/test-electron": "^2.5.2",
-    "esbuild": "^0.25.10",
+    "esbuild": "^0.28.1",
     "js-yaml": "^4.1.0",
     "mocha": "^11.7.5"
   },
