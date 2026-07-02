@@ -1,6 +1,6 @@
 import { platform } from "os";
 import childProcess from "child_process";
-import axios from "axios";
+import { getJson } from "./http";
 import semver from "semver";
 import vscode from "vscode";
 import { downloadAndExtractArtifact } from "./utils";
@@ -16,8 +16,7 @@ const PLATFORM_ASSET = {
 
 async function fetchLatestRelease() {
 	try {
-		const response = await axios.get(GITHUB_API_URL);
-		const release = response.data;
+		const release = await getJson(GITHUB_API_URL, { Accept: "application/vnd.github+json" });
 		return {
 			version: semver.parse(release.tag_name),
 			tag: release.tag_name,
@@ -115,34 +114,7 @@ export async function setupC3Fmt(context) {
 		if (context.extensionMode === vscode.ExtensionMode.Test) {
 			return;
 		}
-		const response = await vscode.window.showInformationMessage(
-			"c3fmt (the C3 formatter) can be installed for code formatting support. Would you like to install it?",
-			"Download c3fmt",
-			"Specify c3fmt path",
-			"Disable formatting",
-		);
-
-		switch (response) {
-			case "Download c3fmt":
-				await installC3Fmt(context);
-				break;
-			case "Specify c3fmt path":
-				const uris = await vscode.window.showOpenDialog({
-					canSelectFiles: true,
-					canSelectFolders: false,
-					canSelectMany: false,
-					title: "Select c3fmt executable",
-				});
-				if (uris) {
-					await fmtConfig.update("path", uris[0].path, true);
-				}
-				break;
-			case "Disable formatting":
-				await fmtConfig.update("enable", false, true);
-				break;
-			case undefined:
-				break;
-		}
+		await installC3Fmt(context);
 	} else if (fmtConfig.get("checkForUpdate")) {
 		checkC3FmtUpdate(context).catch((err) => console.log("c3fmt update check failed:", err));
 	}

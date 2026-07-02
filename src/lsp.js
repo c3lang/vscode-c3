@@ -1,6 +1,6 @@
 import { platform, machine } from "os";
 import childProcess from "child_process";
-import axios from "axios";
+import { getJson } from "./http";
 import semver from "semver";
 import vscode from "vscode";
 import { downloadAndExtractArtifact } from "./utils";
@@ -127,8 +127,7 @@ export async function deactivate() {
 
 async function fetchLatestRelease() {
     try {
-        const response = await axios.get(GITHUB_API_URL);
-        const release = response.data;
+        const release = await getJson(GITHUB_API_URL, { Accept: "application/vnd.github+json" });
         return {
             version: semver.parse(release.tag_name),
             tag: release.tag_name,
