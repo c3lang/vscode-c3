@@ -4,7 +4,7 @@
   "description": "C3 Language Support for VSCode - Syntax Highlighting and Code Snippets",
   "publisher": "c3",
   "repository": "https://github.com/c3lang/vscode-c3.git",
-  "version": "0.3.3",
+  "version": "0.3.5",
   "engines": {
     "vscode": "^1.86.0"
   },
@@ -63,7 +63,7 @@
             "type": "string",
             "default": null,
             "scope": "machine",
-            "markdownDescription": "The path to **c3-lsp** binary"
+            "markdownDescription": "The path to the **c3-lsp** binary. If left empty, the extension downloads and manages it automatically. Set this to use a custom build. To disable the language server entirely, turn off `#c3.lsp.enable#`."
           },
           "c3.lsp.checkForUpdate": {
             "type": "boolean",
@@ -109,7 +109,7 @@
             "type": "string",
             "default": null,
             "scope": "machine",
-            "markdownDescription": "The path to `c3fmt` binary"
+            "markdownDescription": "The path to the `c3fmt` binary. If left empty, the extension downloads and manages it automatically. Set this to use a custom build. To disable formatting entirely, turn off `#c3.format.enable#`."
           },
           "c3.format.checkForUpdate": {
             "type": "boolean",
