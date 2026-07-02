@@ -38,6 +38,19 @@
         "path": "./syntaxes/c3.vscode.tmLanguage.json"
       }
     ],
+    "semanticTokenScopes": [
+      {
+        "language": "c3",
+        "scopes": {
+          "type": ["entity.name.type.c3", "entity.name.type"],
+          "function": ["entity.name.function.c3", "entity.name.function"],
+          "macro": ["entity.name.function.c3", "entity.name.function"],
+          "variable": ["variable.other.c3", "variable.other"],
+          "enumMember": ["variable.other.constant.c3", "constant.other"],
+          "decorator": ["keyword.annotation.c3", "entity.name.decorator"]
+        }
+      }
+    ],
     "snippets": [
       {
         "language": "c3",
