@@ -4,7 +4,7 @@
   "description": "C3 Language Support for VSCode - Syntax Highlighting and Code Snippets",
   "publisher": "c3",
   "repository": "https://github.com/c3lang/vscode-c3.git",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "engines": {
     "vscode": "^1.86.0"
   },
@@ -42,12 +42,21 @@
       {
         "language": "c3",
         "scopes": {
+          "namespace": ["entity.name.namespace.c3", "entity.name.namespace"],
           "type": ["entity.name.type.c3", "entity.name.type"],
           "function": ["entity.name.function.c3", "entity.name.function"],
           "macro": ["entity.name.function.c3", "entity.name.function"],
           "variable": ["variable.other.c3", "variable.other"],
           "enumMember": ["variable.other.constant.c3", "constant.other"],
-          "decorator": ["keyword.annotation.c3", "entity.name.decorator"]
+          "decorator": ["keyword.annotation.c3", "entity.name.decorator"],
+          "keyword": ["keyword.control.c3", "keyword.control", "keyword"],
+          "comment": ["comment.line.c3", "comment"],
+          "string": ["string.quoted.c3", "string"],
+          "number": ["constant.numeric.c3", "constant.numeric"],
+          "class": ["entity.name.type.c3", "entity.name.type"],
+          "parameter": ["variable.parameter.c3", "variable.parameter"],
+          "property": ["variable.other.property.c3", "variable.other.property", "variable.other"],
+          "typeParameter": ["storage.type.decl-accent.c3", "storage.type"]
         }
       }
     ],
