@@ -65,11 +65,16 @@ class C3DebugConfigurationProvider {
 		config.cwd = config.cwd || (folder ? folder.uri.fsPath : undefined);
 		config.args = config.args || [];
 
-		// Always stop at main so GDB can handle setup requests.
-		// If user didn't want stopOnEntry, the adapter will auto-continue.
-		config.stopAtBeginningOfMainSubprogram = true;
-		config._userStopOnEntry = config.stopOnEntry ?? false;
-		delete config.stopOnEntry;
+		config._backend = resolveBackend(config);
+
+		if (config._backend === "gdb") {
+			// Always stop at main so GDB can handle setup requests.
+			// If user didn't want stopOnEntry, the adapter will auto-continue.
+			// lldb-dap supports `stopOnEntry` directly it doens;t need it.
+			config.stopAtBeginningOfMainSubprogram = true;
+			config._userStopOnEntry = config.stopOnEntry ?? false;
+			delete config.stopOnEntry;
+		}
 
 		return config;
 	}
@@ -239,6 +244,29 @@ class GdbDebugAdapter {
 
 class C3DebugAdapterDescriptorFactory {
 	createDebugAdapterDescriptor(session, executable) {
+		const backend = session.configuration._backend || resolveBackend(session.configuration);
+		return backend === "lldb" ? this._lldbDescriptor(session) : this._gdbDescriptor(session);
+	}
+
+	_lldbDescriptor(session) {
+		const configured =
+			session.configuration.lldbDapPath ||
+			vscode.workspace.getConfiguration("c3.debug").get("lldbDapPath");
+
+		const lldbDapPath = findLldbDap(configured);
+		if (!lldbDapPath) {
+			vscode.window.showErrorMessage(
+				configured
+					? `lldb-dap not found at '${configured}'. Check Settings > c3.debug.lldbDapPath.`
+					: "lldb-dap not found. Install LLVM ('brew install llvm') or the Xcode Command Line Tools, or set Settings > c3.debug.lldbDapPath.",
+			);
+			return undefined;
+		}
+
+		return new vscode.DebugAdapterExecutable(lldbDapPath, []);
+	}
+
+	_gdbDescriptor(session) {
 		const gdbPath =
 			session.configuration.gdbPath ||
 			vscode.workspace.getConfiguration("c3.debug").get("gdbPath") ||
@@ -260,6 +288,59 @@ class C3DebugAdapterDescriptorFactory {
 
 		const userStopOnEntry = session.configuration._userStopOnEntry ?? false;
 		return new vscode.DebugAdapterInlineImplementation(new GdbDebugAdapter(gdbPath, userStopOnEntry));
+	}
+}
+
+const IS_MAC = process.platform === "darwin";
+
+function resolveBackend(config) {
+	const setting =
+		config.backend || vscode.workspace.getConfiguration("c3.debug").get("backend") || "auto";
+
+	if (setting === "lldb" || setting === "gdb") return setting;
+	return IS_MAC ? "lldb" : "gdb";
+}
+
+const LLDB_DAP_FALLBACKS = [
+	"/opt/homebrew/opt/llvm/bin/lldb-dap",
+	"/usr/local/opt/llvm/bin/lldb-dap",
+	"/Library/Developer/CommandLineTools/usr/bin/lldb-dap",
+];
+
+function findLldbDap(configuredPath) {
+	// An explicit path is authoritative: don't silently fall back to another
+	// binary when usr asked for specific one.
+	if (configuredPath) {
+		return isRunnable(configuredPath) ? configuredPath : null;
+	}
+
+	const candidates = ["lldb-dap"];
+	if (IS_MAC) {
+		const fromXcrun = xcrunFind("lldb-dap");
+		if (fromXcrun) candidates.push(fromXcrun);
+		candidates.push(...LLDB_DAP_FALLBACKS);
+	}
+
+	return candidates.find(isRunnable) ?? null;
+}
+
+function isRunnable(binPath) {
+	try {
+		childProcess.execFileSync(binPath, ["--version"], { encoding: "utf8", timeout: 5000 });
+		return true;
+	} catch {
+		return false;
+	}
+}
+
+function xcrunFind(tool) {
+	try {
+		const out = childProcess
+			.execFileSync("xcrun", ["-f", tool], { encoding: "utf8", timeout: 5000 })
+			.trim();
+		return out || null;
+	} catch {
+		return null;
 	}
 }
 

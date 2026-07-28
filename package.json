@@ -117,6 +117,27 @@
             "default": "c3c",
             "markdownDescription": "Path to the `c3c` compiler binary, used for diagnostics. Defaults to `c3c` (found via PATH)."
           },
+          "c3.debug.backend": {
+            "type": "string",
+            "enum": [
+              "auto",
+              "lldb",
+              "gdb"
+            ],
+            "enumDescriptions": [
+              "LLDB on macOS, GDB on all other platforms.",
+              "Always use lldb-dap.",
+              "Always use GDB 14+ with DAP support."
+            ],
+            "default": "auto",
+            "markdownDescription": "Which debugger backend to drive. `auto` picks **lldb** on macOS (GDB has no working arm64-darwin build) and **gdb** elsewhere."
+          },
+          "c3.debug.lldbDapPath": {
+            "type": "string",
+            "default": null,
+            "scope": "machine",
+            "markdownDescription": "Path to the `lldb-dap` executable. If left empty, it is looked up on `PATH`, then via `xcrun -f lldb-dap`, then in the Homebrew LLVM and Xcode Command Line Tools locations."
+          },
           "c3.debug.gdbPath": {
             "type": "string",
             "default": "gdb",
@@ -149,7 +170,7 @@
     "debuggers": [
       {
         "type": "c3",
-        "label": "C3 Debug (GDB)",
+        "label": "C3 Debug (LLDB/GDB)",
         "languages": [
           "c3"
         ],
@@ -189,6 +210,19 @@
                 "type": "boolean",
                 "description": "Automatically stop the program at the entry point.",
                 "default": false
+              },
+              "backend": {
+                "type": "string",
+                "enum": [
+                  "auto",
+                  "lldb",
+                  "gdb"
+                ],
+                "description": "Debugger backend for this configuration (overrides c3.debug.backend setting). 'auto' uses LLDB on macOS and GDB elsewhere."
+              },
+              "lldbDapPath": {
+                "type": "string",
+                "description": "Path to lldb-dap executable (overrides c3.debug.lldbDapPath setting)."
               },
               "gdbPath": {
                 "type": "string",
