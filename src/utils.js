@@ -7,6 +7,29 @@ import vscode from "vscode";
 
 const chmod = promisify(fs.chmod);
 
+// True when `binPath` sits inside this extension's globalStorage, i.e. it is a
+// binary we downloaded and therefore own, rather than a custom build the user
+// deliberately pointed us at.
+export function isManagedPath(context, binPath) {
+	if (!binPath) return false;
+	const root = path.resolve(context.globalStorageUri.fsPath);
+	const resolved = path.resolve(binPath);
+	return resolved === root || resolved.startsWith(root + path.sep);
+}
+
+// Bare command names are left to PATH resolution at spawn time; only absolute paths
+// can be meaningfully checked here.
+export async function binaryExists(binPath) {
+	if (!binPath) return false;
+	if (!path.isAbsolute(binPath)) return true;
+	try {
+		await vscode.workspace.fs.stat(vscode.Uri.file(binPath));
+		return true;
+	} catch {
+		return false;
+	}
+}
+
 export async function downloadAndExtractArtifact(
 	/** e.g. `C3CLSP` */
 	title,

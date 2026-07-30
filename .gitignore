@@ -4,6 +4,7 @@ Makefile
 *.vsix
 dist/
 .vscode/.vscode-test
+.vscode-test
 .claude
 .vscode/
 
