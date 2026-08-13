@@ -4,7 +4,7 @@ import { promisify } from "util";
 import { getJson } from "./http";
 import semver from "semver";
 import vscode from "vscode";
-import { downloadAndExtractArtifact, isManagedPath } from "./utils";
+import { downloadAndExtractArtifact, isManagedPath, binaryExists } from "./utils";
 import { LanguageClient } from 'vscode-languageclient/node';
 import { Trace } from 'vscode-jsonrpc';
 
@@ -173,12 +173,22 @@ async function checkUpdate(context) {
     const server = resolveServerPath(context);
     if (!server) return;
 
-    const currentVersion = getVersion(server.path, "--version");
+    const { version: currentVersion, error: versionError } = getVersion(server.path, "--version");
     // A binary we manage that cannot report a parseable version is either broken
     // or left over from a different server. Reinstall instead of giving up, which
     // would leave the user stuck on it forever.
     if (!currentVersion) {
-        if (server.managed) await installLSP(context);
+        if (server.managed) {
+            // Present but cannot run at all: a re-download would fail identically
+            // (e.g. the binary needs a newer glibc than this system has), so
+            // surface the real error instead of silently reinstalling.
+            // Missing, or running but unparseable version: reinstall is right.
+            if ((await binaryExists(server.path)) && versionError) {
+                await reportUnrunnableServer(context, server, versionError);
+            } else {
+                await installLSP(context);
+            }
+        }
         return;
     }
 
@@ -260,14 +270,28 @@ export async function serverIsCompatible(binPath) {
     }
 }
 
+// One-line human-readable reason for a failed probe, for the error popup: prefer
+// the first non-empty stderr line (the dynamic linker's GLIBC_2.38 error, for
+// example), then the exit code or signal.
+export function serverFailureReason(probeError) {
+    const firstLine = String(probeError?.stderr || probeError?.message || "")
+        .split("\n")
+        .find((l) => l.trim() !== "");
+    if (firstLine) return firstLine.trim().slice(0, 300);
+    const code = probeError?.code !== undefined ? probeError.code : probeError?.status;
+    if (code !== undefined && code !== null) return `the process exited with code ${code}`;
+    if (probeError?.signal) return `the process was killed (${probeError.signal})`;
+    return "the server process could not be started";
+}
+
 export function getVersion(filePath, arg) {
     try {
-        const buffer = childProcess.execFileSync(filePath, [arg]);
+        const buffer = childProcess.execFileSync(filePath, [arg], { timeout: 5000 });
         const versionString = buffer.toString("utf8").trim();
 
-        return semver.parse(versionString);
-    } catch {
-        return null;
+        return { version: semver.parse(versionString), error: null };
+    } catch (err) {
+        return { version: null, error: err };
     }
 }
 
@@ -307,4 +331,38 @@ export async function installLSP(context, release) {
     await context.globalState.update(STATE_VERIFIED, undefined);
 
     return lsPath;
+}
+
+// Module lifetime is one extension-host session; reloading the window reloads the
+// module, so "once per activation" holds across all call sites.
+let brokenServerReported = false;
+
+// Red popup for a managed binary that exists but cannot start on this system
+// (e.g. built for a newer glibc). setupC3 (which always runs first) and
+// checkUpdate can both detect the same broken binary in one activation, so the
+// guard keeps it to a single popup. Never silently re-downloads; a manual
+// "Re-download" stays available for genuinely corrupt downloads.
+export async function reportUnrunnableServer(context, server, probeError) {
+    if (brokenServerReported) return;
+    if (context.extensionMode === vscode.ExtensionMode.Test) return;
+    brokenServerReported = true;
+
+    const choice = await vscode.window.showErrorMessage(
+        `The C3 language server at ${server.path} cannot run on this system: ` +
+        `${serverFailureReason(probeError)}. The binary is installed but cannot start, ` +
+        `so re-downloading may not fix it.`,
+        "Re-download",
+        "Ignore",
+    );
+    if (choice === "Re-download") {
+        brokenServerReported = false; // a second failed download should report again
+        try {
+            await installLSP(context);
+        } catch (err) {
+            // The download itself failed (e.g. network error): installLSP's own
+            // error popups cover the release/asset cases, but the fetch can also
+            // throw, which would otherwise surface as an unhandled rejection.
+            console.log("C3LSP re-download failed:", err);
+        }
+    }
 }
