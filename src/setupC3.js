@@ -6,6 +6,9 @@ import {
     serverIsCompatible,
     isVerified,
     markVerified,
+    getVersion,
+    serverFailureReason,
+    reportUnrunnableServer,
 } from "./lsp";
 import { binaryExists } from "./utils";
 
@@ -37,6 +40,28 @@ export async function setupC3(context) {
     if (await serverIsCompatible(server.path)) {
         await markVerified(context, server.path);
         return true;
+    }
+
+    // The binary exists but cannot start on this system at all (e.g. built against
+    // a newer glibc than this system provides): it cannot even answer --version.
+    // Re-downloading would produce the identical failure, so surface the real
+    // error instead of silently re-downloading.
+    const { error: probeError } = getVersion(server.path, "--version");
+    if (probeError) {
+        if (server.managed) {
+            await reportUnrunnableServer(context, server, probeError);
+        } else {
+            await repair(
+                context,
+                server,
+                `The C3 language server at ${server.path} cannot run on this system: ` +
+                serverFailureReason(probeError),
+            );
+        }
+        // The server cannot run, so tell the caller not to start the language
+        // client: spawning the broken binary would only produce a stream of
+        // connection errors and unhandled rejections.
+        return false;
     }
 
     // The binary rejects --compiler-path, so it is the pre-0.3 server
