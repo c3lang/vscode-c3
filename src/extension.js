@@ -5,11 +5,11 @@ import { setupFormat } from './format';
 import { setupDebug } from './debug';
 
 export async function activate(context) {
-    // setupC3 returns false when the server binary exists but cannot run on this
-    // system (e.g. built for a newer glibc): starting the client anyway would
-    // spawn a process that dies immediately, producing connection errors and
-    // unhandled rejections. The formatter and debugger are independent of the
-    // language server, so they still get set up.
+    // setupC3 returns false when there is no server worth connecting to: the binary
+    // exists but cannot run on this system (e.g. built for a newer glibc), or a
+    // repair is still waiting on the user. Starting the client anyway would spawn a
+    // process that dies immediately, producing connection errors and unhandled
+    // rejections. A repair the user accepts starts the server itself.
     const lspReady = await setupC3(context);
     await setupC3Fmt(context);
     await setupFormat(context);
