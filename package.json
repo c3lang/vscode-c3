@@ -66,10 +66,23 @@
         "path": "./snippets/snippets.json"
       }
     ],
+    "commands": [
+      {
+        "command": "c3.reinstallTools",
+        "title": "Re-download tools (c3-lsp and c3fmt)",
+        "category": "C3"
+      },
+      {
+        "command": "c3.checkForUpdates",
+        "title": "Check for tool updates",
+        "category": "C3"
+      }
+    ],
     "configuration": [
       {
         "type": "object",
         "title": "C3 Language Support",
+        "order": 1,
         "properties": {
           "c3.stdlib-path": {
             "type": "string",
@@ -86,11 +99,6 @@
             "default": null,
             "scope": "machine",
             "markdownDescription": "The path to the **c3-lsp** binary. If left empty, the extension downloads and manages it automatically. Set this to use a custom build. To disable the language server entirely, turn off `#c3.lsp.enable#`."
-          },
-          "c3.lsp.checkForUpdate": {
-            "type": "boolean",
-            "description": "Whether to automatically check for new versions",
-            "default": true
           },
           "c3.lsp.sendCrashReports": {
             "type": "boolean",
@@ -132,16 +140,11 @@
             "default": "auto",
             "markdownDescription": "Which debugger backend to drive. `auto` picks **lldb** on macOS (GDB has no working arm64-darwin build) and **gdb** elsewhere."
           },
-          "c3.debug.lldbDapPath": {
+          "c3.debug.path": {
             "type": "string",
             "default": null,
             "scope": "machine",
-            "markdownDescription": "Path to the `lldb-dap` executable. If left empty, it is looked up on `PATH`, then via `xcrun -f lldb-dap`, then in the Homebrew LLVM and Xcode Command Line Tools locations."
-          },
-          "c3.debug.gdbPath": {
-            "type": "string",
-            "default": "gdb",
-            "markdownDescription": "Path to the GDB executable. Requires GDB 14+ with DAP support (`--interpreter=dap`)."
+            "markdownDescription": "Path to the debug adapter for the backend selected in `#c3.debug.backend#` — `lldb-dap` for **lldb**, GDB 14+ with DAP support (`--interpreter=dap`) for **gdb**.\n\nLeave empty to find it automatically: `lldb-dap` is looked up on `PATH`, then via `xcrun -f lldb-dap`, then in the Homebrew LLVM and Xcode Command Line Tools locations; GDB is taken from `PATH`.\n\nA launch configuration can override this per backend with its own `lldbDapPath` or `gdbPath` attribute."
           },
           "c3.format.enable": {
             "type": "boolean",
@@ -153,11 +156,18 @@
             "default": null,
             "scope": "machine",
             "markdownDescription": "The path to the `c3fmt` binary. If left empty, the extension downloads and manages it automatically. Set this to use a custom build. To disable formatting entirely, turn off `#c3.format.enable#`."
-          },
-          "c3.format.checkForUpdate": {
+          }
+        }
+      },
+      {
+        "type": "object",
+        "title": "Tools",
+        "order": 2,
+        "properties": {
+          "c3.tools.checkForUpdate": {
             "type": "boolean",
             "default": true,
-            "description": "Whether to automatically check for new versions of c3fmt"
+            "markdownDescription": "Whether to automatically check for new versions of the managed binaries on startup.\n\nThe actions below apply to **both** tools, c3-lsp and c3fmt:\n\n[Check for updates now](command:c3.checkForUpdates) — asks GitHub for the latest release of each and offers to install what is newer.\n\n[Re-download tools](command:c3.reinstallTools) — deletes both managed binaries and downloads the latest release of each, whatever version is installed."
           }
         }
       }
@@ -222,11 +232,11 @@
               },
               "lldbDapPath": {
                 "type": "string",
-                "description": "Path to lldb-dap executable (overrides c3.debug.lldbDapPath setting)."
+                "description": "Path to lldb-dap executable, used when this configuration runs on the lldb backend (overrides the c3.debug.path setting)."
               },
               "gdbPath": {
                 "type": "string",
-                "description": "Path to GDB executable (overrides c3.debug.gdbPath setting)."
+                "description": "Path to GDB executable, used when this configuration runs on the gdb backend (overrides the c3.debug.path setting)."
               }
             }
           }

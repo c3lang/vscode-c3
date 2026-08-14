@@ -3,7 +3,7 @@ import childProcess from "child_process";
 import { getJson } from "./http";
 import semver from "semver";
 import vscode from "vscode";
-import { downloadAndExtractArtifact, isManagedPath, binaryExists } from "./utils";
+import { downloadAndExtractArtifact, isManagedPath, binaryExists, shouldCheckForUpdate } from "./utils";
 
 const GITHUB_API_URL = "https://api.github.com/repos/lmichaudel/c3fmt/releases/latest";
 const GITHUB_RELEASE_URL = "https://github.com/lmichaudel/c3fmt/releases/download";
@@ -19,6 +19,9 @@ const STATE_PATH = "c3fmt.installedPath";
 const STATE_VERSION = "c3fmt.installedVersion";
 
 const STDIN_FILEPATH_FLAG = "--stdin-filepath";
+
+// Name used when reporting on this tool to the user.
+const TOOL = "c3fmt";
 
 const PLATFORM_ASSET = {
 	linux: "c3fmt-linux",
@@ -147,16 +150,30 @@ export async function installC3Fmt(context, release) {
 	return fmtPath;
 }
 
+// Unconditional re-download for the manual command: no version comparison and no
+// prompt, since this is for a copy that is damaged rather than outdated. The
+// download replaces the whole install directory, so nothing of the old one is left.
+export async function reinstallC3Fmt(context) {
+	return Boolean(await installC3Fmt(context));
+}
+
+// Compares the installed formatter against the latest release and offers the update.
+// As with the language server, the return value exists for the manual "check for
+// updates" command; the activation-time caller ignores it.
 export async function checkC3FmtUpdate(context) {
 	const release = await fetchLatestRelease();
-	if (!release || !release.version) return;
+	if (!release || !release.version) return { tool: TOOL, state: "unknown" };
 
+	// Checked before reading the binary's own version, which costs a process spawn
+	// on every activation that has update checks enabled.
 	const installedTag = context.globalState.get(STATE_VERSION);
-	if (installedTag === release.tag) return;
+	if (installedTag === release.tag) return { tool: TOOL, state: "current", current: release.version };
 
 	const formatter = resolveFormatterPath(context);
 	const currentVersion = formatter ? getVersion(formatter.path) : null;
-	if (currentVersion && semver.gte(currentVersion, release.version)) return;
+	if (currentVersion && semver.gte(currentVersion, release.version)) {
+		return { tool: TOOL, state: "current", current: currentVersion };
+	}
 
 	const response = await vscode.window.showInformationMessage(
 		"New version of c3fmt available: " + release.version,
@@ -165,8 +182,16 @@ export async function checkC3FmtUpdate(context) {
 	);
 
 	if (response === "Install") {
-		await installC3Fmt(context, release);
+		const installed = await installC3Fmt(context, release);
+		return {
+			tool: TOOL,
+			state: installed ? "updated" : "unknown",
+			current: currentVersion,
+			latest: release.version,
+		};
 	}
+
+	return { tool: TOOL, state: "available", current: currentVersion, latest: release.version };
 }
 
 export async function setupC3Fmt(context) {
@@ -193,7 +218,7 @@ export async function setupC3Fmt(context) {
 		return;
 	}
 
-	if (fmtConfig.get("checkForUpdate")) {
+	if (shouldCheckForUpdate()) {
 		checkC3FmtUpdate(context).catch((err) => console.log("c3fmt update check failed:", err));
 	}
 }

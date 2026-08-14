@@ -249,16 +249,14 @@ class C3DebugAdapterDescriptorFactory {
 	}
 
 	_lldbDescriptor(session) {
-		const configured =
-			session.configuration.lldbDapPath ||
-			vscode.workspace.getConfiguration("c3.debug").get("lldbDapPath");
+		const configured = debuggerPath(session, "lldbDapPath");
 
 		const lldbDapPath = findLldbDap(configured);
 		if (!lldbDapPath) {
 			vscode.window.showErrorMessage(
 				configured
-					? `lldb-dap not found at '${configured}'. Check Settings > c3.debug.lldbDapPath.`
-					: "lldb-dap not found. Install LLVM ('brew install llvm') or the Xcode Command Line Tools, or set Settings > c3.debug.lldbDapPath.",
+					? `lldb-dap not found at '${configured}'. Check Settings > c3.debug.path.`
+					: "lldb-dap not found. Install LLVM ('brew install llvm') or the Xcode Command Line Tools, or set Settings > c3.debug.path.",
 			);
 			return undefined;
 		}
@@ -267,21 +265,18 @@ class C3DebugAdapterDescriptorFactory {
 	}
 
 	_gdbDescriptor(session) {
-		const gdbPath =
-			session.configuration.gdbPath ||
-			vscode.workspace.getConfiguration("c3.debug").get("gdbPath") ||
-			"gdb";
+		const gdbPath = debuggerPath(session, "gdbPath") || "gdb";
 
 		const version = getGdbVersion(gdbPath);
 		if (version === null) {
 			vscode.window.showErrorMessage(
-				`GDB not found at '${gdbPath}'. Install GDB 14+ or configure the path in Settings > c3.debug.gdbPath.`,
+				`GDB not found at '${gdbPath}'. Install GDB 14+ or configure the path in Settings > c3.debug.path.`,
 			);
 			return undefined;
 		}
 		if (version.major < 14) {
 			vscode.window.showErrorMessage(
-				`GDB 14+ is required for DAP support (--interpreter=dap). Found version ${version.major}.${version.minor}. Please upgrade GDB or set a path to a newer GDB in Settings > c3.debug.gdbPath.`,
+				`GDB 14+ is required for DAP support (--interpreter=dap). Found version ${version.major}.${version.minor}. Please upgrade GDB or set a path to a newer GDB in Settings > c3.debug.path.`,
 			);
 			return undefined;
 		}
@@ -289,6 +284,21 @@ class C3DebugAdapterDescriptorFactory {
 		const userStopOnEntry = session.configuration._userStopOnEntry ?? false;
 		return new vscode.DebugAdapterInlineImplementation(new GdbDebugAdapter(gdbPath, userStopOnEntry));
 	}
+}
+
+// The debug adapter to run: the launch configuration's own attribute first, then
+// `c3.debug.path`. One setting serves both backends — only one of them is ever the
+// active one, and the settings UI cannot hide the other (VSCode has no conditional
+// visibility for settings), so two fields meant one was always dead weight. Empty
+// leaves each backend to find its adapter itself.
+//
+// `launchAttribute` stays per-backend: a launch configuration names the backend it
+// wants, so `gdbPath` and `lldbDapPath` are unambiguous there.
+function debuggerPath(session, launchAttribute) {
+	return (
+		session.configuration[launchAttribute] ||
+		vscode.workspace.getConfiguration("c3.debug").get("path")
+	);
 }
 
 const IS_MAC = process.platform === "darwin";

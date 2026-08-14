@@ -4,7 +4,7 @@ import { promisify } from "util";
 import { getJson } from "./http";
 import semver from "semver";
 import vscode from "vscode";
-import { downloadAndExtractArtifact, isManagedPath, binaryExists } from "./utils";
+import { downloadAndExtractArtifact, isManagedPath, binaryExists, shouldCheckForUpdate } from "./utils";
 import { LanguageClient } from 'vscode-languageclient/node';
 import { Trace } from 'vscode-jsonrpc';
 
@@ -126,7 +126,7 @@ export async function activate(context) {
 		}
 	};
 
-    if (lsConfig.get("checkForUpdate")) {
+    if (shouldCheckForUpdate()) {
         checkUpdate(context).catch((err) => console.log("C3LSP update check failed:", err));
     }
 
@@ -174,9 +174,16 @@ function getAssetUrl(release) {
     return null;
 }
 
-async function checkUpdate(context) {
+// Name used when reporting on this tool to the user.
+const TOOL = "c3-lsp";
+
+// Compares the installed server against the latest release and offers the update.
+// The activation-time caller ignores the return value; the manual "check for
+// updates" command uses it to report a result even when there is nothing to do,
+// since a command that answers with silence looks broken. See describeCheck.
+export async function checkUpdate(context) {
     const server = resolveServerPath(context);
-    if (!server) return;
+    if (!server) return { tool: TOOL, state: "missing" };
 
     const { version: currentVersion, error: versionError } = await getVersion(server.path, "--version");
     // A binary we manage that cannot report a parseable version is either broken
@@ -196,23 +203,29 @@ async function checkUpdate(context) {
                 await installLSP(context);
             }
         }
-        return;
+        return { tool: TOOL, state: "unknown" };
     }
 
     const release = await fetchLatestRelease();
-    if (!release || !release.version) return;
+    if (!release || !release.version) return { tool: TOOL, state: "unknown", current: currentVersion };
 
-    if (semver.gte(currentVersion, release.version)) return;
+    if (semver.gte(currentVersion, release.version)) {
+        return { tool: TOOL, state: "current", current: currentVersion };
+    }
 
     const response = await vscode.window.showInformationMessage("New version of C3LSP available: " + release.version, "Install", "Ignore");
-    switch (response) {
-        case "Install":
-            await installLSP(context, release);
-            break;
-        case "Ignore":
-        case undefined:
-            break;
+    if (response === "Install") {
+        const installed = await installLSP(context, release);
+        return {
+            tool: TOOL,
+            state: installed ? "updated" : "unknown",
+            current: currentVersion,
+            latest: release.version,
+        };
     }
+
+    // "Ignore", or the notification was dismissed.
+    return { tool: TOOL, state: "available", current: currentVersion, latest: release.version };
 }
 
 // The server to run: an explicit `c3.lsp.path` wins, otherwise the install we
@@ -374,6 +387,43 @@ export async function installLSP(context, release) {
     await context.globalState.update(STATE_VERIFIED, undefined);
 
     return lsPath;
+}
+
+// Unconditional re-download for the manual command: no version comparison and no
+// prompt, because this exists for an install that is damaged rather than outdated,
+// where the version on disk is not what is wrong with it. The install directory is
+// replaced wholesale by the download itself, so the old copy cannot survive.
+//
+// Returns whether the fresh server actually runs, which is the caller's cue to
+// restart the language client.
+export async function reinstallLSP(context) {
+    const installedPath = await installLSP(context);
+    if (!installedPath) return false;
+
+    // Probe before handing it to the client for the same reason a fresh install
+    // does: a download that does not fit this system should end in a plain
+    // explanation rather than a stream of connection errors.
+    const probe = await probeServer(installedPath);
+    if (!probe.ok) {
+        const failure = await startupFailure(installedPath, probe.error);
+        if (failure) {
+            vscode.window.showErrorMessage(
+                `The re-downloaded C3 language server cannot run on this system: ` +
+                `${serverFailureReason(failure)}.`,
+            );
+            return false;
+        }
+        // It runs but rejects our flags, which means the release itself is out of
+        // step with this extension. Nothing the user can fix by downloading again.
+        vscode.window.showErrorMessage(
+            `The re-downloaded C3 language server did not accept this extension's ` +
+            `arguments: ${serverFailureReason(probe.error)}.`,
+        );
+        return false;
+    }
+
+    await markVerified(context, installedPath);
+    return true;
 }
 
 // Module lifetime is one extension-host session; reloading the window reloads the

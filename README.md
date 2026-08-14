@@ -35,9 +35,24 @@ You can override this behaviour in your VS Code settings:
 | `c3.lsp.path` | Point at a custom `c3-lsp` binary instead of the managed download. |
 | `c3.format.enable` | Set to `false` to disable formatting (skips the download). |
 | `c3.format.path` | Point at a custom `c3fmt` binary instead of the managed download. |
-| `c3.lsp.checkForUpdate` / `c3.format.checkForUpdate` | Toggle automatic update checks. |
+| `c3.tools.checkForUpdate` | Toggle the automatic update checks for both binaries. Replaces `c3.lsp.checkForUpdate` and `c3.format.checkForUpdate`, which are gone — clear them from your settings, they are ignored. |
 
 When a `path` is left empty the extension keeps the binary up to date for you.
+
+### Commands
+
+Both are in the command palette, and the settings UI links to them as buttons from
+the **Tools** section (`c3.tools.checkForUpdate`), which is its own settings group
+precisely because each command covers both tools rather than one of them.
+
+| Command | Purpose |
+| --- | --- |
+| `C3: Re-download tools (c3-lsp and c3fmt)` | Deletes the managed binaries and downloads the latest release of each, whatever version is installed. Use it when an install is damaged rather than outdated. |
+| `C3: Check for tool updates` | Runs the update check on demand — for when the automatic notification was dismissed or missed. Reports the result even when everything is up to date. |
+
+Both restart the language server and re-register the formatter afterwards, so no
+window reload is needed. If a custom `path` is set, the command offers to clear it
+first, since a custom binary otherwise shadows the managed download.
 
 ## Issues and contributing
 

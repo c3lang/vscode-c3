@@ -50,7 +50,15 @@ function stdinFilepath(document) {
 	return folder ? path.join(folder.uri.fsPath, "untitled.c3") : null;
 }
 
+// The provider captures the formatter path and its probed capabilities, so a
+// re-download has to replace the registration rather than add a second one:
+// two providers for the same language make VSCode ask the user which to use.
+let registration = null;
+
 export async function setupFormat(context) {
+	registration?.dispose();
+	registration = null;
+
 	const fmtConfig = vscode.workspace.getConfiguration("c3.format");
 
 	if (!fmtConfig.get("enable")) return;
@@ -62,47 +70,47 @@ export async function setupFormat(context) {
 	// spawn, which is not worth repeating for every format request.
 	let canHintFilepath = null;
 
-	context.subscriptions.push(
-		vscode.languages.registerDocumentFormattingEditProvider(
-			[
-				{ language: "c3", scheme: "file" },
-				{ language: "c3", scheme: "untitled" },
-			],
-			{
-				async provideDocumentFormattingEdits(document) {
-					try {
-						const input = document.getText();
+	registration = vscode.languages.registerDocumentFormattingEditProvider(
+		[
+			{ language: "c3", scheme: "file" },
+			{ language: "c3", scheme: "untitled" },
+		],
+		{
+			async provideDocumentFormattingEdits(document) {
+				try {
+					const input = document.getText();
 
-						if (canHintFilepath === null) {
-							canHintFilepath = supportsStdinFilepath(formatter.path);
-						}
-
-						const result = await runC3Fmt(
-							input,
-							formatter.path,
-							canHintFilepath ? stdinFilepath(document) : null,
-						);
-
-						const fullRange = new vscode.Range(
-							document.positionAt(0),
-							document.positionAt(input.length),
-						);
-
-						return [vscode.TextEdit.replace(fullRange, result)];
-					} catch (err) {
-						if (err.message?.includes("SOURCE_CODE_CONTAINS_ERROR")) {
-							vscode.window.showWarningMessage(
-								"c3fmt: Cannot format file with syntax errors",
-							);
-						} else {
-							vscode.window.showErrorMessage(
-								`Error formatting C3 document: ${err.message}`,
-							);
-						}
-						return [];
+					if (canHintFilepath === null) {
+						canHintFilepath = supportsStdinFilepath(formatter.path);
 					}
-				},
+
+					const result = await runC3Fmt(
+						input,
+						formatter.path,
+						canHintFilepath ? stdinFilepath(document) : null,
+					);
+
+					const fullRange = new vscode.Range(
+						document.positionAt(0),
+						document.positionAt(input.length),
+					);
+
+					return [vscode.TextEdit.replace(fullRange, result)];
+				} catch (err) {
+					if (err.message?.includes("SOURCE_CODE_CONTAINS_ERROR")) {
+						vscode.window.showWarningMessage(
+							"c3fmt: Cannot format file with syntax errors",
+						);
+					} else {
+						vscode.window.showErrorMessage(
+							`Error formatting C3 document: ${err.message}`,
+						);
+					}
+					return [];
+				}
 			},
-		),
+		},
 	);
+
+	context.subscriptions.push(registration);
 }

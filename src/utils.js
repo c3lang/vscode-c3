@@ -17,6 +17,13 @@ export function isManagedPath(context, binPath) {
 	return resolved === root || resolved.startsWith(root + path.sep);
 }
 
+// Whether to check for new releases of the managed binaries on startup. One setting
+// for both tools: `c3.lsp.checkForUpdate` and `c3.format.checkForUpdate` were
+// replaced by it outright, so a value left over in either of those is ignored.
+export function shouldCheckForUpdate() {
+	return Boolean(vscode.workspace.getConfiguration("c3.tools").get("checkForUpdate"));
+}
+
 // Bare command names are left to PATH resolution at spawn time; only absolute paths
 // can be meaningfully checked here.
 export async function binaryExists(binPath) {
