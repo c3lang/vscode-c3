@@ -28,7 +28,11 @@
           ".c3i",
           ".c3t"
         ],
-        "configuration": "./language-configuration.json"
+        "configuration": "./language-configuration.json",
+        "icon":{
+          "light": "./images/c3.svg",
+          "dark": "./images/c3.svg"
+        }
       }
     ],
     "grammars": [
