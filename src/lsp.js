@@ -15,6 +15,11 @@ const GITHUB_API_URL = "https://api.github.com/repos/tonis2/lsp/releases/latest"
 // Subdirectory of globalStorageUri holding the server this extension downloads.
 const INSTALL_DIR = "c3lsp_install";
 
+// How long a server may take to answer a probe flag before we call it hung. Every
+// probe runs during activation, so this is a ceiling on how long a broken binary can
+// hold up the extension.
+const PROBE_TIMEOUT_MS = 5000;
+
 // globalState keys tracking the server this extension downloaded. The managed path
 // deliberately does not live in `c3.lsp.path`: that setting is user-visible and
 // outlives both the extension and globalStorage, so a stale managed value there used
@@ -173,7 +178,7 @@ async function checkUpdate(context) {
     const server = resolveServerPath(context);
     if (!server) return;
 
-    const { version: currentVersion, error: versionError } = getVersion(server.path, "--version");
+    const { version: currentVersion, error: versionError } = await getVersion(server.path, "--version");
     // A binary we manage that cannot report a parseable version is either broken
     // or left over from a different server. Reinstall instead of giving up, which
     // would leave the user stuck on it forever.
@@ -184,7 +189,9 @@ async function checkUpdate(context) {
             // surface the real error instead of silently reinstalling.
             // Missing, or running but unparseable version: reinstall is right.
             if ((await binaryExists(server.path)) && versionError) {
-                await reportUnrunnableServer(context, server, versionError);
+                if (await reportUnrunnableServer(context, server, versionError)) {
+                    await restartServer(context);
+                }
             } else {
                 await installLSP(context);
             }
@@ -253,7 +260,9 @@ export async function markVerified(context, binPath) {
     await context.globalState.update(STATE_VERIFIED, verificationStamp(context, binPath));
 }
 
-// True when `binPath` is a server this extension can actually drive.
+// Runs `binPath` with the exact flags we are about to pass the real server. The
+// error is kept rather than swallowed: it is the only thing that tells a binary
+// which never started from one which started and refused us.
 //
 // Releases before 0.3 installed pherrymason/c3-lsp; 0.3 switched the backend to
 // tonis2/lsp and started passing --compiler-path. The old server is built on Go's
@@ -261,35 +270,69 @@ export async function markVerified(context, binPath) {
 // speaking LSP — the client then reports "couldn't create connection to server".
 // Probing with the exact flag we are about to pass tests that incompatibility
 // directly, rather than guessing from a version number or an install path.
-export async function serverIsCompatible(binPath) {
+export async function probeServer(binPath) {
     try {
-        await execFile(binPath, ["--compiler-path=c3c", "--version"], { timeout: 5000 });
-        return true;
-    } catch {
-        return false;
+        await execFile(binPath, ["--compiler-path=c3c", "--version"], { timeout: PROBE_TIMEOUT_MS });
+        return { ok: true, error: null };
+    } catch (error) {
+        return { ok: false, error };
     }
+}
+
+// True when the probe never got the program running at all: the spawn itself failed,
+// which child_process reports as an errno string in `code` (ENOENT, EACCES, ENOEXEC),
+// or the process hung and we killed it. A program that ran and exited has a numeric
+// `code` instead — which is exactly what a server rejecting one of our flags looks
+// like, and is also how a binary that dies in the dynamic linker reports itself.
+function neverRan(probeError) {
+    return typeof probeError?.code === "string" || probeError?.killed === true;
+}
+
+// The reason `binPath` cannot start at all, or null when it does start and therefore
+// merely disagrees with us about flags.
+//
+// A failed --compiler-path probe has two very different causes: the binary cannot run
+// on this system (built against a newer glibc, wrong architecture, not executable),
+// or it ran and rejected the flag, which is what the pre-0.3 server does. A bare
+// --version probe separates them, since every server answers that: a second failure
+// says nothing about our flags and everything about the binary. Spawn failures skip
+// the second probe — nothing ran, so nothing can be learned by running it again.
+export async function startupFailure(binPath, probeError) {
+    if (neverRan(probeError)) return probeError;
+
+    const { error } = await getVersion(binPath, "--version");
+    return error || null;
 }
 
 // One-line human-readable reason for a failed probe, for the error popup: prefer
 // the first non-empty stderr line (the dynamic linker's GLIBC_2.38 error, for
-// example), then the exit code or signal.
+// example), then the errno, exit code or signal.
 export function serverFailureReason(probeError) {
-    const firstLine = String(probeError?.stderr || probeError?.message || "")
+    const firstLine = String(probeError?.stderr ?? "")
         .split("\n")
         .find((l) => l.trim() !== "");
     if (firstLine) return firstLine.trim().slice(0, 300);
-    const code = probeError?.code !== undefined ? probeError.code : probeError?.status;
-    if (code !== undefined && code !== null) return `the process exited with code ${code}`;
+
+    // Checked before `code`, which a timeout leaves null.
+    if (probeError?.killed) return `it did not answer within ${PROBE_TIMEOUT_MS / 1000} seconds`;
+
+    switch (probeError?.code) {
+        case "ENOENT": return "the file is no longer there";
+        case "EACCES": return "the file is not executable";
+        case "ENOEXEC": return "the file is not a program this system can run";
+    }
+    if (typeof probeError?.code === "number") return `the process exited with code ${probeError.code}`;
     if (probeError?.signal) return `the process was killed (${probeError.signal})`;
-    return "the server process could not be started";
+    return String(probeError?.message || "the server process could not be started");
 }
 
-export function getVersion(filePath, arg) {
+// Async so a server that hangs on --version cannot block the extension host: this
+// runs on every activation that has an update check enabled.
+export async function getVersion(filePath, arg) {
     try {
-        const buffer = childProcess.execFileSync(filePath, [arg], { timeout: 5000 });
-        const versionString = buffer.toString("utf8").trim();
+        const { stdout } = await execFile(filePath, [arg], { timeout: PROBE_TIMEOUT_MS });
 
-        return { version: semver.parse(versionString), error: null };
+        return { version: semver.parse(stdout.trim()), error: null };
     } catch (err) {
         return { version: null, error: err };
     }
@@ -341,28 +384,64 @@ let brokenServerReported = false;
 // (e.g. built for a newer glibc). setupC3 (which always runs first) and
 // checkUpdate can both detect the same broken binary in one activation, so the
 // guard keeps it to a single popup. Never silently re-downloads; a manual
-// "Re-download" stays available for genuinely corrupt downloads.
+// "Re-download" stays available for the causes a fresh copy does fix, such as a
+// download that was truncated or never made executable.
+//
+// Returns whether a re-download produced a server that actually runs, which is the
+// caller's cue to start the language client: the user answers this popup long after
+// activation has finished, so nothing else is left to do it.
 export async function reportUnrunnableServer(context, server, probeError) {
-    if (brokenServerReported) return;
-    if (context.extensionMode === vscode.ExtensionMode.Test) return;
+    if (brokenServerReported) return false;
+    if (context.extensionMode === vscode.ExtensionMode.Test) return false;
     brokenServerReported = true;
+
+    // The popup carries one line; keep the whole error where a bug report can find it.
+    console.log("C3LSP cannot start:", probeError);
 
     const choice = await vscode.window.showErrorMessage(
         `The C3 language server at ${server.path} cannot run on this system: ` +
-        `${serverFailureReason(probeError)}. The binary is installed but cannot start, ` +
-        `so re-downloading may not fix it.`,
+        `${serverFailureReason(probeError)}. Re-downloading helps only if the copy on ` +
+        `disk is damaged, not if the binary is incompatible with this system.`,
         "Re-download",
         "Ignore",
     );
-    if (choice === "Re-download") {
-        brokenServerReported = false; // a second failed download should report again
-        try {
-            await installLSP(context);
-        } catch (err) {
-            // The download itself failed (e.g. network error): installLSP's own
-            // error popups cover the release/asset cases, but the fetch can also
-            // throw, which would otherwise surface as an unhandled rejection.
-            console.log("C3LSP re-download failed:", err);
-        }
+    if (choice !== "Re-download") return false;
+
+    brokenServerReported = false; // a second failed download should report again
+
+    let installedPath;
+    try {
+        installedPath = await installLSP(context);
+    } catch (err) {
+        // The download itself failed (e.g. network error): installLSP's own
+        // error popups cover the release/asset cases, but the fetch can also
+        // throw, which would otherwise surface as an unhandled rejection.
+        console.log("C3LSP re-download failed:", err);
+        return false;
     }
+    if (!installedPath) return false;
+
+    // Probe the replacement before handing it to the client, so the case this popup
+    // exists for — a fresh copy failing exactly like the old one — ends in a plain
+    // explanation rather than the connection errors the user started with.
+    const probe = await probeServer(installedPath);
+    if (probe.ok) {
+        await markVerified(context, installedPath);
+        return true;
+    }
+
+    brokenServerReported = true;
+    console.log("C3LSP still cannot start after re-download:", probe.error);
+    vscode.window.showErrorMessage(
+        `The re-downloaded C3 language server still cannot run on this system: ` +
+        `${serverFailureReason(probe.error)}.`,
+    );
+    return false;
+}
+
+// Start the language client, replacing one that is already running. Repairs finish
+// after activation has returned, so they start the server themselves.
+export async function restartServer(context) {
+    await deactivate();
+    await activate(context);
 }
