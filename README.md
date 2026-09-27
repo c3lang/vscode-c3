@@ -2,6 +2,10 @@
 
 ## Installation
 
+Install from the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=c3.vscode-c3).
+
+### Building from source
+
 ```bash
 git clone https://github.com/c3lang/vscode-c3.git
 cd vscode-c3
