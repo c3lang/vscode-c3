@@ -239,14 +239,15 @@ repository:
       # Struct/Bitstruct/Union (structlikes)
       - include: "#structlike"
 
-      # Enum/Constdef (enumlikes)
-      - begin: '(?=\b(?:enum|constdef)\b)'
+      # Enum/Constdef/Constset (enumlikes)
+      - begin: '(?=\b(?:enum|constdef|constset)\b)'
         end: (?<=\})
         patterns:
-          - begin: '\b(enum)|(constdef)\b'
+          - begin: '\b(enum)|(constdef)|(constset)\b'
             beginCaptures:
               1: { name: keyword.declaration.enum.c3 }
               2: { name: keyword.declaration.constdef.c3 }
+              3: { name: keyword.declaration.constset.c3 }
             end: (?=\{)
             name: meta.enum.c3
             patterns:
