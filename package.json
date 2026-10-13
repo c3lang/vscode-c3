@@ -311,6 +311,7 @@
     "build": "node ./build_syntax.js && npm run esbuild-base -- --minify && npx @vscode/vsce package -o vscode-c3.vsix",
     "esbuild-base": "esbuild ./src/extension.js --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node",
     "esbuild": "npm run esbuild-base -- --sourcemap",
+    "pretest": "node ./build_syntax.js && npm run esbuild",
     "test": "node ./src/test/runTest.js"
   }
 }
