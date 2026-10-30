@@ -87,7 +87,8 @@ export async function downloadAndExtractArtifact(
 				const files = (await decompress(zip_path, install_path))
 					.filter((file) => file.type === "file" && !file.path.startsWith("LICENSE") && !file.path.startsWith("README"));
 
-				const exePath = vscode.Uri.joinPath(installDir, files[0].path).fsPath;
+				const bin = files.find((f) => path.basename(f.path) === executableName || path.basename(f.path) === `${executableName}.exe`) ?? files[0];
+				const exePath = vscode.Uri.joinPath(installDir, bin.path).fsPath;
 				await chmod(exePath, 0o755);
 				return exePath;
 			} else {

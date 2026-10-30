@@ -10,10 +10,10 @@ import { Trace } from 'vscode-jsonrpc';
 
 const execFile = promisify(childProcess.execFile);
 
-const GITHUB_API_URL = "https://api.github.com/repos/tonis2/lsp/releases/latest";
+const GITHUB_API_URL = "https://api.github.com/repos/ManuLinares/c3_ls/releases/latest";
 
 // Subdirectory of globalStorageUri holding the server this extension downloads.
-const INSTALL_DIR = "c3lsp_install";
+const INSTALL_DIR = "c3_ls_install";
 
 // How long a server may take to answer a probe flag before we call it hung. Every
 // probe runs during activation, so this is a ceiling on how long a broken binary can
@@ -131,6 +131,23 @@ export async function activate(context) {
     }
 
     client = new LanguageClient("C3LSP", serverOptions, clientOptions);
+    client.registerFeature({
+        fillClientCapabilities(capabilities) {
+            if (capabilities.textDocument) {
+                delete capabilities.textDocument.formatting;
+                delete capabilities.textDocument.rangeFormatting;
+            }
+        },
+        preInitialize(capabilities) {
+            delete capabilities.documentFormattingProvider;
+            delete capabilities.documentRangeFormattingProvider;
+        },
+        initialize(capabilities) {
+            delete capabilities.documentFormattingProvider;
+            delete capabilities.documentRangeFormattingProvider;
+        },
+        dispose() {}
+    });
     if (lsConfig.get("debug")) {
         client.setTrace(Trace.Verbose);
     }
@@ -165,7 +182,7 @@ function getAssetUrl(release) {
     const arch = ARCH_MAP[machine()];
     if (!plat || !arch) return null;
 
-    const prefix = `c3-lsp-${plat}-${arch}`;
+    const prefix = `c3_ls-${plat}-${arch}`;
     const asset = release.assets.find((a) => a.name.startsWith(prefix));
     if (asset) {
         return asset.browser_download_url;
@@ -215,7 +232,11 @@ export async function checkUpdate(context) {
 
     const response = await vscode.window.showInformationMessage("New version of C3LSP available: " + release.version, "Install", "Ignore");
     if (response === "Install") {
+        await deactivate();
         const installed = await installLSP(context, release);
+        if (installed) {
+            await activate(context);
+        }
         return {
             tool: TOOL,
             state: installed ? "updated" : "unknown",
@@ -248,12 +269,19 @@ export function resolveServerPath(context) {
 export async function migrateManagedPath(context) {
     const configuration = vscode.workspace.getConfiguration("c3.lsp");
     const configured = configuration.get("path");
-    if (!configured || !isManagedPath(context, configured)) return;
+    if (configured && isManagedPath(context, configured)) {
+        // `c3.lsp.path` is machine-scoped, so Global is the only target it can be written to.
+        await configuration.update("path", undefined, true);
+        if (!context.globalState.get(STATE_PATH)) {
+            await context.globalState.update(STATE_PATH, configured);
+        }
+    }
 
-    // `c3.lsp.path` is machine-scoped, so Global is the only target it can be written to.
-    await configuration.update("path", undefined, true);
-    if (!context.globalState.get(STATE_PATH)) {
-        await context.globalState.update(STATE_PATH, configured);
+    const installed = context.globalState.get(STATE_PATH);
+    if (installed && installed.includes("c3lsp_install")) {
+        await context.globalState.update(STATE_PATH, undefined);
+        await context.globalState.update(STATE_VERSION, undefined);
+        await context.globalState.update(STATE_VERIFIED, undefined);
     }
 }
 
@@ -344,8 +372,8 @@ export function serverFailureReason(probeError) {
 export async function getVersion(filePath, arg) {
     try {
         const { stdout } = await execFile(filePath, [arg], { timeout: PROBE_TIMEOUT_MS });
-
-        return { version: semver.parse(stdout.trim()), error: null };
+        const match = stdout.match(/(\d+\.\d+\.\d+)/);
+        return { version: match ? semver.parse(match[1]) : null, error: null };
     } catch (err) {
         return { version: null, error: err };
     }
@@ -367,8 +395,8 @@ export async function installLSP(context, release) {
     }
 
     const lsPath = await downloadAndExtractArtifact(
-        "C3LSP",
-        "c3lsp",
+        "c3_ls",
+        "c3_ls",
         vscode.Uri.joinPath(context.globalStorageUri, INSTALL_DIR),
         url,
         [],
@@ -397,6 +425,7 @@ export async function installLSP(context, release) {
 // Returns whether the fresh server actually runs, which is the caller's cue to
 // restart the language client.
 export async function reinstallLSP(context) {
+    await deactivate();
     const installedPath = await installLSP(context);
     if (!installedPath) return false;
 
