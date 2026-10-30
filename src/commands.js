@@ -85,10 +85,6 @@ async function checkForUpdates(context) {
     if (isEnabled("c3.lsp")) {
         const result = await checkUpdate(context);
         results.push(describeCheck(result));
-        // An update installed from the prompt lands beside a client still running
-        // the old server; the automatic check runs before the client starts, so
-        // only this path has anything to restart.
-        if (result?.state === "updated") await restartServer(context);
     }
 
     if (isEnabled("c3.format")) {
