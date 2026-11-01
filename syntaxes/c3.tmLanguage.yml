@@ -191,7 +191,7 @@ repository:
             beginCaptures:
               1: { name: keyword.declaration.faultdef.c3 }
               2: { name: keyword.declaration.excuse.c3 }
-            end: (?=\{|[A-Z])
+            end: (?=\{|[_A-Z])
             name: meta.excuse.c3
             patterns:
               - include: "#comments"
@@ -204,6 +204,7 @@ repository:
             name: meta.excuse.body.c3
             patterns:
               - include: "#comments"
+              - include: "#attribute"
               - match: '{{CONST}}'
                 name: variable.other.constant.c3
               - match: ','

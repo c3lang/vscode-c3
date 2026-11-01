@@ -292,7 +292,7 @@
                   "name": "keyword.declaration.excuse.c3"
                 }
               },
-              "end": "(?=\\{|[A-Z])",
+              "end": "(?=\\{|[_A-Z])",
               "name": "meta.excuse.c3",
               "patterns": [
                 {
@@ -317,6 +317,9 @@
               "patterns": [
                 {
                   "include": "#comments"
+                },
+                {
+                  "include": "#attribute"
                 },
                 {
                   "match": "(?:\\b_*[A-Z][_A-Z0-9]*\\b)",
