@@ -279,38 +279,87 @@
           ]
         },
         {
-          "begin": "\\bfaultdef\\b",
-          "beginCaptures": {
-            "0": {
-              "name": "keyword.declaration.faultdef.c3"
-            }
-          },
-          "end": ";",
-          "endCaptures": {
-            "0": {
-              "name": "punctuation.terminator.c3"
-            }
-          },
-          "name": "meta.faultdef.c3",
+          "begin": "(?=\\b(?:faultdef|excuse)\\b)",
+          "end": "(?<=\\}|;)",
           "patterns": [
             {
-              "include": "#comments"
+              "begin": "\\b(faultdef)|(excuse)\\b",
+              "beginCaptures": {
+                "1": {
+                  "name": "keyword.declaration.faultdef.c3"
+                },
+                "2": {
+                  "name": "keyword.declaration.excuse.c3"
+                }
+              },
+              "end": "(?=\\{|[A-Z])",
+              "name": "meta.excuse.c3",
+              "patterns": [
+                {
+                  "include": "#comments"
+                }
+              ]
             },
             {
-              "include": "#attribute"
+              "begin": "\\{",
+              "beginCaptures": {
+                "0": {
+                  "name": "punctuation.section.block.begin.c3"
+                }
+              },
+              "end": "\\}",
+              "endCaptures": {
+                "0": {
+                  "name": "punctuation.section.block.end.c3"
+                }
+              },
+              "name": "meta.excuse.body.c3",
+              "patterns": [
+                {
+                  "include": "#comments"
+                },
+                {
+                  "match": "(?:\\b_*[A-Z][_A-Z0-9]*\\b)",
+                  "name": "variable.other.constant.c3"
+                },
+                {
+                  "match": ",",
+                  "name": "punctuation.separator.c3"
+                }
+              ]
             },
             {
-              "match": "(?:\\b_*[A-Z][_A-Z0-9]*\\b)",
-              "name": "variable.other.constant.c3"
-            },
-            {
-              "match": ",",
-              "name": "punctuation.separator.c3"
+              "begin": "(?:\\b_*[A-Z][_A-Z0-9]*\\b)",
+              "beginCaptures": {
+                "0": {
+                  "name": "variable.other.constant.c3"
+                }
+              },
+              "end": ";",
+              "endCaptures": {
+                "0": {
+                  "name": "punctuation.terminator.c3"
+                }
+              },
+              "name": "meta.excuse.body.c3",
+              "patterns": [
+                {
+                  "include": "#comments"
+                },
+                {
+                  "match": "(?:\\b_*[A-Z][_A-Z0-9]*\\b)",
+                  "name": "variable.other.constant.c3"
+                },
+                {
+                  "match": ",",
+                  "name": "punctuation.separator.c3"
+                }
+              ]
             }
           ]
         },
         {
-          "begin": "\\battrdef\\b",
+          "begin": "\\b(?:attrdef|attrmacro)\\b",
           "beginCaptures": {
             "0": {
               "name": "keyword.declaration.attrdef.c3"
@@ -1297,7 +1346,7 @@
           "end": "(?=\\*>)",
           "patterns": [
             {
-              "match": "@param(?:\\s*\\[&?(?:in|out|inout)\\])?\\s*(?:([$#]?(?:\\b_*[a-z][_a-zA-Z0-9]*\\b))|(\\$(?:\\b_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*\\b))|(\\.\\.\\.))",
+              "match": "@param(?:\\s*\\[&?(?:in|out|inout|own|init|drop)\\])?\\s*(?:([$#]?(?:\\b_*[a-z][_a-zA-Z0-9]*\\b))|(\\$(?:\\b_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*\\b))|(\\.\\.\\.))",
               "captures": {
                 "0": {
                   "name": "comment.block.documentation.c3"
@@ -1314,10 +1363,19 @@
               }
             },
             {
-              "begin": "@(?:require\\b|ensure\\b|return\\?)",
+              "begin": "@(?:require\\b|ensure\\b|return\\?)(?:\\s*\\[(?:([$#]?(?:\\b_*[a-z][_a-zA-Z0-9]*\\b))|(\\$(?:\\b_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*\\b))|(\\.\\.\\.))\\])?",
               "beginCaptures": {
                 "0": {
                   "name": "comment.block.documentation.c3"
+                },
+                "1": {
+                  "name": "variable.parameter.c3"
+                },
+                "2": {
+                  "name": "support.type.c3"
+                },
+                "3": {
+                  "name": "keyword.operator.variadic.c3"
                 }
               },
               "end": "(?=:|\\*>|$)",
@@ -1376,10 +1434,19 @@
               }
             },
             {
-              "begin": "^\\s*@(?:require\\b|ensure\\b|return\\?)",
+              "begin": "^\\s*@(?:require\\b|ensure\\b|return\\?)(?:\\s*\\[(?:([$#]?(?:\\b_*[a-z][_a-zA-Z0-9]*\\b))|(\\$(?:\\b_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*\\b))|(\\.\\.\\.))\\])?",
               "beginCaptures": {
                 "0": {
                   "name": "comment.block.documentation.c3"
+                },
+                "1": {
+                  "name": "variable.parameter.c3"
+                },
+                "2": {
+                  "name": "support.type.c3"
+                },
+                "3": {
+                  "name": "keyword.operator.variadic.c3"
                 }
               },
               "end": "(?=:|\\*>|$)",
@@ -1524,7 +1591,7 @@
     "attribute": {
       "patterns": [
         {
-          "begin": "@(?:(?:align|allow_deprecated|benchmark|bigendian|builtin|callconv|cname|compact|const|constinit|deprecated|dynamic|export|finalizer|format|if|inline|init|jump|link|littleendian|local|maydiscard|mustinit|naked|noalias|nodiscard|noinit|noinline|nopadding|norecurse|noreturn|nosanitize|nostrip|obfuscate|operator|operator_r|operator_s|optional|overlap|packed|private|public|pure|reflect|safeinfer|safemacro|simd|section|tag|test|unused|used|wasm|weak|weaklink|winmain)\\b|(?:\\b_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*\\b))",
+          "begin": "@(?:(?:align|allow_deprecated|asmname|benchmark|bigendian|builtin|callconv|cname|compact|const|constinit|deprecated|dynamic|export|feat|finalizer|format|if|init|inline|jump|link|littleendian|local|maydiscard|mustinit|naked|noalias|nodiscard|noinit|noinline|nopadding|norecurse|noredzone|noreturn|nosanitize|nostrip|obfuscate|operator|operator_r|operator_s|optional|overlap|packed|private|public|pure|reflect|safeinfer|safemacro|section|simd|tag|test|unused|used|wasm|weak|weaklink|winmain|stackprobe|nostackprobe|stackprotector|nostackprotector)\\b|(?:\\b_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*\\b))",
           "beginCaptures": {
             "0": {
               "name": "keyword.annotation.c3"

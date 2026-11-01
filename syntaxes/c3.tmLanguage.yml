@@ -46,7 +46,7 @@ variables:
   ct_control_keyword: 'case|else|endfor|endforeach|endif|endswitch|for|foreach|if|switch'
   # @deprecated contains "isz" for 0.7 compatibility
   base_type: 'void|bool|char|double|float|float16|bfloat|int128|ichar|int|iptr|isz|sz|long|short|uint128|uint|ulong|uptr|ushort|usz|float128|any|fault|typeid|untypedlist'
-  attribute: 'align|allow_deprecated|benchmark|bigendian|builtin|callconv|cname|compact|const|constinit|deprecated|dynamic|export|finalizer|format|if|inline|init|jump|link|littleendian|local|maydiscard|mustinit|naked|noalias|nodiscard|noinit|noinline|nopadding|norecurse|noreturn|nosanitize|nostrip|obfuscate|operator|operator_r|operator_s|optional|overlap|packed|private|public|pure|reflect|safeinfer|safemacro|simd|section|tag|test|unused|used|wasm|weak|weaklink|winmain'
+  attribute: 'align|allow_deprecated|asmname|benchmark|bigendian|builtin|callconv|cname|compact|const|constinit|deprecated|dynamic|export|feat|finalizer|format|if|init|inline|jump|link|littleendian|local|maydiscard|mustinit|naked|noalias|nodiscard|noinit|noinline|nopadding|norecurse|noredzone|noreturn|nosanitize|nostrip|obfuscate|operator|operator_r|operator_s|optional|overlap|packed|private|public|pure|reflect|safeinfer|safemacro|section|simd|tag|test|unused|used|wasm|weak|weaklink|winmain|stackprobe|nostackprobe|stackprotector|nostackprotector'
 
 patterns:
   - include: "#top_level"
@@ -183,24 +183,47 @@ repository:
               - include: "#attribute"
               - include: "#assign_right_expression"
 
-      # Faultdef
-      - begin: '\bfaultdef\b'
-        beginCaptures:
-          0: { name: keyword.declaration.faultdef.c3 }
-        end: ';'
-        endCaptures:
-          0: { name: punctuation.terminator.c3 }
-        name: meta.faultdef.c3
+      # Faultdef/Excuse
+      - begin: '(?=\b(?:faultdef|excuse)\b)'
+        end: (?<=\}|;)
         patterns:
-          - include: "#comments"
-          - include: "#attribute"
-          - match: '{{CONST}}'
-            name: variable.other.constant.c3
-          - match: ','
-            name: punctuation.separator.c3
-      
-      # Attrdef
-      - begin: '\battrdef\b'
+          - begin: '\b(faultdef)|(excuse)\b'
+            beginCaptures:
+              1: { name: keyword.declaration.faultdef.c3 }
+              2: { name: keyword.declaration.excuse.c3 }
+            end: (?=\{|[A-Z])
+            name: meta.excuse.c3
+            patterns:
+              - include: "#comments"
+          - begin: \{
+            beginCaptures:
+              0: { name: punctuation.section.block.begin.c3 }
+            end: \}
+            endCaptures:
+              0: { name: punctuation.section.block.end.c3 }
+            name: meta.excuse.body.c3
+            patterns:
+              - include: "#comments"
+              - match: '{{CONST}}'
+                name: variable.other.constant.c3
+              - match: ','
+                name: punctuation.separator.c3
+          - begin: '{{CONST}}'
+            beginCaptures: 
+              0: { name: variable.other.constant.c3 }
+            end: ';'
+            endCaptures:
+              0: { name: punctuation.terminator.c3 }
+            name: meta.excuse.body.c3
+            patterns:
+              - include: "#comments"
+              - match: '{{CONST}}'
+                name: variable.other.constant.c3
+              - match: ','
+                name: punctuation.separator.c3
+          
+      # Attrdef/Attrmacro
+      - begin: '\b(?:attrdef|attrmacro)\b'
         beginCaptures:
           0: { name: keyword.declaration.attrdef.c3 }
         end: ';'
@@ -239,7 +262,7 @@ repository:
       # Struct/Bitstruct/Union (structlikes)
       - include: "#structlike"
 
-      # Enum/Constdef/Constset (enumlikes)
+      # Enum/Constdef/Constset/Excuse (enumlikes)
       - begin: '(?=\b(?:enum|constdef|constset)\b)'
         end: (?<=\})
         patterns:
@@ -697,15 +720,18 @@ repository:
         end: '(?=\*>)'
         patterns:
           # Highlight parameter names
-          - match: '@param(?:\s*\[&?(?:in|out|inout)\])?\s*(?:([$#]?{{IDENT}})|(\${{TYPE}})|(\.\.\.))'
+          - match: '@param(?:\s*\[&?(?:in|out|inout|own|init|drop)\])?\s*(?:([$#]?{{IDENT}})|(\${{TYPE}})|(\.\.\.))'
             captures:
               0: { name: comment.block.documentation.c3 }
               1: { name: variable.parameter.c3 }
               2: { name: '{{scope:type_use}}' }
               3: { name: keyword.operator.variadic.c3 }
-          - begin: '@(?:require\b|ensure\b|return\?)'
-            beginCaptures:
+          - begin: '@(?:require\b|ensure\b|return\?)(?:\s*\[(?:([$#]?{{IDENT}})|(\${{TYPE}})|(\.\.\.))\])?'
+            beginCaptures: 
               0: { name: comment.block.documentation.c3 }
+              1: { name: variable.parameter.c3 }
+              2: { name: '{{scope:type_use}}' }
+              3: { name: keyword.operator.variadic.c3 }
             end: '(?=:|\*>|$)'
             patterns:
               - include: "#contract_expression"
@@ -732,9 +758,12 @@ repository:
               1: { name: variable.parameter.c3 }
               2: { name: '{{scope:type_use}}' }
               3: { name: keyword.operator.variadic.c3 }
-          - begin: '^\s*@(?:require\b|ensure\b|return\?)'
-            beginCaptures:
+          - begin: '^\s*@(?:require\b|ensure\b|return\?)(?:\s*\[(?:([$#]?{{IDENT}})|(\${{TYPE}})|(\.\.\.))\])?'
+            beginCaptures: 
               0: { name: comment.block.documentation.c3 }
+              1: { name: variable.parameter.c3 }
+              2: { name: '{{scope:type_use}}' }
+              3: { name: keyword.operator.variadic.c3 }
             end: '(?=:|\*>|$)'
             patterns:
               - include: "#contract_expression"
