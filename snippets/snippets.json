@@ -25,9 +25,7 @@
     "call external c function":{
         "prefix": ["cfunction"],
         "body": [
-            "extern fn ${1:type} _${2:c3_name}(${3:args}) @extern(\"${3:c_name}\") {",
-                "\t${0}",
-            "}"
+            "extern fn ${1:type} ${2:c3_name}(${3:args}) @cname(\"${4:c_name}\");"
         ]
 
     },
@@ -50,10 +48,31 @@
             "${1:type} ${2:name} @noinit;"
         ]
     },
-    "def": {
-        "prefix": ["def"],
+    "alias": {
+        "prefix": ["alias"],
         "body": [
-            "def ${1:name} = ${2:name};"
+            "alias ${1:Name} = ${2:Type};"
+        ]
+    },
+    "typedef": {
+        "prefix": ["typedef"],
+        "body": [
+            "typedef ${1:Name} = ${2:Type};"
+        ]
+    },
+    "excuse": {
+        "prefix": ["excuse"],
+        "body": [
+            "excuse ${1:NAME};"
+        ]
+    },
+    "constset": {
+        "prefix": ["constset"],
+        "body": [
+            "constset ${1:Name} : inline ${2:int}",
+            "{",
+                "\t${3:A} = ${4:1},",
+            "}"
         ]
     },
     "module definition": {
@@ -75,13 +94,6 @@
             "}"
         ] 
 
-    },
-    "expression blocks":{
-        "prefix": ["{|"],
-        "body": ["{|",
-            "\t${0}",
-            "|}"
-        ]
     },
     "do":{
         "prefix": ["do"],
