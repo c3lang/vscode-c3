@@ -28,8 +28,8 @@ scopeName: source.c3
 variables:
   INT: '[0-9](?:_?[0-9])*'
   HINT: '[a-fA-F0-9](?:_?[a-fA-F0-9])*'
-  OINT: '[0-7](_?[0-7])*'
-  BINT: '[0-1](_?[0-1])*'
+  OINT: '[0-7](?:_?[0-7])*'
+  BINT: '[01](?:_?[01])*'
   # @deprecated contains integer suffix for 0.7 compatibility
   INTTYPE: '(?:[UuIi](?:8|16|32|64|128)|[Uu][Ll]{0,2}|[Ll]{1,2})'
   # @deprecated contains float suffix for 0.7 compatibility
@@ -39,16 +39,20 @@ variables:
   CONST: '(?:\b_*[A-Z][_A-Z0-9]*\b)'
   TYPE: '(?:\b_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*\b)'
   IDENT: '(?:\b_*[a-z][_a-zA-Z0-9]*\b)'
-  keyword: 'assert|asm|catch|inline|import|lengthof|module|interface|try|var'
+  keyword: 'assert|asm|catch|import|lengthof|module|interface|try|var'
   control_keyword: 'break|case|continue|default|defer|do|else|for|foreach|foreach_r|if|nextcase|return|switch|while'
   # @deprecated contains keywords for 0.7 compatibility
-  ct_keyword: 'alignof|assert|assignable|default|defined|echo|embed|eval|error|exec|expand|extnameof|feat|feature|include|reflect|is_const|kindof|nameof|offsetof|qnameof|sizeof|stringify|vacount|vaconst|vaarg|vaexpr|vasplat'
+  ct_keyword: 'alignof|assert|assignable|defined|echo|embed|eval|error|exec|expand|extnameof|feat|feature|include|reflect|is_const|kindof|nameof|offsetof|qnameof|sizeof|stringify|vacount|vaconst|vaarg|vaexpr|vasplat'
   ct_control_keyword: 'case|else|endfor|endforeach|endif|endswitch|for|foreach|if|switch'
   # @deprecated contains "isz" for 0.7 compatibility
   base_type: 'void|bool|char|double|float|float16|bfloat|int128|ichar|int|iptr|isz|sz|long|short|uint128|uint|ulong|uptr|ushort|usz|float128|any|fault|typeid|untypedlist'
   attribute: 'align|allow_deprecated|asmname|benchmark|bigendian|builtin|callconv|cname|compact|const|constinit|deprecated|dynamic|export|feat|finalizer|format|if|init|inline|jump|link|littleendian|local|maydiscard|mustinit|naked|noalias|nodiscard|noinit|noinline|nopadding|norecurse|noredzone|noreturn|nosanitize|nostrip|obfuscate|operator|operator_r|operator_s|optional|overlap|packed|private|public|pure|reflect|safeinfer|safemacro|section|simd|tag|test|unused|used|wasm|weak|weaklink|winmain|stackprobe|nostackprobe|stackprotector|nostackprotector'
 
 patterns:
+  - match: '\A(#!).*$'
+    captures:
+      1: { name: punctuation.definition.comment.c3 }
+    name: comment.line.shebang.c3
   - include: "#top_level"
   - include: "#statements"
 
@@ -61,14 +65,16 @@ repository:
       - include: "#modifier_keywords"
 
       # Compile Time Statements
-      - begin: '\$(?:assert|include|echo|exec)\b'
+      - begin: '\$(?:assert|echo|error|exec|expand|include)\b'
         beginCaptures:
-          0: { name: keyword.other.c3 }
+          0: { name: keyword.other.ct.c3 }
         end: ;
         endCaptures:
           0: { name: punctuation.terminator.c3 }
         patterns:
           - include: "#comments"
+          # `$include`, `$expand` and `$exec` may have attributes
+          - include: "#attribute"
           - include: "#expression"
 
       # Module
@@ -218,6 +224,7 @@ repository:
             name: meta.excuse.body.c3
             patterns:
               - include: "#comments"
+              - include: "#attribute"
               - match: '{{CONST}}'
                 name: variable.other.constant.c3
               - match: ','
@@ -263,7 +270,7 @@ repository:
       # Struct/Bitstruct/Union (structlikes)
       - include: "#structlike"
 
-      # Enum/Constdef/Constset/Excuse (enumlikes)
+      # Enum/Constdef/Constset (enumlikes)
       - begin: '(?=\b(?:enum|constdef|constset)\b)'
         end: (?<=\})
         patterns:
@@ -280,6 +287,7 @@ repository:
                 name: '{{scope:type_decl:enum}}'
               - include: "#generic_params"
               - include: "#attribute"
+              - include: "#interface_impl"
               - begin: ':'
                 beginCaptures:
                   0 : { name: punctuation.separator.c3 }
@@ -374,6 +382,8 @@ repository:
     end: (?=;)
     patterns:
       - include: "#comments"
+      # Trailing attributes, e.g. `typedef Foo = float[<4>] @simd;`
+      - include: "#attribute"
       - include: "#expression"
   
   function_header:
@@ -416,6 +426,21 @@ repository:
           - include: "#generic_params"
           - include: "#attribute"
 
+  # Interface implementation
+  interface_impl:
+    begin: '\('
+    beginCaptures:
+      0: { name: punctuation.section.group.begin.c3 }
+    end: '\)'
+    endCaptures:
+      0: { name: punctuation.section.group.end.c3 }
+    name: meta.group.c3
+    patterns:
+      - include: "#comments"
+      - include: "#path"
+      - include: "#type"
+      - include: "#punctuation"
+
   structlike:
     begin: '(?=\b(?:(struct|bitstruct)|(union))\b)'
     end: (?<=\})
@@ -443,19 +468,7 @@ repository:
               - include: "#type_no_generics"
               - include: "#generic_params"
               - include: "#attribute"
-          # Interface implementation
-          - begin: '\('
-            beginCaptures:
-              0: { name: punctuation.section.group.begin.c3 }
-            end: '\)'
-            endCaptures:
-              0: { name: punctuation.section.group.end.c3 }
-            name: meta.group.c3
-            patterns:
-              - include: "#comments"
-              - include: "#path"
-              - include: "#type"
-              - include: "#punctuation"
+          - include: "#interface_impl"
       # Struct body
       - begin: \{
         beginCaptures:
@@ -496,6 +509,8 @@ repository:
         name: keyword.other.ct.c3
       - match: '\$(?:{{ct_control_keyword}})\b'
         name: keyword.control.ct.c3
+      - match: '\binline\b'
+        name: storage.modifier.c3
       - match: '\b(?:{{keyword}})\b'
         name: keyword.other.c3
       - match: '\b(?:{{control_keyword}})\b'
@@ -637,7 +652,7 @@ repository:
           0: { name: punctuation.definition.string.end.c3 }
         name: string.quoted.other.c3
         patterns:
-          - match: '[\sfA-Fa-f0-9]+'
+          - match: '[\sA-Fa-f0-9]+'
             name: constant.numeric.integer.c3
       - begin: "(b64)([\"'`])"
         beginCaptures:
@@ -684,7 +699,9 @@ repository:
   # that could span across lines and consume the *> comment closer.
   contract_expression:
     patterns:
-      - include: "#comments"
+      # `return` is the return value in `@ensure`
+      - match: '\breturn\b'
+        name: variable.language.c3
       - include: "#function"
       - include: "#constants"
       - include: "#builtin"
@@ -714,7 +731,7 @@ repository:
   doc_comment_body:
     patterns:
       # Match doc comment start with first contract on same line
-      - begin: '(<\*)\s*(?=@)'
+      - begin: '(<\*)\s*(?=@[a-z])'
         beginCaptures:
           0: { name: comment.block.documentation.c3 }
           1: { name: punctuation.definition.comment.begin.c3 }
@@ -733,7 +750,7 @@ repository:
               1: { name: variable.parameter.c3 }
               2: { name: '{{scope:type_use}}' }
               3: { name: keyword.operator.variadic.c3 }
-            end: '(?=:|\*>|$)'
+            end: '(?=:\s*(?:["`]|$)|\*>|$)'
             patterns:
               - include: "#contract_expression"
           - match: '@{{IDENT}}'
@@ -746,14 +763,14 @@ repository:
         beginCaptures:
           0: { name: comment.block.documentation.c3 }
           1: { name: punctuation.definition.comment.begin.c3 }
-        end: '(?=^\s*@|\*>)'
+        end: '(?=^\s*@[a-z]|\*>)'
         name: comment.block.documentation.c3
       # Match contracts
       - begin: ''
         end: '(?=\*>)'
         patterns:
           # Highlight parameter names
-          - match: '^\s*@param(?:\s*\[&?(?:in|out|inout)\])?\s*(?:([$#]?{{IDENT}})|(\${{TYPE}})|(\.\.\.))'
+          - match: '^\s*@param(?:\s*\[&?(?:in|out|inout|own|init|drop)\])?\s*(?:([$#]?{{IDENT}})|(\${{TYPE}})|(\.\.\.))'
             captures:
               0: { name: comment.block.documentation.c3 }
               1: { name: variable.parameter.c3 }
@@ -765,7 +782,7 @@ repository:
               1: { name: variable.parameter.c3 }
               2: { name: '{{scope:type_use}}' }
               3: { name: keyword.operator.variadic.c3 }
-            end: '(?=:|\*>|$)'
+            end: '(?=:\s*(?:["`]|$)|\*>|$)'
             patterns:
               - include: "#contract_expression"
           - match: '^\s*@{{IDENT}}'
@@ -784,13 +801,20 @@ repository:
         name: keyword.operator.c3
   
   type_access:
-    match: '(::)\s*({{IDENT}})'
-    captures:
-      1: { name: punctuation.accessor.c3 }
-      2: { name: variable.other.constant.c3 }
+    patterns:
+      - match: '(::)\s*({{IDENT}})(?=\s*\()'
+        captures:
+          1: { name: punctuation.accessor.c3 }
+          2: { name: entity.name.function.c3 }
+      - match: '(::)\s*({{IDENT}})'
+        captures:
+          1: { name: punctuation.accessor.c3 }
+          2: { name: variable.other.constant.c3 }
 
   type:
     patterns:
+      # Must come before TYPE, which also matches `$Typeof`/`$Typefrom`
+      - include: "#type_expr"
       - begin: '\b({{base_type}})\b|(\$?\b{{TYPE}}\b)'
         beginCaptures:
           1: { name: storage.type.built-in.primitive.c3 }
@@ -801,12 +825,13 @@ repository:
           - include: "#generic_args"
           - include: "#type_suffix"
           - include: "#type_access"
-      - include: "#type_expr"
       - include: "#path"
 
   type_no_generics:
     patterns:
       - include: "#path"
+      # Must come before TYPE, which also matches `$Typeof`/`$Typefrom`
+      - include: "#type_expr"
       - begin: '\b({{base_type}})\b|(\$?\b{{TYPE}}\b)'
         beginCaptures:
           1: { name: storage.type.built-in.primitive.c3 }
@@ -815,8 +840,7 @@ repository:
         patterns:
           - include: "#comments"
           - include: "#type_suffix"
-      - include: "#type_expr"
-  
+
   type_expr:
     patterns:
       # @deprecated contains $typefrom, $typeof, $evaltype and $vatype for 0.7 compatibility
@@ -893,13 +917,13 @@ repository:
           0: { name: punctuation.separator.c3 } # Override the : operator
         patterns:
           - include: "#expression"
-      # case/default
+      # case/default (also `nextcase default;`)
       - begin: '\b(?:case|default)\b'
         beginCaptures:
           0: { name: keyword.control.c3 }
-        end: ':'
+        end: '(:)|(?=;)'
         endCaptures:
-          0: { name: punctuation.separator.c3 } # Override the : operator
+          1: { name: punctuation.separator.c3 } # Override the : operator
         patterns:
           - include: "#expression"
 
@@ -919,7 +943,7 @@ repository:
       - include: "#expression"
 
   variable:
-    begin: '(?<!#)\$?{{IDENT}}'
+    begin: '[$#]?{{IDENT}}'
     beginCaptures:
       0: { name: variable.other.c3 }
     end: '(?=[^{ \t])|(?<=\})' # ' \t' instead of '\s' because doc comments are newline sensitive
@@ -1068,6 +1092,15 @@ repository:
         end: '(?=\))'
         patterns:
           - include: "#comments"
+          - begin: '(@{{IDENT}})\s*(\()'
+            beginCaptures:
+              1: { name: entity.name.function.c3 }
+              2: { name: punctuation.section.group.begin.c3 }
+            end: '\)'
+            endCaptures:
+              0: { name: punctuation.section.group.end.c3 }
+            patterns:
+              - include: "#parameters"
           - match: '@{{IDENT}}'
             name: entity.name.function.c3
           - include: "#parameters"
@@ -1104,11 +1137,13 @@ repository:
   generic_params:
     patterns:
       - begin: '<'
-        end: '>'
+        # Also stop at characters that can't be part of the list,
+        # so an unclosed `<` doesn't consume the rest of the file while typing
+        end: '(>)|(?=[{;=(@])'
         beginCaptures:
           0: { name: punctuation.definition.generic.begin.c3 }
         endCaptures:
-          0: { name: punctuation.definition.generic.end.c3 }
+          1: { name: punctuation.definition.generic.end.c3 }
         name: meta.generic.c3
         patterns:
           - include: "#comments"
