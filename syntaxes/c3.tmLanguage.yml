@@ -994,8 +994,10 @@ repository:
       # Pick up unmatched @ident, assume it's a function call attribute or a macro identifier
       - include: "#leftover_at_ident"
 
+  # Note: Lookahead can't see past the end of the line, so an identifier followed by `(` on the next line isn't matched.
   function_call:
-    begin: '([@#]?{{IDENT}})(?=\s*(\{.*\})?\s*\()' # TODO using \s* doesn't match over multiple lines
+    # Generic args may contain up to 3 levels of nested braces
+    begin: '([@#]?{{IDENT}})(?=\s*(?:\{(?:[^{}]|\{(?:[^{}]|\{[^{}]*\})*\})*\})?\s*\()'
     beginCaptures:
       1: { name: entity.name.function.c3 }
     end: '(?<=\))'
