@@ -31,6 +31,9 @@
           "include": "#comments"
         },
         {
+          "include": "#doc_comment"
+        },
+        {
           "include": "#modifier_keywords"
         },
         {
@@ -309,6 +312,9 @@
               "patterns": [
                 {
                   "include": "#comments"
+                },
+                {
+                  "include": "#doc_comment"
                 }
               ]
             },
@@ -329,6 +335,9 @@
               "patterns": [
                 {
                   "include": "#comments"
+                },
+                {
+                  "include": "#doc_comment"
                 },
                 {
                   "include": "#attribute"
@@ -360,6 +369,9 @@
               "patterns": [
                 {
                   "include": "#comments"
+                },
+                {
+                  "include": "#doc_comment"
                 },
                 {
                   "include": "#attribute"
@@ -458,146 +470,7 @@
           "include": "#structlike"
         },
         {
-          "begin": "(?=\\b(?:enum|constdef|constset)\\b)",
-          "end": "(?<=\\})",
-          "patterns": [
-            {
-              "begin": "\\b(enum)|(constdef)|(constset)\\b",
-              "beginCaptures": {
-                "1": {
-                  "name": "keyword.declaration.enum.c3"
-                },
-                "2": {
-                  "name": "keyword.declaration.constdef.c3"
-                },
-                "3": {
-                  "name": "keyword.declaration.constset.c3"
-                }
-              },
-              "end": "(?=\\{)",
-              "name": "meta.enum.c3",
-              "patterns": [
-                {
-                  "include": "#comments"
-                },
-                {
-                  "match": "(?:\\b_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*\\b)",
-                  "name": "entity.name.type.enum.c3"
-                },
-                {
-                  "include": "#generic_params"
-                },
-                {
-                  "include": "#attribute"
-                },
-                {
-                  "include": "#interface_impl"
-                },
-                {
-                  "begin": ":",
-                  "beginCaptures": {
-                    "0": {
-                      "name": "punctuation.separator.c3"
-                    }
-                  },
-                  "end": "(?=\\{)",
-                  "patterns": [
-                    {
-                      "include": "#comments"
-                    },
-                    {
-                      "match": "\\b(?:inline|const)\\b",
-                      "name": "storage.modifier.c3"
-                    },
-                    {
-                      "include": "#type_no_generics"
-                    },
-                    {
-                      "begin": "\\(",
-                      "beginCaptures": {
-                        "0": {
-                          "name": "punctuation.section.group.begin.c3"
-                        }
-                      },
-                      "end": "\\)",
-                      "endCaptures": {
-                        "0": {
-                          "name": "punctuation.section.group.end.c3"
-                        }
-                      },
-                      "contentName": "meta.group.c3",
-                      "patterns": [
-                        {
-                          "include": "#comments"
-                        },
-                        {
-                          "match": "\\binline\\b",
-                          "name": "storage.modifier.c3"
-                        },
-                        {
-                          "include": "#parameters"
-                        }
-                      ]
-                    },
-                    {
-                      "include": "#generic_params"
-                    },
-                    {
-                      "include": "#attribute"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "begin": "\\{",
-              "beginCaptures": {
-                "0": {
-                  "name": "punctuation.section.block.begin.c3"
-                }
-              },
-              "end": "\\}",
-              "endCaptures": {
-                "0": {
-                  "name": "punctuation.section.block.end.c3"
-                }
-              },
-              "name": "meta.enum.body.c3",
-              "patterns": [
-                {
-                  "include": "#comments"
-                },
-                {
-                  "begin": "=",
-                  "beginCaptures": {
-                    "0": {
-                      "name": "keyword.operator.assignment.c3"
-                    }
-                  },
-                  "end": "(?=[,}])",
-                  "patterns": [
-                    {
-                      "include": "#expression"
-                    }
-                  ]
-                },
-                {
-                  "include": "#block"
-                },
-                {
-                  "include": "#attribute"
-                },
-                {
-                  "match": "(?:\\b_*[A-Z][_A-Z0-9]*\\b)",
-                  "name": "variable.other.constant.c3"
-                },
-                {
-                  "match": ",",
-                  "name": "punctuation.separator.c3"
-                }
-              ]
-            }
-          ]
+          "include": "#enumlike"
         },
         {
           "begin": "(?=\\binterface\\b)",
@@ -665,6 +538,9 @@
               "patterns": [
                 {
                   "include": "#comments"
+                },
+                {
+                  "include": "#doc_comment"
                 },
                 {
                   "match": ";",
@@ -884,6 +760,9 @@
               "include": "#comments"
             },
             {
+              "include": "#doc_comment"
+            },
+            {
               "include": "#structlike"
             },
             {
@@ -919,6 +798,151 @@
                   "include": "#expression"
                 }
               ]
+            }
+          ]
+        }
+      ]
+    },
+    "enumlike": {
+      "begin": "(?=\\b(?:enum|constdef|constset)\\b)",
+      "end": "(?<=\\})",
+      "patterns": [
+        {
+          "begin": "\\b(enum)|(constdef)|(constset)\\b",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.declaration.enum.c3"
+            },
+            "2": {
+              "name": "keyword.declaration.constdef.c3"
+            },
+            "3": {
+              "name": "keyword.declaration.constset.c3"
+            }
+          },
+          "end": "(?=\\{)",
+          "name": "meta.enum.c3",
+          "patterns": [
+            {
+              "include": "#comments"
+            },
+            {
+              "match": "(?:\\b_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*\\b)",
+              "name": "entity.name.type.enum.c3"
+            },
+            {
+              "include": "#generic_params"
+            },
+            {
+              "include": "#attribute"
+            },
+            {
+              "include": "#interface_impl"
+            },
+            {
+              "begin": ":",
+              "beginCaptures": {
+                "0": {
+                  "name": "punctuation.separator.c3"
+                }
+              },
+              "end": "(?=\\{)",
+              "patterns": [
+                {
+                  "include": "#comments"
+                },
+                {
+                  "match": "\\b(?:inline|const)\\b",
+                  "name": "storage.modifier.c3"
+                },
+                {
+                  "include": "#type_no_generics"
+                },
+                {
+                  "begin": "\\(",
+                  "beginCaptures": {
+                    "0": {
+                      "name": "punctuation.section.group.begin.c3"
+                    }
+                  },
+                  "end": "\\)",
+                  "endCaptures": {
+                    "0": {
+                      "name": "punctuation.section.group.end.c3"
+                    }
+                  },
+                  "contentName": "meta.group.c3",
+                  "patterns": [
+                    {
+                      "include": "#comments"
+                    },
+                    {
+                      "match": "\\binline\\b",
+                      "name": "storage.modifier.c3"
+                    },
+                    {
+                      "include": "#parameters"
+                    }
+                  ]
+                },
+                {
+                  "include": "#generic_params"
+                },
+                {
+                  "include": "#attribute"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "begin": "\\{",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.section.block.begin.c3"
+            }
+          },
+          "end": "\\}",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.block.end.c3"
+            }
+          },
+          "name": "meta.enum.body.c3",
+          "patterns": [
+            {
+              "include": "#comments"
+            },
+            {
+              "include": "#doc_comment"
+            },
+            {
+              "begin": "=",
+              "beginCaptures": {
+                "0": {
+                  "name": "keyword.operator.assignment.c3"
+                }
+              },
+              "end": "(?=[,}])",
+              "patterns": [
+                {
+                  "include": "#expression"
+                }
+              ]
+            },
+            {
+              "include": "#block"
+            },
+            {
+              "include": "#attribute"
+            },
+            {
+              "match": "(?:\\b_*[A-Z][_A-Z0-9]*\\b)",
+              "name": "variable.other.constant.c3"
+            },
+            {
+              "match": ",",
+              "name": "punctuation.separator.c3"
             }
           ]
         }
@@ -1247,9 +1271,6 @@
         },
         {
           "include": "#block_comment"
-        },
-        {
-          "include": "#doc_comment"
         }
       ]
     },
