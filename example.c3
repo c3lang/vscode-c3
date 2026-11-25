@@ -1,12 +1,11 @@
 module stack <Type>;
 // Above: the parameterized type is applied to the entire module.
-import std::mem;
-import std::io;
+import std;
 
 struct Stack
 {
-    usize capacity;
-    usize size;
+    sz capacity;
+    sz size;
     Type* elems;
 }
 
@@ -32,5 +31,8 @@ fn Type Stack.pop(Stack* this)
 
 fn bool Stack.empty(Stack* this)
 {
+	
     return !this.size;
 }
+
+// const char ASD = $$max

@@ -146,7 +146,12 @@ export async function activate(context) {
             delete capabilities.documentFormattingProvider;
             delete capabilities.documentRangeFormattingProvider;
         },
-        dispose() {}
+        getState() {
+            return { kind: "static" };
+        },
+        // The client calls this on every stop; without it, cleanup throws and the
+        // client cannot stop or restart.
+        clear() {}
     });
     if (lsConfig.get("debug")) {
         client.setTrace(Trace.Verbose);
