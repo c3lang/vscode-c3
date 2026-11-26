@@ -855,7 +855,9 @@ repository:
       - begin: '\$(?:Typeof|Typefrom|typeof|typefrom|evaltype|vatype)\b'
         beginCaptures:
           0: { name: '{{scope:type_use}}' }
-        end: '(?=[^ \t*\[?(:]|:(?!:))' # ' \t' instead of '\s' because doc comments are newline sensitive
+        # ' \t' instead of '\s' because doc comments are newline sensitive.
+        # A `(` after the closing `)` is a parameter list, e.g. `fn $Typeof(x) ($Typeof(x) a) => a`
+        end: '(?=[^ \t*\[?(:]|:(?!:))|(?<=\))(?=[ \t]*\()'
         patterns:
           - include: "#parens"
           - include: "#type_suffix"
@@ -1073,6 +1075,8 @@ repository:
   parameters:
     patterns:
       - include: "#comments"
+      # Before the CT type parameter, which also matches `$Typeof`/`$Typefrom`
+      - include: "#type_expr"
       # CT type parameter, before #type
       - begin: '\${{TYPE}}'
         beginCaptures:

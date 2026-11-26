@@ -18,7 +18,7 @@ fn void Stack.push(Stack* this, Type element)
     if (this.capacity == this.size)
     {
         this.capacity *= 2;
-        this.elems = mem::realloc(this.elems, $sizeof(Type) * this.capacity);
+        this.elems = mem::realloc(this.elems, Type::size * this.capacity);
     }
     this.elems[this.size++] = element;
 }

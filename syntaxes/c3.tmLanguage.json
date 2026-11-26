@@ -1641,7 +1641,7 @@
               "name": "support.type.c3"
             }
           },
-          "end": "(?=[^ \\t*\\[?(:]|:(?!:))",
+          "end": "(?=[^ \\t*\\[?(:]|:(?!:))|(?<=\\))(?=[ \\t]*\\()",
           "patterns": [
             {
               "include": "#parens"
@@ -2080,6 +2080,9 @@
       "patterns": [
         {
           "include": "#comments"
+        },
+        {
+          "include": "#type_expr"
         },
         {
           "begin": "\\$(?:\\b_*[A-Z][_A-Z0-9]*[a-z][_a-zA-Z0-9]*\\b)",
